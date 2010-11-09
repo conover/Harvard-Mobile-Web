@@ -5,3 +5,201 @@
 
 @import url('/modules/media/jqtouch-1.0-beta/themes/jqt/theme.min.css');
 
+/******************************************************************************\
+  jQTouch Overrides & Extensions
+\******************************************************************************/
+body > div { background:none; }
+h1, h2 { color: #fff; margin:0; }
+ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
+.gloss { padding: 7px; margin: 0; }
+.gloss li { 
+	padding-top:10px; padding-bottom:10px;
+	line-height:21px; height:21px;
+	margin: 5px 0 0 0;
+	color:#BCBCBC;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+	background: -moz-linear-gradient(top,  #4c4d4e,  #404142); 
+    border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+.gloss li.dull { background: #404142; }
+.gloss li.arrow {
+	background: url(img/chevron.png), -moz-linear-gradient(top,  #4c4d4e,  #404142);
+	background: url(img/chevron.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142)) ;
+    background-position: right center;
+    background-repeat: no-repeat; }
+.gloss li.arrow-back {
+	padding-left: 28px; 
+	background-image: url(img/chevron-flip.png), -moz-linear-gradient(top,  #4c4d4e,  #404142);
+	background-image: url(img/chevron-flip.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+	background-position: left center;
+    background-repeat: no-repeat; }
+.gloss li.toggley { 
+	padding-top:0;
+	padding-bottom:0; 
+	height:41px;
+	line-height:41px;
+	background-image: -moz-linear-gradient(top,  #4c4d4e,  #404142);
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+}
+.toggle {
+	margin-top:7px;
+	width: 94px; position: relative; height: 27px; display: block; overflow: hidden; float: right; }
+.toggle input[type="checkbox"]:checked { left: 0px; }
+.toggle input[type="checkbox"] { 
+	-webkit-appearance: textarea; -moz-appearance:textarea;
+    -webkit-border-radius: 5px; -moz-radius: 5px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-transition: left .15s; -moz-transition: left 1s;
+    background-color: transparent; background: #fff url(img/on_off.png) 0 0 no-repeat;
+    border: 0; height: 27px; left: -55px; margin: 0;  overflow: hidden; position: absolute; top: 0; width: 149px; }
+.gloss li.search {
+	padding-top:9px;
+	padding-bottom:11px;
+}
+.gloss li input[type="search"] {
+	width:83%;
+}
+
+
+/******************************************************************************\
+  New Styles
+\******************************************************************************/
+body{
+	margin: 0;
+	padding: 0;
+    background-color: #333;
+    font-family: Helvetica;
+	color: #ddd;
+}
+
+#Header{
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#000));
+	border-bottom: 2px solid #ffd203;
+	background-color: #000;	
+	color: #fff;
+	padding: 5px 5px;
+}
+#Header h1{
+	text-align: center;
+}
+#Header h1 a{
+	text-decoration: none;
+	color: #ffd203;
+	border:0;
+}
+h1 a:active, h1 a:hover { border:0; outline:0; }
+
+/* application icons */
+/*
+.Application a{ text-indent: 42px; background-position: 10px 50%; background-repeat: no-repeat; } 
+.Application.News a{ background-image: url('img/news.png'); } 
+.Application.Shuttles a{ background-image: url('img/shuttle.png'); } 
+.Application.Phonebook a{ background-image: url('img/people.png'); } 
+.Application.Help a{ background-image: url('img/help.png'); } 
+.Application.Emergency a{ background-image: url('img/emergency.png'); } 
+.Application.Events a{ background-image: url('img/events.png'); } 
+.Application.Courses a{ background-image: url('img/courses.png'); } 
+.Application.Map a{ background-image: url('img/map.png'); }
+*/
+
+#Content{padding: 5px 10px;}
+
+#CourseSearch{}
+#CourseSearch>p{font-weight: bold; color: #fff; padding: 5px;}
+#CourseSearch form{}
+#CourseSearch form input#filter{font-size: 14px;}
+#CourseSearch .Course{color: #fff;}
+#CourseSearch .Course .Number{font-size: 120%; font-weight: bold; margin-bottom: 10px;}
+#CourseSearch .Course .Description{font-size: 80%; font-weight: normal;}
+
+#Emergency{}
+#Emergency>p{font-weight: bold; color: #fff; padding: 5px;}
+#Emergency .News{}
+#Emergency .News h3{color: #fff; font-weight: bold; font-size: 120%;}
+#Emergency .News p{color: #fff; font-weight: normal; font-size: 80%;}
+
+#PeopleSearch .Person{color: #fff;}
+#PeopleSearch form{}
+#PeopleSearch form input#filter{font-size: 14px;}
+#PeopleSearch .Person .Name{font-size: 120%; font-weight: bold;}
+#PeopleSearch .Person .Phone{font-size: 80%; font-weight: normal;}
+#PeopleSearch .Person .Email{font-size: 80%; font-weight: normal;}
+
+#Events .Yesterday{}
+#Events .Tomorrow{}
+#Events .Yesterday,
+#Events .Tomorrow{color: #fff; font-weight: bold;}
+#Events .Event{color: #fff;}
+#Events .Event .Date{font-size: 80%;}
+#Events .Event .Title{font-size: 120%;}
+#Events .Event .Description{font-size: 80%; font-weight: normal;}
+
+#Today{color: #fff;}
+#Today span.smallprint{font-size: 80%;}
+#Today strong{font-size: 120%;}
+#Today a{color: #fff; font-weight: bold;}
+#Today .focal{
+	margin: 5px 0 0 0;
+    border-top: 1px solid #333;
+    border-bottom: #555858;
+    list-style-type: none;
+    padding: 10px 10px 10px 10px;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+	-webkit-border-radius: 5px;
+    overflow: hidden;}
+
+#Content { padding:0; }
+#Header { padding:0; }
+html, body { margin:0; padding:0; }
+h1 {margin:0; padding:0; font-size:18px; line-height:21px; }
+h1 a { 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#000));
+	display:block;
+	padding:10px 0 7px; }
+h1 a span {color:white; }
+
+
+
+
+#map-options { padding:6px 12px; }
+#map-options a { 
+	display:block; padding:5px 10px 5px 17px; 
+	text-decoration:none; 
+	color:#5577bb; 
+	background:white url(img/google-plus.png) no-repeat; 
+	background-position:7px 9px;
+	border:1px solid #bbb; 
+	border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px;; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; 
+}
+.basic #map-options { 
+	padding:22px 0 0 0;
+}
+
+/******************************************************************************\
+    Styling for Phonebook and Courses
+\******************************************************************************/
+.wrap { margin:5px 0; padding:6px 12px; overflow:hidden; }
+.wrap label { display:block; padding-bottom:5px; }
+.wrap h2 { color:white; font-size:22px; padding:5px 0; }
+.wrap h3 { color:white; font-size:20px; margin:0; padding:12px 0 0 5px;}
+.wrap h4 { color:white; font-size:18px; margin-top:0; padding:0;}
+.wrap p { padding-top:0; margin-top:0; }
+.wrap .gloss { padding:0; }
+.wrap .gloss li { height:auto; }
+.wrap .gloss li a { display:inline; border-bottom:1px dotted #6C6F6F;  padding:0; margin:0; color:#BCBCBC; }
+.wrap .gloss li h4 { margin-bottom:0; padding-bottom:5px; padding-top:5px; }
+.wrap .gloss li p { padding: 0 0 5px 0; margin:0; font-weight:normal; }
+.wrap .gloss h3 { color:white; display:block; }
+.wrap .gloss p { font-size:90%; display:block; }
+
+
+
+
+
+/******************************************************************************\
+    Google Things
+\******************************************************************************/
+.info-window { width:300px; overflow-x:hidden; margin:0; font-family:"Trebuchet MS",sans-serif; font-size:12px; }
+.info-window h2 {margin:0; padding-bottom:10px; font-size:1.5em; font-family:georgia,serif; font-size:18px; color:black; font-weight:normal; }
+.info-window p {text-align:right; padding-top:7px; margin:0; color:#151515;}
+.info-window a { color:	#990000; }
