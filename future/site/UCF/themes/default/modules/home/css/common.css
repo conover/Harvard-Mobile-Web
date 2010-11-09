@@ -3,7 +3,7 @@
 	Summer 2010
 \******************************************************************************/
 
-@import url('/modules/media/jqtouch-1.0-beta/themes/jqt/theme.min.css');
+@import url('/modules/media/-/jqtouch-1.0-beta/themes/jqt/theme.min.css');
 
 /******************************************************************************\
   jQTouch Overrides & Extensions
@@ -22,14 +22,14 @@ ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
     border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
 .gloss li.dull { background: #404142; }
 .gloss li.arrow {
-	background: url(../images/chevron.png), -moz-linear-gradient(top,  #4c4d4e,  #404142);
-	background: url(../images/chevron.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142)) ;
+	background: url(/modules/media/img/chevron.png), -moz-linear-gradient(top,  #4c4d4e,  #404142);
+	background: url(/modules/media/img/chevron.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142)) ;
     background-position: right center;
     background-repeat: no-repeat; }
 .gloss li.arrow-back {
 	padding-left: 28px; 
-	background-image: url(../images/chevron-flip.png), -moz-linear-gradient(top,  #4c4d4e,  #404142);
-	background-image: url(../images/chevron-flip.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+	background-image: url(/modules/media/img/chevron-flip.png), -moz-linear-gradient(top,  #4c4d4e,  #404142);
+	background-image: url(/modules/media/img/chevron-flip.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
 	background-position: left center;
     background-repeat: no-repeat; }
 .gloss li.toggley { 
@@ -49,7 +49,7 @@ ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
     -webkit-border-radius: 5px; -moz-radius: 5px;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-transition: left .15s; -moz-transition: left 1s;
-    background-color: transparent; background: #fff url(../images/on_off.png) 0 0 no-repeat;
+    background-color: transparent; background: #fff url(/modules/media/img/on_off.png) 0 0 no-repeat;
     border: 0; height: 27px; left: -55px; margin: 0;  overflow: hidden; position: absolute; top: 0; width: 149px; }
 .gloss li.search {
 	padding-top:9px;
@@ -91,14 +91,14 @@ h1 a:active, h1 a:hover { border:0; outline:0; }
 /* application icons */
 /*
 .Application a{ text-indent: 42px; background-position: 10px 50%; background-repeat: no-repeat; } 
-.Application.News a{ background-image: url('../images/news.png'); } 
-.Application.Shuttles a{ background-image: url('../images/shuttle.png'); } 
-.Application.Phonebook a{ background-image: url('../images/people.png'); } 
-.Application.Help a{ background-image: url('../images/help.png'); } 
-.Application.Emergency a{ background-image: url('../images/emergency.png'); } 
-.Application.Events a{ background-image: url('../images/events.png'); } 
-.Application.Courses a{ background-image: url('../images/courses.png'); } 
-.Application.Map a{ background-image: url('../images/map.png'); }
+.Application.News a{ background-image: url('/modules/media/img/news.png'); } 
+.Application.Shuttles a{ background-image: url('/modules/media/img/shuttle.png'); } 
+.Application.Phonebook a{ background-image: url('/modules/media/img/people.png'); } 
+.Application.Help a{ background-image: url('/modules/media/img/help.png'); } 
+.Application.Emergency a{ background-image: url('/modules/media/img/emergency.png'); } 
+.Application.Events a{ background-image: url('/modules/media/img/events.png'); } 
+.Application.Courses a{ background-image: url('/modules/media/img/courses.png'); } 
+.Application.Map a{ background-image: url('/modules/media/img/map.png'); }
 */
 
 #Content{padding: 5px 10px;}
@@ -165,7 +165,7 @@ h1 a span {color:white; }
 	display:block; padding:5px 10px 5px 17px; 
 	text-decoration:none; 
 	color:#5577bb; 
-	background:white url(../images/google-plus.png) no-repeat; 
+	background:white url(/modules/media/img/google-plus.png) no-repeat; 
 	background-position:7px 9px;
 	border:1px solid #bbb; 
 	border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
