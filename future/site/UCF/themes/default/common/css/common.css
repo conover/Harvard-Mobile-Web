@@ -1,4 +1,4 @@
-/******************************************************************************\
+                                           /******************************************************************************\
 	UCF Web Communications
 	Summer 2010
 \******************************************************************************/
@@ -58,6 +58,13 @@ ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
 .gloss li input[type="search"] {
 	width:83%;
 }
+
+/******************************************************************************\
+  MIT mobile & general styles
+\******************************************************************************/
+a { color:white; }
+a:hover { color:#FFD203; }
+.focal { background:#3C3C3C; border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
 
 
 /******************************************************************************\
@@ -191,9 +198,6 @@ h1 a span {color:white; }
 .wrap .gloss li p { padding: 0 0 5px 0; margin:0; font-weight:normal; }
 .wrap .gloss h3 { color:white; display:block; }
 .wrap .gloss p { font-size:90%; display:block; }
-
-
-
 
 
 /******************************************************************************\

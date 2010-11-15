@@ -1,16 +1,3 @@
-{capture name="banner" assign="banner"}
-  {block name="banner"}
-    
-    <div id="Header">
-      {if isset($topItem)}
-          <div id="new"><a href="/about/new.php"><span class="newlabel">NEW:</span>{$topItem}</a></div>
-      {/if}
-      <h1><a href="/">UCF<span>Mobile</span></a></h1>
-    </div>
-    
-  {/block}
-{/capture}
-
 {include file="findInclude:common/header.tpl" customHeader=$banner scalable=false}
 
 {*
