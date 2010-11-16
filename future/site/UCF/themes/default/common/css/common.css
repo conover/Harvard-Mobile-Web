@@ -165,23 +165,6 @@ h1 a {
 h1 a span {color:white; }
 
 
-
-
-#map-options { padding:6px 12px; }
-#map-options a { 
-	display:block; padding:5px 10px 5px 17px; 
-	text-decoration:none; 
-	color:#5577bb; 
-	background:white url(/modules/media/img/google-plus.png) no-repeat; 
-	background-position:7px 9px;
-	border:1px solid #bbb; 
-	border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px;; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; 
-}
-.basic #map-options { 
-	padding:22px 0 0 0;
-}
-
 /******************************************************************************\
     Styling for Phonebook and Courses
 \******************************************************************************/
