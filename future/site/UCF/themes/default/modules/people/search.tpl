@@ -3,11 +3,11 @@
 {block name="body"}
 <form action="{$searchURL}" method="get"><div>
 	<input type="search" name="{$queryName}" id="people-search-input" />
-	<input type="submit" />
+	<input type="submit" value="Search" />
 </div></form>
 
 {if $query}
-<p>Search results for '{$query}':</p>
+<p>Found {count($listing)} results for '{$query}':</p>
 {if $listing}
 <ul id="results">
 	{foreach $listing as $result}
