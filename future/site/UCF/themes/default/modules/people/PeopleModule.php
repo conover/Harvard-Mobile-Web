@@ -34,11 +34,10 @@ class PeopleModule extends Module{
 	 * @author Jared Lang
 	 **/
 	function search($query){
-		$service   = 'http://webcom.dev.smca.ucf.edu/people/';
+		$service   = $GLOBALS['siteConfig']->getVar('PEOPLE_SERVICE_URL');
 		$query_str = http_build_query(array(
 			'query' => $query,
 		));
-		
 		
 		$url = implode(array($service, '?', $query_str));
 		$xml = file_get_contents($url);
