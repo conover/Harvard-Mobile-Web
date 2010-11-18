@@ -1,5 +1,10 @@
 {extends file="findExtends:common/header.tpl"}
 
+{block name="additionalHeadTags"}
+  <!--  Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{/block}
+
 {block name="header"}
     <div id="Header">
       {if isset($topItem)}
