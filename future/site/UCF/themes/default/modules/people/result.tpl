@@ -3,8 +3,8 @@
 		<h1>{$result.name}</h1>
 	</header>
 	<section class="organization">
-		{if !empty($result.organization_name)}{$result.organization_name}{/if}<!--
-		-->{if !empty($result.department_name)}, {$result.department_name}{/if}
+		{if !empty($result.organization_name)}{$result.organization_name}{/if}
+		{if !empty($result.department_name)}&#8226; {$result.department_name}{/if}
 	</section>
 	<section class="building">
 		{if !empty($result.building_name)}{$result.building_name}{/if}<!--

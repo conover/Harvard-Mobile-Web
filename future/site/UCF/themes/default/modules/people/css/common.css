@@ -1,0 +1,20 @@
+@charset "utf-8";
+
+input[type="search"]{width: 89%;}
+input[type="submit"]{width: 10%;}
+
+.directory-item{}
+.directory-item header{}
+.directory-item header h1{font-size: 20px; margin: 0;}
+
+.directory-item footer{border-top: 1px solid #5C5D5E; margin-top: 10px; padding-top: 5px; font-size: 16px;}
+.directory-item footer .phone{width: 175px; float: left;}
+.directory-item footer .email{margin-left: 175px;}
+
+.directory-item .organization{color: #c8c8c8; font-weight: normal; margin-top: 10px; font-size: 14px;}
+.directory-item .building{color: #c8c8c8; font-weight: normal; font-size: 14px;}
+
+.no-result{}
+.end{clear: both;}
+
+#results{padding: 0; margin: 0; list-style-type: none;}

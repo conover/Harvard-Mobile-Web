@@ -28,6 +28,23 @@ class PeopleModule extends Module{
 	}
 	
 	/**
+	 * Retreives data pointed to by URL.
+	 *
+	 * @return string
+	 * @author Jared Lang
+	 **/
+	function fetchHTTP($url){
+		$timeout = $GLOBALS['siteConfig']->getVar('PEOPLE_SEARCH_TIMEOUT');
+		$options = stream_context_create(array(
+			'http' => array(
+				'timeout' => (string)$timeout,
+			),
+		));
+		$data = file_get_contents($url, false, $options);
+		return $data;
+	}
+	
+	/**
 	 * Returns an array of objects resulting from a search against $query.
 	 *
 	 * @return array
@@ -40,7 +57,7 @@ class PeopleModule extends Module{
 		));
 		
 		$url = implode(array($service, '?', $query_str));
-		$xml = file_get_contents($url);
+		$xml = $this->fetchHTTP($url);
 		
 		$libxml  = libxml_use_internal_errors(True);
 		$results = array();
