@@ -1,4 +1,4 @@
-{extends file="findExtends:modules/{$moduleID}/base.tpl"}
+{extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
     <ul class="gloss">
