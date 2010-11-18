@@ -13,7 +13,7 @@
     <p id="no-results">No results</p>
   {else}
       {foreach $results as $item}
-      <li class="arrow"><a href="/map/building/{$item->number}">{$item->name}</a></li>
+      <li class="arrow"><a href="/map/location/{$item->number}">{$item->name}</a></li>
       {/foreach}
     </ul>
   {/if}

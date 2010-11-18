@@ -7,17 +7,26 @@
 require_once realpath(LIB_DIR.'/Module.php');
 class MapModule extends Module {
   protected $id = 'map';
+  protected $location = false;
   
   /****************************************************************************\
     Constructor
       - sets the correct page
   \****************************************************************************/
   function __construct($page='index', $args=array()){
+    
     parent::__construct($page, $args);
+    
+    // accept building numbers
+    $url = $_SERVER["REQUEST_URI"];
+    $matches = array();
+    if(preg_match('/location\/([\w-_]+)$/', $url, $matches)){
+      $this->location = $matches[1];
+    }
+    
     $map_pages = array(
       'options',
       'search',
-      'building',
     );
     if(!in_array($this->page, $map_pages)){
       $this->page = 'index';
@@ -93,10 +102,32 @@ JS;
     $this->addInlineJavascript($js);
     $this->addInlineJavascriptFooter("Campus_Map.gmap();");
     
-    if($this->page == 'building'){
-      die('oh yeah');
+    if($this->location){
+      
+      // TODO: move to config/web/map.ini
+      $map_api = 'http://webcom.dev.smca.ucf.edu/map/json/location/';
+      $url = $map_api . urlencode($this->location);
+      $contents = file_get_contents($url);
+      $loc = utf8_encode($contents);
+      
+      $js=<<<JS
+      
+      (function(){
+        var map = Campus_Map.map;
+        var loc = $loc;
+        var latlng = new google.maps.LatLng( loc.coord_x , loc.coord_y );
+        map.panTo(latlng);
+        map.panBy(0, -100);
+        var infoWindow = new google.maps.InfoWindow({
+          content: loc.info,
+          position: latlng
+        });
+        infoWindow.open(map);
+      })();
+JS;
+      $this->addInlineJavascriptFooter($js);
+      
     }
-    
     
   }
   

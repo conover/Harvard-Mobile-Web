@@ -1,5 +1,12 @@
-{extends file="findExtends:common/base.tpl"}
+{include file="findInclude:common/header.tpl"}
 
-{block name="body"}
 <div id="map-canvas"></div>
-{/block}
+
+<script type="text/javascript">
+{foreach $inlineJavascriptFooterBlocks as $script}
+{$script} 
+{/foreach}
+</script>
+
+</body>
+</html>
