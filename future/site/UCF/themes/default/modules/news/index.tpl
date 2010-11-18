@@ -1,0 +1,1 @@
+{extends file="fileExtend:common/base.tpl"}
