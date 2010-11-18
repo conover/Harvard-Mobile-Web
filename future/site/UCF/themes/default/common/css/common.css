@@ -95,65 +95,6 @@ body{
 }
 h1 a:active, h1 a:hover { border:0; outline:0; }
 
-/* application icons */
-/*
-.Application a{ text-indent: 42px; background-position: 10px 50%; background-repeat: no-repeat; } 
-.Application.News a{ background-image: url('/modules/media/img/news.png'); } 
-.Application.Shuttles a{ background-image: url('/modules/media/img/shuttle.png'); } 
-.Application.Phonebook a{ background-image: url('/modules/media/img/people.png'); } 
-.Application.Help a{ background-image: url('/modules/media/img/help.png'); } 
-.Application.Emergency a{ background-image: url('/modules/media/img/emergency.png'); } 
-.Application.Events a{ background-image: url('/modules/media/img/events.png'); } 
-.Application.Courses a{ background-image: url('/modules/media/img/courses.png'); } 
-.Application.Map a{ background-image: url('/modules/media/img/map.png'); }
-*/
-
-#Content{padding: 5px 10px;}
-
-#CourseSearch{}
-#CourseSearch>p{font-weight: bold; color: #fff; padding: 5px;}
-#CourseSearch form{}
-#CourseSearch form input#filter{font-size: 14px;}
-#CourseSearch .Course{color: #fff;}
-#CourseSearch .Course .Number{font-size: 120%; font-weight: bold; margin-bottom: 10px;}
-#CourseSearch .Course .Description{font-size: 80%; font-weight: normal;}
-
-#Emergency{}
-#Emergency>p{font-weight: bold; color: #fff; padding: 5px;}
-#Emergency .News{}
-#Emergency .News h3{color: #fff; font-weight: bold; font-size: 120%;}
-#Emergency .News p{color: #fff; font-weight: normal; font-size: 80%;}
-
-#PeopleSearch .Person{color: #fff;}
-#PeopleSearch form{}
-#PeopleSearch form input#filter{font-size: 14px;}
-#PeopleSearch .Person .Name{font-size: 120%; font-weight: bold;}
-#PeopleSearch .Person .Phone{font-size: 80%; font-weight: normal;}
-#PeopleSearch .Person .Email{font-size: 80%; font-weight: normal;}
-
-#Events .Yesterday{}
-#Events .Tomorrow{}
-#Events .Yesterday,
-#Events .Tomorrow{color: #fff; font-weight: bold;}
-#Events .Event{color: #fff;}
-#Events .Event .Date{font-size: 80%;}
-#Events .Event .Title{font-size: 120%;}
-#Events .Event .Description{font-size: 80%; font-weight: normal;}
-
-#Today{color: #fff;}
-#Today span.smallprint{font-size: 80%;}
-#Today strong{font-size: 120%;}
-#Today a{color: #fff; font-weight: bold;}
-#Today .focal{
-	margin: 5px 0 0 0;
-    border-top: 1px solid #333;
-    border-bottom: #555858;
-    list-style-type: none;
-    padding: 10px 10px 10px 10px;
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
-	-webkit-border-radius: 5px;
-    overflow: hidden;}
-
 #Content { padding:0; }
 #Header { padding:0; }
 html, body { margin:0; padding:0; }
@@ -163,24 +104,6 @@ h1 a {
 	display:block;
 	padding:10px 0 7px; }
 h1 a span {color:white; }
-
-
-/******************************************************************************\
-    Styling for Phonebook and Courses
-\******************************************************************************/
-.wrap { margin:5px 0; padding:6px 12px; overflow:hidden; }
-.wrap label { display:block; padding-bottom:5px; }
-.wrap h2 { color:white; font-size:22px; padding:5px 0; }
-.wrap h3 { color:white; font-size:20px; margin:0; padding:12px 0 0 5px;}
-.wrap h4 { color:white; font-size:18px; margin-top:0; padding:0;}
-.wrap p { padding-top:0; margin-top:0; }
-.wrap .gloss { padding:0; }
-.wrap .gloss li { height:auto; }
-.wrap .gloss li a { display:inline; border-bottom:1px dotted #6C6F6F;  padding:0; margin:0; color:#BCBCBC; }
-.wrap .gloss li h4 { margin-bottom:0; padding-bottom:5px; padding-top:5px; }
-.wrap .gloss li p { padding: 0 0 5px 0; margin:0; font-weight:normal; }
-.wrap .gloss h3 { color:white; display:block; }
-.wrap .gloss p { font-size:90%; display:block; }
 
 
 /******************************************************************************\

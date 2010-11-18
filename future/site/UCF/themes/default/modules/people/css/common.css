@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+#people-search h2 {margin-top: 15px; text-align: center;}
+
 input[type="search"]{width: 89%;}
 input[type="submit"]{width: 10%;}
 

@@ -1,4 +1,4 @@
-{extends file="findExtends:modules/{$moduleID}/base.tpl"}
+{extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
   
@@ -12,8 +12,4 @@
     *}
     <li class="arrow-back"><a id="back" href="/map/">View UCF Campus Map</a></li>
   </ul>
-  
-  
-  
-  
 {/block}
