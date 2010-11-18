@@ -3,7 +3,7 @@
 {block name="body"}
     <ul class="gloss">
       <li class="search">
-        <form action="/map/search/" method="get">
+        <form action="../search/" method="get">
           <input type="search" placeholder="search" results="0" name="q" value="{$search_q}"><input type="submit" value="Search" />
         </form>
       </li>
