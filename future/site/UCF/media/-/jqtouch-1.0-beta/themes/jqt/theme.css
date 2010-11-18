@@ -2,9 +2,6 @@ body {
     background: #000;
     color: #ddd;
 }
-body > * {
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#5e5e65));
-}
 h1, h2 {
     font: bold 18px Helvetica;
     text-shadow: rgba(255,255,255,.2) 0 1px 1px;
