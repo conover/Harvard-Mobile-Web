@@ -51,13 +51,6 @@ ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
     -webkit-transition: left .15s; -moz-transition: left 1s;
     background-color: transparent; background: #fff url(/modules/media/img/on_off.png) 0 0 no-repeat;
     border: 0; height: 27px; left: -55px; margin: 0;  overflow: hidden; position: absolute; top: 0; width: 149px; }
-.gloss li.search {
-	padding-top:9px;
-	padding-bottom:11px;
-}
-.gloss li input[type="search"] {
-	width:83%;
-}
 
 /******************************************************************************\
   MIT mobile & general styles

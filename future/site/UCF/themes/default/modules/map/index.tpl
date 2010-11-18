@@ -3,4 +3,3 @@
 {block name="body"}
 <div id="map-canvas"></div>
 {/block}
-
