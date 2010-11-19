@@ -7,7 +7,7 @@
 		<input type="search" name="{$queryName}" id="people-search-input" />
 		<input type="submit" value="Search" />
 	</div></form>
-
+	
 	{if $query}
 	<p>Found {count($listing)} results for '{$query}':</p>
 	{if $listing}
