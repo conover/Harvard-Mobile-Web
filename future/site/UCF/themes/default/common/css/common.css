@@ -17,6 +17,7 @@ ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
 	line-height:21px; height:21px;
 	margin: 5px 0 0 0;
 	color:#BCBCBC;
+	background: #4c4d4e;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
 	background: -moz-linear-gradient(top,  #4c4d4e,  #404142); 
     border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
