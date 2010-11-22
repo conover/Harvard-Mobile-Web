@@ -1,0 +1,8 @@
+.news-header{padding: .5em 10px;}
+.news-header h1 a{background: none;}
+.news-items{padding: 0; margin: 0;}
+
+article.content { border: 1px solid white; margin: 0 10px; padding: 10px; background:#3C3C3C; border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
+article.content h1{font-size: 20px; margin-bottom: 10px;}
+article.content {overflow: hidden;}
+article.content section img{margin: 5px 10px 10px 0;}
