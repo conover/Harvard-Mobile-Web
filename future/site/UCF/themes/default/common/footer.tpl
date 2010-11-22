@@ -36,5 +36,19 @@
 			{/block}
 			{/strip}
 		</footer>
+		
+		
+		{if $platform=="computer"}
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script src="/media/-/jquery.browser.min.js"></script>
+        <script>
+          jQuery(function(){
+            $('#Body').addClass(jQuery.browser.name);
+            $('#Body').addClass(jQuery.browser.name + '' + jQuery.browser.versionX);
+          });
+        </script>
+    {/if}
+		{block name="script"}{/block}
+		
 	</body>
 </html>

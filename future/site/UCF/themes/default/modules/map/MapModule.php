@@ -61,6 +61,8 @@ class MapModule extends Module {
   \****************************************************************************/
   protected function search() {
     
+    $this->page = 'options';
+    
     $results = array();
     $this->assignByRef('results', $results);
     
