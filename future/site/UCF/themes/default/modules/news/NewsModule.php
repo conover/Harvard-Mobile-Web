@@ -51,8 +51,9 @@ class NewsModule extends Module{
 		
 		foreach($articles as $index=>$article){
 			$article->url = $this->buildURL('article', array(
-				'id' => $article->getGUID(),
+				'id'  => $article->getGUID(),
 			));
+			$article->image   = $article->getImage();
 			$articles[$index] = $article;
 		}
 		$this->assign('articles', $articles);
@@ -74,6 +75,8 @@ class NewsModule extends Module{
 	}
 	
 	function feedsPage(){
+		$slug  = $this->getSlugFromURL();
+		$cfeed = $this->getFeedBySlug($slug);
 		$feeds = array();
 		foreach($this->feeds as $index => $feed){
 			$feeds[$index] = array(
@@ -85,6 +88,7 @@ class NewsModule extends Module{
 		}
 		
 		$this->assign('feeds', $feeds);
+		$this->assign('cfeed', $cfeed);
 		return;
 	}
 	

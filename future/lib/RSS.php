@@ -276,7 +276,7 @@ class RSSItem extends RSSElement
     {
         $name = $element->name();
         $value = $element->value();
-        
+
         switch ($name)
         {
             case 'LINK':

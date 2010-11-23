@@ -12,11 +12,23 @@
 		{/block}
 		{block name="news_items"}
 		{foreach $articles as $article}
-		<li class="news-item article arrow">
-			<a href="{$article->url}">{$article->getTitle()}</a>
-		</li>
+		<li class="news-item article arrow"><a href="{$article->url}">
+			<article{if !$article->image} class="no-image"{/if}>
+				{if $article->image}
+				<div class="image">
+					<img src="{$article->image->getURL()}" />
+				</div>
+				{/if}
+				<div class="title">
+					{$article->getTitle()}
+				</div>
+				
+				<div class="end"><!-- --></div>
+			</article>
+		</a></li>
 		{/foreach}
 		{/block}
-		{block name="news_items_end"}{/block}
+		{block name="news_items_end"}
+		{/block}
 	</ul>
 {/block}

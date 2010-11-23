@@ -4,6 +4,7 @@ require_once(LIB_DIR . '/RSS.php');
 
 class GazetteRSScontroller extends RSSDataController
 {
+	protected $DEFAULT_PARSER_CLASS='mRSSDataParser';
 	protected $loadMore=true;
 	
 	public function addFilter($var, $value)
@@ -87,7 +88,6 @@ class GazetteRSSItem extends RSSItem
 	{
 		$name = $element->name();
 		$value = $element->value();
-		
 		switch ($name)
 		{
 			case 'enclosure':
@@ -178,6 +178,24 @@ class GazetteRSSEnclosure extends RSSEnclosure
 			$this->width = intval($image_size[0]);
 			$this->height = intval($image_size[1]);
 			return true;
+		}
+	}
+}
+
+class GazetteRSSMediaGroup extends GazetteRSSEnclosure{
+	public function addElement(RSSElement $element){
+		$name  = $element->name();
+		$value = $element->value();
+		
+		switch($name){
+			case 'MEDIA:CONTENT':
+				$this->url  = $element->getAttrib('URL');
+				$this->type = $element->getAttrib('TYPE');
+				break;
+			case 'MEDIA:THUMBNAIL':
+				$this->url  = $element->getAttrib('URL');
+			default:
+				break;
 		}
 	}
 }

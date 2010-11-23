@@ -127,7 +127,6 @@ class RSSDataParser extends DataParser
     protected function endElement($xml_parser, $name)
     {
         if ($element = array_pop($this->elementStack)) {
-
             $element->setValue($this->data, $this->shouldStripTags($element));
             $parent = end($this->elementStack);
             switch ($name)
