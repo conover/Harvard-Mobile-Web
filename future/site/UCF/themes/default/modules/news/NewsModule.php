@@ -89,6 +89,7 @@ class NewsModule extends Module{
 		
 		$this->assign('feeds', $feeds);
 		$this->assign('cfeed', $cfeed);
+		$this->setPageTitle('Categories');
 		return;
 	}
 	
