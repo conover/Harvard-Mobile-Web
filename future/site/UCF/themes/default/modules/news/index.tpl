@@ -29,8 +29,7 @@
 		</a></li>
 		{/foreach}
 		{/block}
-		{block name="news_items_end"}
-		{/block}
+		{block name="news_items_end"}{/block}
 	</ul>
 </div>
 {/block}
