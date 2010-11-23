@@ -52,7 +52,7 @@ Campus_Map.controls = function() {
 	
 	var options = document.createElement('a');
 	options.title = 'Click to set the view map options';
-	options.innerHTML = "options";
+	options.innerHTML = "Locate";
 	options.href = Campus_Map.urls['map-options'];
 	controls.appendChild(options);
   	
@@ -76,7 +76,7 @@ Campus_Map.gmap = function(){
 		zoom: 16,
 		center: myLatlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		mapTypeControl: true,
+		mapTypeControl: false,
 		mapTypeControlOptions: {
 			style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
 		}

@@ -1,10 +1,10 @@
 #map-options { padding:22px 0 0 0; }
 #map-options a { 
-	display:block; padding:5px 10px 5px 17px; 
+	display:block; padding:7px 10px 5px 22px; 
 	text-decoration:none; 
 	color:#5577bb; 
-	background:white url(/modules/media/img/google-plus.png) no-repeat; 
-	background-position:7px 9px;
+	background:white url(/modules/media/img/google-search.png) no-repeat; 
+	background-position:5px 6px;
 	border:1px solid #bbb; 
 	border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px;; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; 
@@ -12,6 +12,6 @@
 
 .gloss form { margin:0; padding:0; }
 .gloss input { margin:0; padding:0; font-size:17px; }
-.gloss li.search { padding-top:5px; padding-bottom:11px; }
-.gloss li input[type="search"] {  }
-#no-results { font-weight:bold; padding:10px 0 0 20px; margin:0; font-size:22px;  }
+.gloss li { border-width:0; }
+
+#no-results { font-weight:bold; padding:0 0 8px 20px; margin:0; font-size:22px;  }
