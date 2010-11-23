@@ -11,7 +11,10 @@
 body > div { background:none; }
 h1, h2 { color: #fff; margin:0; }
 ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
-.gloss { padding: 7px; margin: 0; }
+#body{padding: 0 7px;}
+.gloss{
+	margin: 0; padding: 0;
+}
 .gloss li { 
 	padding-top:10px; padding-bottom:10px;
 	line-height:21px; height:21px;

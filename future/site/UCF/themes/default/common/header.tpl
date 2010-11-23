@@ -65,7 +65,7 @@
 		{block name="additionalHeadTags"}{/block}
 	</head>
 	
-	<body>
+	<body class="{$platform} {$pagetype}">
 		{block name="header"}
 		<div id="Header">
 			{if isset($topItem)}
