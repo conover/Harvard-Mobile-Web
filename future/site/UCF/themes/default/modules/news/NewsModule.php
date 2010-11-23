@@ -40,17 +40,24 @@ class NewsModule extends Module{
 	}
 	
 	function indexPage(){
-		$feeds = array();
-		foreach($this->feeds as $index => $feed){
-			$feeds[$index] = array(
-				'title' => $feed['TITLE'],
-				'feed'  => $feed['BASE_URL'],
-				'slug'  => $feed['SLUG'],
-				'url'   => $this->buildURL($feed['SLUG']. '/feed'),
-			);
+		$slug = $this->getSlugFromURL();
+		if (!$slug){
+			$slug = $GLOBALS['siteConfig']->getVar('NEWS_DEFAULT_FEED');
+			$this->redirectTo($slug.'/index');
 		}
 		
-		$this->assign('feeds', $feeds);
+		$feed     = $this->getFeedBySlug($slug);
+		$articles = $feed->items();
+		
+		foreach($articles as $index=>$article){
+			$article->url = $this->buildURL('article', array(
+				'id' => $article->getGUID(),
+			));
+			$articles[$index] = $article;
+		}
+		$this->assign('articles', $articles);
+		$this->assign('feed', $feed);
+		$this->setPageTitle($feed->title);
 		return;
 	}
 	
@@ -66,20 +73,18 @@ class NewsModule extends Module{
 		}
 	}
 	
-	function feedPage(){
-		$slug     = $this->getSlugFromURL();
-		$feed     = $this->getFeedBySlug($slug);
-		$articles = $feed->items();
-		
-		foreach($articles as $index=>$article){
-			$article->url = $this->buildURL('article', array(
-				'id' => $article->getGUID(),
-			));
-			$articles[$index] = $article;
+	function feedsPage(){
+		$feeds = array();
+		foreach($this->feeds as $index => $feed){
+			$feeds[$index] = array(
+				'title' => $feed['TITLE'],
+				'feed'  => $feed['BASE_URL'],
+				'slug'  => $feed['SLUG'],
+				'url'   => $this->buildURL($feed['SLUG'].'/index'),
+			);
 		}
-		$this->assign('articles', $articles);
-		$this->assign('feed', $feed);
-		$this->setPageTitle($feed->title);
+		
+		$this->assign('feeds', $feeds);
 		return;
 	}
 	
@@ -99,10 +104,11 @@ class NewsModule extends Module{
 	function initializeForPage(){
 		switch($this->page){
 			case 'index':
+				#List stories of feed, if feed is not defined, redirect to default
 				$this->indexPage();
 				break;
-			case 'feed':
-				$this->feedPage();
+			case 'feeds':
+				$this->feedsPage();
 				break;
 			case 'article':
 				$this->articlePage();

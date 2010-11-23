@@ -2,14 +2,18 @@
 
 {block name="body"}
 	<header class="news-header">
-		{block name="news_header"}<h1>News</h1>{/block}
+		{block name="news_header"}<h1>{$feed->title}</h1>{/block}
 	</header>
 	<ul class="news-items gloss">
-		{block name="news_items_start"}{/block}
+		{block name="news_items_start"}
+		<li class="selector arrow">
+			<a href="feeds.php">Other Categories</a>
+		</li>
+		{/block}
 		{block name="news_items"}
-		{foreach $feeds as $feed}
-		<li class="news-item feed arrow">
-			<a href="{$feed.url}">{$feed.title}</a>
+		{foreach $articles as $article}
+		<li class="news-item article arrow">
+			<a href="{$article->url}">{$article->getTitle()}</a>
 		</li>
 		{/foreach}
 		{/block}

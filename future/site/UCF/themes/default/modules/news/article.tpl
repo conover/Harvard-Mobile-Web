@@ -2,7 +2,7 @@
 
 {block name="body"}
 	<header class="news-header">
-		<h1><a href="feed.php">Return to {$feed->title}</a></h1>
+		<h1><a href="./index.php">Return to {$feed->title}</a></h1>
 	</header>
 	<article class="content">
 		<h1>{$article->getTitle()}</h1>
