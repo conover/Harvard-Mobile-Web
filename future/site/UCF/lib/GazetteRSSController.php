@@ -84,6 +84,14 @@ class GazetteRSScontroller extends RSSDataController
 
 class GazetteRSSItem extends RSSItem
 {
+	public function getProperty($key, $default=null){
+		if (array_key_exists($key, $this->properties)){
+			if (isset($this->properties[$key]->value)){
+				return $this->properties[$key]->value;
+			}
+		}
+		return $default;
+	}
 	public function addElement(RSSElement $element)
 	{
 		$name = $element->name();

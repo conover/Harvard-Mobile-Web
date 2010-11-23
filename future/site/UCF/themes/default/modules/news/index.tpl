@@ -1,6 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
+<div id="news">
 	<header class="news-header">
 		{block name="news_header"}<h1>{$feed->title}</h1>{/block}
 	</header>
@@ -31,4 +32,5 @@
 		{block name="news_items_end"}
 		{/block}
 	</ul>
+</div>
 {/block}

@@ -1,15 +1,21 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-	<header class="news-header">
-		<h1><a href="./index.php">Return to {$feed->title}</a></h1>
-	</header>
-	<article class="content">
-		<h1>{$article->getTitle()}</h1>
-		<section>
-			{$article->getContent()}
+<div id="story">
+	<article>
+		<header class="news-header">
+			<ul class="gloss">
+				<li><a href="../index.php">Return to {$feed->title} Category</a></li>
+				<li><a href="{$article->getLink()}">Read Original</a></li>
+			</ul>
+			<h1>{$article->getTitle()}</h1>
+		</header>
+		
+		<section class="content">
+		{$article->getContent()}
+		<p>Written by {$article->getProperty('DC:CREATOR', 'Unknown')} on {$article->getPubDate()}</p>
 		</section>
-		<a href="{$article->getLink()}">Read original</a>
 	</article>
+</div>
 {/block}
 
