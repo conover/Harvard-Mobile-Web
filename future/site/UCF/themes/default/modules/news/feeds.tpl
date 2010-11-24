@@ -15,3 +15,5 @@
 </li>
 {/foreach}
 {/block}
+
+{block name="news_items_end"}{/block}

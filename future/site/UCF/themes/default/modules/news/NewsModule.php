@@ -46,8 +46,18 @@ class NewsModule extends Module{
 			$this->redirectTo($slug.'/index');
 		}
 		
+		$page  = $this->getArg('page', 0);
+		$limit = $GLOBALS['siteConfig']->getVar('NEWS_ITEMS_PER_PAGE');
+		$start = $page * $limit;
+		
 		$feed     = $this->getFeedBySlug($slug);
-		$articles = $feed->items();
+		$articles = $feed->items($start, $limit, $total);
+		
+		$page = array(
+			'hasNext' => ($start + $limit < $total),
+			'hasPrev' => ($start > 0),
+			'current' => $page,
+		);
 		
 		foreach($articles as $index=>$article){
 			$article->url = $this->buildURL('article', array(
@@ -56,6 +66,9 @@ class NewsModule extends Module{
 			$article->image   = $article->getImage();
 			$articles[$index] = $article;
 		}
+		
+		
+		$this->assign('page', $page);
 		$this->assign('articles', $articles);
 		$this->assign('feed', $feed);
 		$this->setPageTitle($feed->title);

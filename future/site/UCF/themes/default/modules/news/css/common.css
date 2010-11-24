@@ -1,6 +1,7 @@
 .news-header{margin: 10px 0 20px 0; text-align: center;}
 .news-header h1{margin: 10px 0;}
 .news-header h1 a{background: none;}
+
 .news-header ul,
 .news-items{padding: 0; margin: 0;}
 .news-header ul li,
@@ -8,6 +9,8 @@
 .news-header ul li a,
 .news-items li a{white-space: normal; font-size: 14px;}
 .news-items .selector{margin-bottom: 35px;}
+.news-items li.last{margin-bottom: 35px;}
+
 .news-item article .image{float: right;}
 .news-item article .image img {width: 75px; border: 1px solid #3C3C3C;}
 .news-item article .title{margin-right: 85px;}

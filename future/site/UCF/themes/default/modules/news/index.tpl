@@ -13,7 +13,7 @@
 		{/block}
 		{block name="news_items"}
 		{foreach $articles as $article}
-		<li class="news-item article arrow"><a href="{$article->url}">
+		<li class="{if $article@last}last {/if}news-item article arrow"><a href="{$article->url}">
 			<article{if !$article->image} class="no-image"{/if}>
 				{if $article->image}
 				<div class="image">
@@ -29,7 +29,18 @@
 		</a></li>
 		{/foreach}
 		{/block}
-		{block name="news_items_end"}{/block}
+		{block name="news_items_end"}
+		{if $page.hasNext}
+		<li class="next arrow">
+			<a href="?page={$page.current + 1}">Next page&hellip;</a>
+		</li>
+		{/if}
+		{if $page.hasPrev}
+		<li class="prev arrow-back">
+			<a href="?page={$page.current - 1}">Previous page&hellip;</a>
+		</li>
+		{/if}
+		{/block}
 	</ul>
 </div>
 {/block}
