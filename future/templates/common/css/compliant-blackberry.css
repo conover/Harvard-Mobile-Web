@@ -1,0 +1,54 @@
+#homegrid {
+	margin: 0 auto;
+	padding: 0;
+	margin-left: 2px;
+}
+#homegrid div {
+	position: relative;
+	width: 70px;
+	height: 92px;
+	margin: 0 1px;
+	padding: 0;
+	border: 0;
+	float: left;
+	font-size: 12px;
+	line-height: 1.1em;
+	text-align: center;		
+	vertical-align: top;
+	display: block;
+}
+#homegrid a {	
+	display: block;
+	color: #333;
+	text-decoration: none;
+	border: none;
+	padding: 8px 5px;
+}
+#homegrid a img {
+	margin-bottom: 1px;
+	border: none;
+}
+#homegrid div.separator {
+	display: block;
+	width: 100%;
+	height: 10px;
+	clear:both;
+	margin: 0;
+	padding: 0;
+	float: none;
+}
+
+#outerSpringboardContainer {
+    height: 200px;
+}
+
+.forminput {
+	border: 1px solid #666;
+	position: absolute;
+	left: 0;
+	right: 34px;
+	height: 30px;
+	padding: 4px 6px;
+	-webkit-appearance:textfield;
+	-webkit-border-radius: 5px;
+}
