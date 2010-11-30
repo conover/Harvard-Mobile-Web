@@ -11,9 +11,9 @@
 body > div { background:none; }
 h1, h2 { color: #fff; margin:0; }
 ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
-#body{padding: 0 7px;}
+#body{}
 .gloss{
-	margin:5px 0 10px 0; padding: 0;
+	margin:5px 0 10px 0; padding: 0 7px;
 }
 .gloss li { 
 	padding-top:10px; padding-bottom:10px;
@@ -113,6 +113,26 @@ h1 a {
 	padding:10px 0 7px; }
 h1 a span {color:white; }
 input[type="submit"]:hover { cursor:pointer; }
+
+
+#text {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#333333)); 
+	background: -moz-linear-gradient(top,  #4c4d4e,  #333333);
+	min-height:50px;
+	padding:12px;
+	color:white;
+}
+#text h2 { padding:3px 0 0 5px; font-size:22px; }
+#text h3 { border-bottom:1px dotted #FFD203;  color:white; padding-bottom:6px; margin-bottom:18px; }
+#text .block { 
+	background:black;
+	padding:12px 12px 12px 24px; margin:12px 0;
+	border: 1px solid black; 
+	border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#161616)); 
+	background: -moz-linear-gradient(top,  #333,  #161616);
+}
+#text .block h3 { margin-left: -12px; }
 
 /******************************************************************************\
     Google Things
