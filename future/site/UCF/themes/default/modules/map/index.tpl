@@ -19,7 +19,7 @@ Campus_Map.showGeoLoc = function(){
 	var map = Campus_Map.map;
 	var html = '{strip}
 		<div class="locate">
-			<h3>Your location.</h3>
+			<h3>You Are Here.</h3>
 			<span>
 				&raquo; <a onclick="Campus_Map.directions()">Directions to campus</a><br>
 				&raquo; Directions to location:
