@@ -133,6 +133,7 @@ input[type="submit"]:hover { cursor:pointer; }
 	background: -moz-linear-gradient(top,  #333,  #161616);
 }
 #text .block h3 { margin-left: -12px; }
+#text .block p { padding:8px 0; margin:0; }
 
 /******************************************************************************\
     Google Things
