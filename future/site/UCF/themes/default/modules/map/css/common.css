@@ -15,3 +15,14 @@
 .gloss li { border-width:0; }
 
 #no-results { font-weight:bold; padding:0 0 8px 20px; margin:0; font-size:22px;  }
+
+.locate { color: #444; line-height:22px;}
+.locate h3 { font-size:16px; padding:0; margin:0; color:#444; }
+.locate span { font-size:14px; display:block; padding-top:5px;}
+.locate a { color: #5577BB; text-decoration:none;  }
+.locate a:hover, .locate a:active { border-bottom:1px dotted #5577BB; cursor:pointer; }
+.locate input { padding:0; line-height:18px; width:140px; font-size:14px; }
+.locate input[type='submit'] { background: url("/media/img/google-search.png") no-repeat 4px 3px; text-indent:-500px; width:25px; height:25px; border:1px solid #bbb; border-radius:8px; -moz-border-radius: 6px; -webkit-border-radius: 6px; margin-left:3px; }
+.locate form { padding:0 0 5px 15px; margin:0; }
+
+.gmnoprint { color:#444; }

@@ -8,10 +8,14 @@ require_once realpath(LIB_DIR.'/Module.php');
 class MapModule extends Module {
   protected $id = 'map';
   protected $location = false;
+  protected $locate_me = false;
+  protected $directions = false;
+  
   
   /****************************************************************************\
     Constructor
       - sets the correct page
+      - initializes private vars based on URL
   \****************************************************************************/
   function __construct($page='index', $args=array()){
     
@@ -23,11 +27,21 @@ class MapModule extends Module {
     if(preg_match('/location\/([\w-_]+)$/', $url, $matches)){
       $this->location = $matches[1];
     }
+    if($this->location !== false && stripos($url, 'me+location')){
+      $this->directions = true;
+    }
+    
+    // tell map to ask for locaiton (append /me to url)
+    if(preg_match('/\/me$/', $url)){
+      $this->locate_me = true;
+    }
     
     $map_pages = array(
       'options',
       'search',
+      'directions'
     );
+    
     if(!in_array($this->page, $map_pages)){
       $this->page = 'index';
     }
@@ -44,12 +58,12 @@ class MapModule extends Module {
         $this->map();
         break;
       
-      case 'building':
-        $this->map();
-        break;
-      
       case 'search':
         $this->search();
+        break;
+      
+      case 'directions':
+        $this->search(true);
         break;
         
     }
@@ -59,8 +73,8 @@ class MapModule extends Module {
   /****************************************************************************\
     Search - passes query to the Campus Map
   \****************************************************************************/
-  protected function search() {
-    
+  protected function search( $directions=false ) {
+    $this->assign('directions', $directions);
     $this->page = 'options';
     
     $results = array();
@@ -88,47 +102,29 @@ class MapModule extends Module {
   \****************************************************************************/
   protected function map() {
     
+    // add script to header
+    // the only variable exposed to the window should be Campus_Map
+    // rest of the js is in theme/map/index template
     $this->addExternalJavascript('http://maps.google.com/maps/api/js?sensor=false');
-    
     $url = URL_PREFIX . 'map/options/';
-    $js=<<<JS
-    
-      // the only variable exposed to the window should be Campus_Map
-      var Campus_Map = { };
-      Campus_Map.device = "$this->platform";
-      Campus_Map.urls   = {
-        "map-options" : "$url"
-      }
-JS;
-    
-    $this->addInlineJavascript($js);
-    $this->addInlineJavascriptFooter("Campus_Map.gmap();");
+    $this->assign('options_url', $url);
+    $this->addInlineJavascript('var Campus_Map = { };');
     
     if($this->location){
-      
-      // TODO: move to config/web/map.ini
+      // TODO: move url to config/web/map.ini
       $map_api = 'http://webcom.dev.smca.ucf.edu/map/json/location/';
       $url = $map_api . urlencode($this->location);
       $contents = file_get_contents($url);
       $loc = utf8_encode($contents);
-      
-      $js=<<<JS
-      
-      (function(){
-        var map = Campus_Map.map;
-        var loc = $loc;
-        var latlng = new google.maps.LatLng( loc.coord_x , loc.coord_y );
-        map.panTo(latlng);
-        map.panBy(0, -100);
-        var infoWindow = new google.maps.InfoWindow({
-          content: loc.info,
-          position: latlng
-        });
-        infoWindow.open(map);
-      })();
-JS;
-      $this->addInlineJavascriptFooter($js);
-      
+      $this->assign('location', $loc);
+      $this->assign('location_id', $this->location);
+      if($this->directions) $this->assign('directions', true);
+    }
+    
+    if($this->locate_me){
+      $url = URL_PREFIX . 'map/directions/';
+      $this->assign('directions_url', $url);
+      $this->assign('locate_me', true);
     }
     
   }
