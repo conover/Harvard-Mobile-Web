@@ -71,7 +71,7 @@ class EventsModule extends Module {
 	function initializeForPage(){
 		$list = $this->getArg('list');
 		switch($list){
-			case 'index':
+			default:
 			case 'today':
 				$this->todayPage();
 				break;
