@@ -75,6 +75,12 @@ a:hover { color:#FFD203; }
 .focal { background:#3C3C3C; border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
 
 
+.tabs{padding: 0; margin: 0;}
+.tabs li{display: inline-block; font-size: 16px;}
+.tabs li.first{margin-left: 2px;}
+.tabs li{
+	-webkit-border-bottom-left-radius: 0; -webkit-border-bottom-right-radius: 0;
+	-moz-border-radius-bottomleft: 0; -moz-border-radius-bottomright: 0;}
 /******************************************************************************\
   New Styles
 \******************************************************************************/

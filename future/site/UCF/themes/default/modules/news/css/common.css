@@ -16,6 +16,8 @@
 .news-item article .title{margin-right: 85px;}
 .news-item article.no-image .title{margin-right: 0;}
 
-#story  h1{margin: 20px 0;}
-#story .content img{max-width: 100%;}
-#story .content {overflow: hidden; padding: 10px; background:#3C3C3C; border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;}
+#text {background: none;}
+#text  h1{margin: 20px 0;}
+#text .content img{max-width: 100%;}
+#text .content {}
+#text h1 { border-bottom:1px dotted #FFD203;  color:white; padding-bottom:6px; margin-bottom:18px; }
