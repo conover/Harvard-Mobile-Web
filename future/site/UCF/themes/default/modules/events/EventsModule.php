@@ -50,12 +50,22 @@ class EventsModule extends Module {
 	}
 	
 	function upcomingPage(){
-		$q_str = date($this->options['EVENTS_UPCOMING']);
+		$q_str = $this->options['EVENTS_UPCOMING'];
 		$url   = $this->options["EVENTS_URL"].'?'.$q_str.'&'.$this->rss_arg;
 		$feed  = $this->getFeed($url);
 		
 		$this->assign('events', $feed->items());
 		$this->setPageTitle('Upcoming Events');
+	}
+	
+	function searchPage(){
+		$q     = $this->getArg('q');
+		$q_str = str_replace('%q', $q, $this->options['EVENTS_SEARCH']);
+		$url   = $this->options['EVENTS_URL'].'?'.$q_str.'&'.$this->rss_arg;
+		$feed  = $this->getFeed($url);
+		
+		$this->assign('events', $feed->items());
+		$this->setPageTitle('Search UCF Events');
 	}
 	
 	function initializeForPage(){
@@ -70,6 +80,9 @@ class EventsModule extends Module {
 				break;
 			case 'upcoming':
 				$this->upcomingPage();
+				break;
+			case 'search':
+				$this->searchPage();
 				break;
 		}
 		
