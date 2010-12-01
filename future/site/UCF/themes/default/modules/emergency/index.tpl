@@ -15,6 +15,7 @@
 			<dt>Parking Services</dt><dd>407-823-5812</dd>
 			<dt>Health Services Information</dt><dd>407-823-2701</dd>
 		</dl>
+		<div class="clear">&nbsp;</div>
 	</div>
 	
 	<div class="block">
@@ -23,6 +24,7 @@
 			<dt>Main Office</dt><dd>407-823-4663</dd>
 			<dt>Maintenance</dt><dd>407-823-5587</dd>
 		</dl>
+		<div class="clear">&nbsp;</div>
 	</div>
 	
 	<div class="block">
