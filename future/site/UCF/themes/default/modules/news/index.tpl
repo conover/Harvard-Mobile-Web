@@ -8,7 +8,7 @@
 	<ul class="news-items gloss">
 		{block name="news_items_start"}
 		<li class="selector arrow">
-			<a href="feeds.php">Other Categories</a>
+			<a href="feeds/">Other Categories</a>
 		</li>
 		{/block}
 		{block name="news_items"}
