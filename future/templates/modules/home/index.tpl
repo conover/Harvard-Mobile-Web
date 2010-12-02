@@ -10,7 +10,9 @@
   {/block}
 {/capture}
 
-{include file="findInclude:common/header.tpl" customHeader=$banner scalable=false}
+{block name="header"}
+    {include file="findInclude:common/header.tpl" customHeader=$banner scalable=false}
+{/block}
 
 {block name="homeSearch"}
   {include file="findInclude:common/search.tpl" placeholder="Search "|cat:$SITE_NAME}  
