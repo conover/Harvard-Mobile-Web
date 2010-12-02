@@ -1,7 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<div id="people-search">
+<div id="people-search" class="text">
 	<h2>Search for people at UCF</h2>
 	<form action="{$searchURL}" method="get"><div>
 		<input type="search" name="{$queryName}" id="people-search-input" />

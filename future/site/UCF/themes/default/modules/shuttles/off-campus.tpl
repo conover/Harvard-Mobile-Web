@@ -1,7 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<div id="text">
+<div class="text">
 	<h2>Off-campus shuttle routes</h2>
 	<div class="block">
 		<p>There are 11 regular, fixed shuttle routes between the UCF campus and the following 17 off-campus apartment complexes and Central Florida Research Park.</p>
@@ -16,6 +16,7 @@
 			<tr><td>3</td><td>The Edge/Arbour Apts. <span>(On-Campus Stop at Lynx Transit Center)</span></td></tr>
 			<tr><td>4</td><td>Alafaya Club/Campus Crossings/Pegasus Pointe <span>(On-Campus Stop at Millican Hall)</span></td></tr>
 			<tr><td>5</td><td>Village at Science Dr. <span>(On-Campus Stop at Lynx Transit Center)</span></td></tr>
+			<tr><td>6</td><td>Northgate Lakes/Tivoli <span>(On-Campus Stop at HPA/Engr Bldgs)</span></td></tr>
 			<tr><td>7</td><td>Collegiate Village Inn (CVI) <span>(On-Campus Stop at Lynx Transit Center)</span></td></tr>
 			<tr><td>8</td><td>Riverwind of Alafaya <span>(On-Campus Stop at Student Union)</span></td></tr>
 			<tr><td>9</td><td>Knights Landing/Partnership II/ <br>Orlando Tech Center/University Towers <span>(On-Campus Stop at Health Center & Public Affairs LOT C1)</span></td></tr>

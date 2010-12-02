@@ -13,7 +13,7 @@
 	<li><a href="?list=upcoming">Upcoming</a></li>
 </ul>
 
-<div id="text">
+<div class="text">
 {if count($events)}
 {foreach $events as $event}
 	<div class="block">
