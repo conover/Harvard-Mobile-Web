@@ -1,26 +1,31 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<div id="people-search" class="text">
+<div id="people-search">
 	<h2>Search for people at UCF</h2>
-	<form action="{$searchURL}" method="get"><div>
-		<input type="search" name="{$queryName}" id="people-search-input" />
-		<input type="submit" value="Search" />
-	</div></form>
+	<ul class="gloss">
+		<li class="search">
+			<form action="{$searchURL}" method="get">
+				<div><input type="search" name="{$queryName}" id="people-search-input" /></div>
+				<input type="submit" value="Search" />
+			</form>
+		</li>
+	</ul>
+	
 	
 	{if $query}
-	<p>Found {count($listing)} results for '{$query}':</p>
-	{if $listing}
-	<ul id="results">
-		{foreach $listing as $result}
-		<li>
-			{include file="findInclude:modules/{$moduleID}/result.tpl" result=$result}
-		</li>
-		{/foreach}
-	</ul>
-	{else}
-	<p class="no-result">Sorry, we found no results for '{$query}'.</p>
-	{/if}
+		{if $listing}
+		<h3>Found {count($listing)} results for '{$query}':</h3>
+		<ul id="results">
+			{foreach $listing as $result}
+			<li>
+				{include file="findInclude:modules/{$moduleID}/result.tpl" result=$result}
+			</li>
+			{/foreach}
+		</ul>
+		{else}
+		<h3>No results for '{$query}'</h3>
+		{/if}
 	{/if}
 </div>
 {/block}

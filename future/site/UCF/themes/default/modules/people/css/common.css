@@ -1,22 +1,24 @@
 @charset "utf-8";
 
-#people-search h2 {margin-top: 15px; text-align: center;}
+h2 { text-align: center; }
+h3 { margin-bottom:0; padding-top:7px; }
+ul li { padding:7px; }
+article {
+	padding:12px 12px 12px 24px;
+	background:black; border: 1px solid black; 
+	border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#252525), to(#161616)); 
+	background: -moz-linear-gradient(top,  #252525,  #161616); }
+article header{}
+article header h1{font-size: 20px; margin: 0;}
 
-input[type="search"]{width: 89%;}
-input[type="submit"]{width: 10%;}
+article footer {border-top: 1px solid #5C5D5E; margin-top: 10px; padding-top: 5px; font-size: 16px;}
+article footer .phone{width: 175px; float: left;}
+article footer .email{margin-left: 175px;}
 
-.directory-item{}
-.directory-item header{}
-.directory-item header h1{font-size: 20px; margin: 0;}
+article .organization{color: #c8c8c8; font-weight: normal; margin-top: 10px; font-size: 14px;}
+article .building{color: #c8c8c8; font-weight: normal; font-size: 14px;}
 
-.directory-item footer{border-top: 1px solid #5C5D5E; margin-top: 10px; padding-top: 5px; font-size: 16px;}
-.directory-item footer .phone{width: 175px; float: left;}
-.directory-item footer .email{margin-left: 175px;}
-
-.directory-item .organization{color: #c8c8c8; font-weight: normal; margin-top: 10px; font-size: 14px;}
-.directory-item .building{color: #c8c8c8; font-weight: normal; font-size: 14px;}
-
-.no-result{}
 .end{clear: both;}
 
 #results{padding: 0; margin: 0; list-style-type: none;}

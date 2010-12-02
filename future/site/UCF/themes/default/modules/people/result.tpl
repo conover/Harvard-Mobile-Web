@@ -1,4 +1,4 @@
-<article class="directory-item">
+<article>
 	<header>
 		<h1>{$result.name}</h1>
 	</header>

@@ -10,10 +10,6 @@
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px;; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; 
 }
 
-.gloss form { margin:0; padding:0; }
-.gloss input { margin:0; padding:0; font-size:17px; }
-.gloss li { border-width:0; }
-
 #no-results { font-weight:bold; padding:0 0 8px 20px; margin:0; font-size:22px;  }
 
 .locate { color: #444; line-height:22px;}
