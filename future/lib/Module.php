@@ -231,7 +231,7 @@ abstract class Module {
       $argString = http_build_query($args);
     }
     
-    return "$page.php".(strlen($argString) ? "?$argString" : "");
+    return "$page/".(strlen($argString) ? "?$argString" : "");
   }
 
   protected function redirectToModule($id, $args=array()) {
