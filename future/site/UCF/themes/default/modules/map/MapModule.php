@@ -4,7 +4,6 @@
 * Web Communications - Fall 2010
 */
 
-require_once realpath(LIB_DIR.'/Module.php');
 class MapModule extends Module {
   protected $id = 'map';
   protected $location = false;
