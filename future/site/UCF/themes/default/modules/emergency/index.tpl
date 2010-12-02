@@ -2,7 +2,7 @@
 
 {block name="body"}
 	
-<div id="text">
+<div class="text">
 	<h2>Emergency Contact Numbers</h2>
 	
 	<div class="block">

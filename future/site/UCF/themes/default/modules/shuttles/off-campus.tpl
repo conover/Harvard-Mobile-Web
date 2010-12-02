@@ -1,7 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<div id="text">
+<div class="text">
 	<h2>Off-campus shuttle routes</h2>
 	<div class="block">
 		<p>There are 11 regular, fixed shuttle routes between the UCF campus and the following 17 off-campus apartment complexes and Central Florida Research Park.</p>

@@ -1,7 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<div id="text">
+<div class="text">
 	<h2>College of Medicine shuttle</h2>
 	<div class="block" id="med">
 		<h3>Fall 2010 - Spring 2011 schedule</h3>
