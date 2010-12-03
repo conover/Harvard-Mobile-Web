@@ -16,7 +16,7 @@
 	{if $query}
 		{if $listing}
 		<h3>Found {count($listing)} results for '{$query}':</h3>
-		<ul id="results">
+		<ul class="articles">
 			{foreach $listing as $result}
 			<li>
 				{include file="findInclude:modules/{$moduleID}/result.tpl" result=$result}

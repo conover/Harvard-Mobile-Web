@@ -1,23 +1,5 @@
-.news-header{margin: 10px 0 20px 0; text-align: center;}
-.news-header h1{margin: 10px 0;}
-.news-header h1 a{background: none;}
-
-.news-header ul,
-.news-items{padding: 0; margin: 0;}
-.news-header ul li,
-.news-items li{height: auto; padding-right: 40px;}
-.news-header ul li a,
-.news-items li a{white-space: normal; font-size: 14px;}
-.news-items .selector{margin-bottom: 35px;}
-.news-items li.last{margin-bottom: 35px;}
-
-.news-item article .image{float: right;}
-.news-item article .image img {width: 75px; border: 1px solid #3C3C3C;}
-.news-item article .title{margin-right: 85px;}
-.news-item article.no-image .title{margin-right: 0;}
-
-#text {background: none;}
-#text  h1{margin: 20px 0;}
-#text .content img{max-width: 100%;}
-#text .content {}
-#text h1 { border-bottom:1px dotted #FFD203;  color:white; padding-bottom:6px; margin-bottom:18px; }
+.pad h1 { padding-bottom:8px; }
+.pad .wp-caption { display:block; float:left; line-height:100%; }
+.pad .wp-caption img { margin-bottom:4px; }
+.pad .wp-caption p { font-size:12px; font-family:georgia; color:#A9AAA9;}
+.pad img { float:left; margin-right:12px; margin-bottom:12px; }

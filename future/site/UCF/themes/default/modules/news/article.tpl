@@ -3,9 +3,9 @@
 {block name="body"}
 <ul class="gloss">
 	<li class="arrow-back"><a href="../index.php">Return to {$feed->title} Category</a></li>
-	<li><a href="{$article->getLink()}">Read Original</a></li>
+	<li class="arrow"><a href="{$article->getLink()}">Read Original</a></li>
 </ul>
-<div class="text">
+<div class="pad">
 	<article class="block">
 		<h1>{$article->getTitle()}</h1>
 		<section class="content">
