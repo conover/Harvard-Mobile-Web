@@ -5,7 +5,7 @@
 	<h2>Search for people at UCF</h2>
 	<ul class="gloss">
 		<li class="search">
-			<form action="{$searchURL}" method="get">
+			<form action="" method="get">
 				<div><input type="search" name="{$queryName}" value="{$query}" id="people-search-input" /></div>
 				<input type="submit" value="Search" />
 			</form>

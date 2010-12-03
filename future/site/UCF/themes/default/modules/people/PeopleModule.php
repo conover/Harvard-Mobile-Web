@@ -70,16 +70,13 @@ class PeopleModule extends Module{
 		$queryName = 'q';
 		$idName    = 'id';
 		$query     = $this->getArg($queryName, '');
-		$this->assign('searchURL', $this->buildURL('search'));
+		$this->assign('searchURL', $this->buildURL('./search'));
 		$this->assign('queryName', $queryName);
 		$this->assign('idName', $idName);
 		$this->assign('query', $query);
 		
 		switch ($this->page){
 			case 'index':
-				$this->redirectTo('search');
-				break;
-			case 'search':
 				$this->assign('query', $query);
 				
 				if (!empty($this->args[$queryName])){
