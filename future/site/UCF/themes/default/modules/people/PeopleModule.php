@@ -56,22 +56,14 @@ class PeopleModule extends Module{
 			'query' => $query,
 		));
 		
-		$url = implode(array($service, '?', $query_str));
-		$xml = $this->fetchHTTP($url);
+		$url  = implode(array($service, '?', $query_str));
+		$json = $this->fetchHTTP($url);
 		
-		$libxml  = libxml_use_internal_errors(True);
-		$results = array();
-		try{
-			$xml    = new SimpleXMLElement($xml);
-			$status = $xml->resultCode;
-			foreach($xml->MODULE_RESULT as $result){
-				$results[] = $this->resultToArray($result);
-			}
-		}catch(Exception $e){
-			error_log('Uncaught exception when converting result from web service: '.$e);
+		$response = json_decode($json);
+		if ($response == null){
+			return array();
 		}
-		libxml_use_internal_errors($libxml);
-		return $results;
+		return $response->results;
 	}
 	
 	function initializeForPage(){
