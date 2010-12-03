@@ -6,7 +6,7 @@
 	<ul class="gloss">
 		<li class="search">
 			<form action="{$searchURL}" method="get">
-				<div><input type="search" name="{$queryName}" id="people-search-input" /></div>
+				<div><input type="search" name="{$queryName}" value="{$query}" id="people-search-input" /></div>
 				<input type="submit" value="Search" />
 			</form>
 		</li>
@@ -16,7 +16,7 @@
 	{if $query}
 		{if $listing}
 		<h3>Found {count($listing)} results for '{$query}':</h3>
-		<ul id="results">
+		<ul class="articles">
 			{foreach $listing as $result}
 			<li>
 				{include file="findInclude:modules/{$moduleID}/result.tpl" result=$result}

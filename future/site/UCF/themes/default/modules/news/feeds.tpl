@@ -1,19 +1,12 @@
-{extends file="findExtends:modules/$moduleID/index.tpl"}
+{extends file="findExtends:common/base.tpl"}
 
-{block name="news_header"}<h1>Choose a category to read</h1>{/block}
+{block name="body"}
+	<h2 class="c">Choose a category to read</h1>
 
-{block name="news_items_start"}
-<li class="selector arrow-back">
-	<a href="./index.php">Return to {$cfeed->title}</a>
-</li>
+	<ul class="gloss">
+		<li class="arrow-back"><a href="../">Return to {$cfeed->title}</a></li>
+		{foreach $feeds as $feed}
+		<li class="arrow"><a href="../../{$feed.url}">{$feed.title}</a></li>
+		{/foreach}
+	</ul>
 {/block}
-
-{block name="news_items"}
-{foreach $feeds as $feed}
-<li class="news-item feed arrow-back">
-	<a href="../{$feed.url}">{$feed.title}</a>
-</li>
-{/foreach}
-{/block}
-
-{block name="news_items_end"}{/block}

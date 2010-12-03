@@ -2,24 +2,206 @@
 	UCF Web Communications
 	Summer 2010
 \******************************************************************************/
-@import url('/modules/media/-/jqtouch-1.0-beta/themes/jqt/theme.min.css');
 
 /* html5 elements */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+
+/* from jq touch */
+body {
+    background: #000;
+    color: #ddd;
+}
+h1, h2 {
+    font: bold 18px Helvetica;
+    text-shadow: rgba(255,255,255,.2) 0 1px 1px;
+    color: #000;
+    margin: 10px 20px 5px;
+}
+
+h1 + ul, h2 + ul, h3 + ul, h4 + ul, h5 + ul, h6 + ul {
+    margin-top: 0;
+}
+ul {
+    color: #aaa;
+    border: 1px solid #333333;
+    font: bold 18px Helvetica;
+    padding: 0;
+    margin: 15px 10px 17px 10px;
+}
+
+ul li {
+    color: #666;
+    border-top: 1px solid #333;
+    border-bottom: #555858;
+    list-style-type: none;
+    padding: 10px 10px 10px 10px;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+    overflow: hidden;
+}
+ul li.arrow {
+    background-image: url(img/chevron.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+ul li.forward {
+    background-image: url(img/chevron_circle.png), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+/* @group Forms */
+ul.form li {
+    padding: 7px 10px;
+}
+ul.form li.error {
+    border: 2px solid red;
+}
+ul.form li.error + li.error {
+    border-top: 0;
+}
+ul li input[type="text"], ul li input[type="password"], ul li textarea, ul li select {
+    color: #777;
+    background: transparent url(../.png);
+    border: 0;
+    font: normal 17px Helvetica;
+    padding: 0;
+    display: inline-block;
+    margin-left: 0px;
+    width: 100%;
+    -webkit-appearance: textarea;
+}
+ul li textarea {
+    height: 120px;
+    padding: 0;
+    text-indent: -2px;
+}
+ul li select {
+    text-indent: 0px;
+    background: transparent url(img/chevron.png) no-repeat right center;
+    -webkit-appearance: textfield;
+    margin-left: -6px;
+    width: 104%;
+}
+ul li input[type="checkbox"], ul li input[type="radio"] {
+    margin: 0;
+    padding: 10px 10px;
+}
+ul li input[type="checkbox"]:after, ul li input[type="radio"]:after {
+    content: attr(title);
+    font: 17px Helvetica;
+    display: block;
+    width: 246px;
+    color: #777;
+    margin: -12px 0 0 17px;
+}
+/* @end */
+/* @group Mini Label */
+ul li small {
+    color: #64c114;
+    font: 17px Helvetica;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    width: 23%;
+    float: right;
+    padding: 0;
+}
+ul li.arrow small {
+    padding: 0 15px;
+}
+ul li small.counter {
+    font-size: 17px;
+    line-height: 13px;
+    font-weight: bold;
+    background: rgba(0,0,0,.15);
+    color: #fff;
+    -webkit-border-radius: 11px;
+    padding: 4px 10px 5px 10px;
+    display: block;
+    width: auto;
+    margin-top: -22px;
+    -webkit-box-shadow: rgba(255,255,255,.1) 0 1px 0;
+}
+ul li.arrow small.counter {
+    margin-right: 15px;
+}
+/* @end */
+/* @group Individual */
+ul.individual {
+    border: 0;
+    background: none;
+    clear: both;
+    overflow: hidden;
+    padding-bottom: 3px;
+    -webkit-box-shadow: none;
+}
+ul.individual li {
+    background: #4c4d4e;
+    border: 1px solid #333;
+    font-size: 14px;
+    text-align: center;
+    -webkit-border-radius: 8px;
+    -webkit-box-sizing: border-box;
+    width: 48%;
+    float: left;
+    display: block;
+    padding: 11px 10px 14px 10px;
+    -webkit-box-shadow: rgba(0,0,0,.2) 1px 1px 3px;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#404142));
+}
+ul.individual li + li {
+    float: right;
+}
+ul.individual li a {
+    color: #fff;
+    line-height: 16px;
+    margin: -11px -10px -14px -10px;
+    padding: 11px 10px 14px 10px;
+    -webkit-border-radius: 8px;
+}
+/* @end */
+/* @group Toggle */
+.toggle {
+    width: 94px;
+    position: relative;
+    height: 27px;
+    display: block;
+    overflow: hidden;
+    float: right;
+}
+.toggle input[type="checkbox"]:checked {
+    left: 0px;
+}
+.toggle input[type="checkbox"] {
+    -webkit-appearance: textarea;
+    -webkit-border-radius: 5px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-transition: left .15s;
+    background-color: transparent;
+    background: #fff url(img/on_off.png) 0 0 no-repeat;
+    border: 0;
+    height: 27px;
+    left: -55px;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 149px;
+}
 
 /******************************************************************************\
   jQTouch Overrides & Extensions
 \******************************************************************************/
 body > div { background:none; }
 h1, h2 { color: #fff; margin:0; }
-ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
 #body{}
 .gloss{
 	margin:10px 0; padding: 0 7px; border:0;
 }
+.gloss li a { display:block; padding-top:11px; padding-bottom:9px; line-height:21px; height:21px;}
 .gloss li { 
-	padding-top:11px; padding-bottom:9px;
-	line-height:21px; height:21px;
+	padding-top:0; padding-bottom:0;
 	margin: 5px 0 0 0;
 	color:#BCBCBC;
 	background: #4c4d4e;
@@ -74,24 +256,12 @@ ul li a, li.img a + a { padding-top:10px; padding-bottom:10px; }
 
 
 /******************************************************************************\
-  MIT mobile
-\******************************************************************************/
-.focal { background:#3C3C3C; border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
-
-
-.tabs{padding: 0; margin: 0;}
-.tabs li{display: inline-block; font-size: 16px;}
-.tabs li.first{margin-left: 2px;}
-.tabs li{
-	-webkit-border-bottom-left-radius: 0; -webkit-border-bottom-right-radius: 0;
-	-moz-border-radius-bottomleft: 0; -moz-border-radius-bottomright: 0;}
-/******************************************************************************\
   General Styles
 \******************************************************************************/
 html { margin:0; padding:0; }
 body { margin: 0; padding: 0; background-color: #333; font-family: Helvetica; color: #ddd; }
 
-a { color:white; }
+a { color:white; outline:none; text-decoration:none; }
 a:hover { color:#FFD203; }
 a:active { outline:none; }
 .clear { clear:both; height:1px; overflow:hidden; }
@@ -107,6 +277,22 @@ h1 a {
 h1 a span {color:white; }
 h2 { padding:12px 0 0 9px; font-size:22px; margin:0; }
 h3 { color:white; padding:0 7px; }
+
+.c { text-align:center; }
+.pad { padding-left:7px; padding-right:7px; }
+
+/******************************************************************************\
+  MIT mobile
+\******************************************************************************/
+.focal { background:#3C3C3C; border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
+
+
+.tabs{padding: 0; margin: 0;}
+.tabs li{display: inline-block; font-size: 16px;}
+.tabs li.first{margin-left: 2px;}
+.tabs li{
+	-webkit-border-bottom-left-radius: 0; -webkit-border-bottom-right-radius: 0;
+	-moz-border-radius-bottomleft: 0; -moz-border-radius-bottomright: 0;}
 
 
 /******************************************************************************\
@@ -128,7 +314,7 @@ h3 { color:white; padding:0 7px; }
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4c4d4e), to(#333333)); 
 	background: -moz-linear-gradient(top,  #4c4d4e,  #333333);
 	min-height:50px; padding:12px 7px 0; color:white; }
-.text h2 { padding:3px 0 0 0; text-shadow: 0 2px 3px rgba(0, 0, 0, .5); }
+.text h2 { padding:3px 0 0 0; text-shadow: 0 2px 3px rgba(0, 0, 0, .5); text-align:center; }
 .text h2 + p { margin-top:4px; }
 .text h2 + .block { margin-top:12px; }
 .text h3 { border-bottom:1px dotted #FFD203;  color:white; padding-bottom:6px; margin-bottom:18px; }
@@ -155,6 +341,22 @@ h3 { color:white; padding:0 7px; }
 .text tr th:first-child { padding-right:10px; }
 .text .block table { width:auto; }
 .text .c td { text-align:center; }
+
+.articles { padding: 0; margin: 0; list-style-type: none; border:0; }
+.articles li { padding:0 7px 7px; }
+article {
+	padding:12px;
+	background:black; border: 1px solid black; line-height:120%;
+	border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#252525), to(#161616)); 
+	background: -moz-linear-gradient(top,  #252525,  #161616); }
+article header { padding-bottom:5px; }
+section { font-weight:normal; color:white; color:#D7D7D7; font-size:16px; }
+section .img { display:inline; float:left; }
+section .img img { margin:0 5px 5px 0; padding-top:0; border:1px solid black; }
+section a:hover img { border-color:#FFD203; }
+article footer { clear:both; }
+section a { color:white;}
 
 /******************************************************************************\
     Google Things

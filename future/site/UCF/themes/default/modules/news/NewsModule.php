@@ -43,7 +43,7 @@ class NewsModule extends Module{
 		$slug = $this->getSlugFromURL();
 		if (!$slug){
 			$slug = $GLOBALS['siteConfig']->getVar('NEWS_DEFAULT_FEED');
-			$this->redirectTo($slug.'/index');
+			$this->redirectTo($slug);
 		}
 		
 		$page  = $this->getArg('page', 0);
@@ -51,6 +51,11 @@ class NewsModule extends Module{
 		$start = $page * $limit;
 		
 		$feed     = $this->getFeedBySlug($slug);
+		if(!$feed){
+			#raise 404
+			$this->redirectToModule('error', array('code'=>'notfound', 'url'=>$_SERVER['REQUEST_URI']));
+			return;
+		}
 		$articles = $feed->items($start, $limit, $total);
 		
 		$page = array(
@@ -71,18 +76,19 @@ class NewsModule extends Module{
 		$this->assign('page', $page);
 		$this->assign('articles', $articles);
 		$this->assign('feed', $feed);
+		$this->page = 'index';
 		$this->setPageTitle($feed->title);
 		return;
 	}
 	
 	function getSlugFromURL(){
 		$suburl  = $GLOBALS['parts'][1];
-		$matched = preg_match('/(.*)\/([^\/]+).php/i', $suburl, $matches);
+		$matched = preg_match('/([^\/]+)\//i', $suburl, $matches);
 		if ($matched){
 			$slug = $matches[1];
 			return $slug;
 		}else{
-			error_log('Couldn\'t parse feed slug from url: "{$suburl}".');
+			error_log("Couldn't parse feed slug from url: '$suburl'");
 			return null;
 		}
 	}
@@ -96,7 +102,7 @@ class NewsModule extends Module{
 				'title' => $feed['TITLE'],
 				'feed'  => $feed['BASE_URL'],
 				'slug'  => $feed['SLUG'],
-				'url'   => $this->buildURL($feed['SLUG'].'/index'),
+				'url'   => $this->buildURL($feed['SLUG']),
 			);
 		}
 		
@@ -121,10 +127,6 @@ class NewsModule extends Module{
 	
 	function initializeForPage(){
 		switch($this->page){
-			case 'index':
-				#List stories of feed, if feed is not defined, redirect to default
-				$this->indexPage();
-				break;
 			case 'feeds':
 				$this->feedsPage();
 				break;
@@ -132,10 +134,8 @@ class NewsModule extends Module{
 				$this->articlePage();
 				break;
 			default:
-				#raise 404
-				header("HTTP/1.0 404 Not Found");
-				exit();
-				break;
+				#List stories of feed, if feed is not defined, redirect to default
+				$this->indexPage();
 		}
 	}
 } // END class 
