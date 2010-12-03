@@ -6,7 +6,7 @@
 	<ul class="gloss">
 		<li class="search">
 			<form action="{$searchURL}" method="get">
-				<div><input type="search" name="{$queryName}" id="people-search-input" /></div>
+				<div><input type="search" name="{$queryName}" value="{$query}" id="people-search-input" /></div>
 				<input type="submit" value="Search" />
 			</form>
 		</li>
