@@ -59,7 +59,7 @@ class EventsModule extends Module {
 	}
 	
 	function searchPage(){
-		$q     = $this->getArg('q');
+		$q     = $this->getArg('q', '');
 		$q_str = str_replace('%q', $q, $this->options['EVENTS_SEARCH']);
 		$url   = $this->options['EVENTS_URL'].'?'.$q_str.'&'.$this->rss_arg;
 		$feed  = $this->getFeed($url);
