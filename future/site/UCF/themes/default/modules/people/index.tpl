@@ -7,7 +7,8 @@
 		<li class="search">
 			<form action="" method="get">
 				<div><input type="search" name="{$queryName}" value="{$query}" id="people-search-input" /></div>
-				<input type="submit" value="Search" />
+				<input type="submit" value="Search">
+				box?
 			</form>
 		</li>
 	</ul>
