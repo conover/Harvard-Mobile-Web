@@ -49,23 +49,33 @@ class FaqModule extends UCFModule {
 	}
 	
 	function answerPage(){
-		$url = $this->getArg('url', '');
-		$q   = $this->getArg('q', '');
+		$url   = $this->getArg('url', '');
+		$q     = $this->getArg('q', '');
+		$url   = str_replace('std_adp.php', 'prnt_adp.php', $url);
+		$page  = $this->fetchHTTP($url);
 
-		$url  = str_replace('std_adp.php', 'prnt_adp.php', $url);
-		$page = $this->fetchHTTP($url);
-		$top  = "<\!-- Incident Text ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>- -->";
-		$bot  = "<\!-- Custom Fields \(if any\) ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>- -->";
-		$page = preg_match("/{$top}(.*){$bot}/is", $page, $match);
-		if (count($match)){
-			$content = $match[1];
-		}else{
-			$content = null;
+		$quote = "['\"]"; #Double or single quotes
+		
+		#Find question
+		$open  = "<td[\s]+class={$quote}textcell{$quote}[\s]+id={$quote}desc{$quote}>";
+		$close = "<\/td>";
+		$found = preg_match("/{$open}(.*){$close}/isU", $page, $match);
+		if ($found){
+			$question = $match[1];
+		}
+		
+		#Find answer
+		$open  = "<td[\s]+class={$quote}textcell{$quote}[\s]+id={$quote}soln{$quote}>";
+		$close = "<\/td>";
+		$found = preg_match("/{$open}(.*){$close}/is", $page, $match);
+		if ($found){
+			$answer = $match[1];
 		}
 		
 		$this->assign('url', $url);
 		$this->assign('q', $q);
-		$this->assign('content', $content);
+		$this->assign('question', $question);
+		$this->assign('answer', $answer);
 		
 	}
 	

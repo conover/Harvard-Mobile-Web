@@ -1,12 +1,16 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<div>
+<div id="faqs">
 	<h2>FAQs</h2>
-	<form action="" method="get"><div>
-		<input type="search" placeholder="Ask a question" name="q" />
-		<input type="submit" value="Search" />
-	</div></form>
+	<ul class="gloss">
+		<li class="search">
+			<form action="" method="get"><div>
+				<input type="search" placeholder="Ask a question" name="q" id="faq-search-input" />
+				<input type="submit" value="Search" />
+			</div></form>
+		</li>
+	</ul>
 	{if $items}
 	<ul class="gloss">
 	{foreach $items as $item}
@@ -22,5 +26,3 @@
 	{/if}
 </div>
 {/block}
-http://ucf.custhelp.com/cgi-bin/ucf.cfg/php/enduser/std_adp.php?p_faqid=549&p_created=1015631783
-http://ucf.custhelp.com/cgi-bin/ucf.cfg/php/enduser/prnt_adp.php?p_faqid=549&p_created=1015631783
