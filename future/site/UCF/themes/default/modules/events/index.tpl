@@ -1,11 +1,15 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<form action="" method="get">
-	<input type="hidden" name="list" value="search" />
-	<input type="search" placeholder="Search UCF Events" name="q" />
-	<input type="submit" value="Search" />
-</form>
+<ul class="gloss">
+	<li class="search">
+		<form method="get">
+			<input type="hidden" name="list" value="search" />
+			<div><input type="search" placeholder="Search UCF Events" name="q" {if $search_q}value="{$search_q}"{/if}></div>
+			<input type="submit" value="Search" />
+		</form>
+	</li>
+</ul>
 
 <ul class="gloss tabs">
 	<li class="first"><a href="?list=today">Today</a></li>
@@ -19,7 +23,7 @@
 	<div class="block">
 		<h3>
 			{$event->getTitle()}
-			<span class="sub">Starts {date('F jS, Y', strtotime($event->getPubDate()))}</span>
+			<span>Starts {date('F jS, Y', strtotime($event->getPubDate()))}</span>
 		</h3>
 		<div class="description">
 		{$event->getDescription()}

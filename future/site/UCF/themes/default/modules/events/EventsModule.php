@@ -65,6 +65,7 @@ class EventsModule extends UCFModule {
 		$feed  = $this->getFeed($url);
 		
 		$this->assign('events', $feed->items());
+		$this->assign('search_q', $q);
 		$this->setPageTitle('Search UCF Events');
 	}
 	

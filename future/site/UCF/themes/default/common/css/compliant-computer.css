@@ -21,6 +21,7 @@
 .webkit .gloss li.search { margin-bottom:0; }
 
 .firefox .gloss li { line-height:23px; }
+.firefox .tabs { height:46px; }
 
 /******************************************************************************\
   IE
