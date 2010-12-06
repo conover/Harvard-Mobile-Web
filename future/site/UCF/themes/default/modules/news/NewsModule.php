@@ -138,5 +138,15 @@ class NewsModule extends Module{
 				$this->indexPage();
 		}
 	}
-} // END class 
-?>
+} // END class
+
+
+// Strip Image Dimensions
+// Helper function called in template.  
+// When width and height are set with html attributes, 
+// it becomes difficult to style with CSS and breaks layout
+function strip_img_dimensions($str=""){
+	$str = preg_replace('/<img([^>]+)width="[^"]+"([^>]*)>/i',  '<img$1$2>', $str);
+	$str = preg_replace('/<img([^>]+)height="[^"]+"([^>]*)>/i', '<img$1$2>', $str);
+	return $str;
+}

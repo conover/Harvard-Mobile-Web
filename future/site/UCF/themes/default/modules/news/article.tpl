@@ -9,7 +9,7 @@
 	<article class="block">
 		<h1>{$article->getTitle()}</h1>
 		<section class="content">
-			{$article->getContent()}
+			{strip_img_dimensions($article->getContent())}
 			<p>Written by {$article->getProperty('DC:CREATOR', 'Unknown')} on {$article->getPubDate()}</p>
 		</section>
 	</article>
