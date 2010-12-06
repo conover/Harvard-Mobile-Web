@@ -7,7 +7,7 @@
  * @package default
  * @author Jared Lang
  **/
-class PeopleModule extends Module{
+class PeopleModule extends UCFModule{
 	protected $id = 'people';
 	
 	/**
@@ -25,23 +25,6 @@ class PeopleModule extends Module{
 			$array[$key] = $value;
 		}
 		return $array;
-	}
-	
-	/**
-	 * Retreives data pointed to by URL.
-	 *
-	 * @return string
-	 * @author Jared Lang
-	 **/
-	function fetchHTTP($url){
-		$timeout = $GLOBALS['siteConfig']->getVar('PEOPLE_SEARCH_TIMEOUT');
-		$options = stream_context_create(array(
-			'http' => array(
-				'timeout' => (string)$timeout,
-			),
-		));
-		$data = file_get_contents($url, false, $options);
-		return $data;
 	}
 	
 	/**

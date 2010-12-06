@@ -6,7 +6,7 @@
  * @author Douglas Beck
  * @author Jared Lang
  */
-class EventsModule extends Module {
+class EventsModule extends UCFModule {
 	protected $id = 'events';
 	
 	function initialize(){
