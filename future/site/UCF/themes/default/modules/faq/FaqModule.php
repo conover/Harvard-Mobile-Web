@@ -26,7 +26,7 @@ class FaqModule extends UCFModule {
 		
 	}
 	
-	function getSlug(){
+	function getCategory(){
 		$suburl  = $GLOBALS['parts'][1];
 		$matched = preg_match('/([^\/]+)\//i', $suburl, $matches);
 		if ($matched){
@@ -35,13 +35,18 @@ class FaqModule extends UCFModule {
 			error_log("Couldn't parse feed slug from url: '$suburl'");
 			$slug = null;
 		}
-		$this->slug = $slug;
+		if ($slug != null and array_key_exists($slug, $this->categories)){
+			$this->category = $this->categories[$slug];
+		}else{
+			$this->category = null;
+		}
+		$this->assign('category', $category);
 	}
 	
 	function initialize(){
 		$this->options    = $GLOBALS['siteConfig']->getSection($this->id);
 		$this->getCategories();
-		$this->getSlug();
+		$this->getCategory();
 	}
 	
 	function sluggify($text){
@@ -88,7 +93,7 @@ class FaqModule extends UCFModule {
 		$url     = $this->options['FAQ_URL'].$this->options['FAQ_SEARCH'];
 		$qstring = str_replace('%q', urlencode($q), $this->options['FAQ_SEARCH_ARG']);
 		
-		if ($this->slug != null and array_key_exists($this->slug, $this->categories)){
+		if ($this->category != null and array_key_exists($this->slug, $this->categories)){
 			$id = $this->categories[$this->slug]['id'];
 			$qstring .= '&'.str_replace('%category', $id, $this->options['FAQ_CAT_ARG']);
 		}
