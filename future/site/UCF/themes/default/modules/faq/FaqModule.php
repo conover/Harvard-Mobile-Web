@@ -8,7 +8,8 @@
  */
 class FaqModule extends UCFModule {
 	
-	protected $id = 'faq';
+	protected $id         = 'faq';
+	protected $categories = array();
 	
 	function getFeed($url){
 		$dummy = array(
@@ -26,12 +27,42 @@ class FaqModule extends UCFModule {
 	}
 	
 	function initialize(){
-		$this->options = $GLOBALS['siteConfig']->getSection($this->id);
+		$this->options    = $GLOBALS['siteConfig']->getSection($this->id);
+		$this->getCategories();
+	}
+	
+	function getCategories(){
+		$url     = $this->options['FAQ_URL'].$this->options['FAQ_CATS'];
+		$content = $this->fromCache($url);
+		
+		$glue_re      = "[,\s]+";
+		$id_regex     = "(?P<id>[\d]+)";
+		$name_re      = "['\"](?P<name>[^'\"]+)['\"]";
+		$full_id_re   = "['\"](?P<long_id>[^'\"]+)['\"]";
+		$full_name_re = "['\"](?P<long_name>[^'\"]+)['\"]";
+		$category_re  = "_do_search\([\s]*{$id_regex}{$glue_re}{$full_id_re}{$glue_re}{$full_name_re}{$glue_re}{$name_re}[\s]*\)";
+		$found        = preg_match_all("/{$category_re}/", $content, $matches);
+		
+		if (!$found){return;}
+		$categories = array();
+		foreach ($matches[0] as $key=>$match){
+			$categories[] = array(
+				'id'        => $matches['id'][$key],
+				'name'      => $matches['name'][$key],
+				'_long_id'   => $matches['long_id'][$key],
+				'_long_name' => $matches['long_name'][$key],
+				
+			);
+		}
+		$categories = array_filter($categories, create_function('$c', '
+			return count(explode(",", $c["_long_id"])) < 2;
+		'));
+		$this->categories = $categories;
 	}
 	
 	function search($q){
-		$url     = $this->options['FAQ_URL'];
-		$qstring = str_replace('%q', urlencode($q), $this->options['FAQ_QUERY']);
+		$url     = $this->options['FAQ_URL'].$this->options['FAQ_SEARCH'];
+		$qstring = str_replace('%q', urlencode($q), $this->options['FAQ_SEARCH_ARG']);
 		$feed    = $this->getFeed($url.'?'.$qstring);
 		return $feed->items();
 	}
@@ -52,7 +83,7 @@ class FaqModule extends UCFModule {
 		$url   = $this->getArg('url', '');
 		$q     = $this->getArg('q', '');
 		$url   = str_replace('std_adp.php', 'prnt_adp.php', $url);
-		$page  = $this->fetchHTTP($url);
+		$page  = $this->fromCache($url);
 
 		$quote = "['\"]"; #Double or single quotes
 		
