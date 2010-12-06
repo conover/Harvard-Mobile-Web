@@ -2,20 +2,17 @@
 
 {block name="body"}
 <div>
-	<h2>UCF Help</h2>
+	<h2>FAQs</h2>
 	<form action="" method="get"><div>
 		<input type="search" placeholder="Ask a question" name="q" />
 		<input type="submit" value="Search" />
 	</div></form>
 	{if $items}
-	<ul id="text">
+	<ul class="gloss">
 	{foreach $items as $item}
-		<li class="block">
-			<h3 class="question">{$item->getTitle()}</h3>
-			<div class="answer">
-				I am a robot
-			</div>
-		</li>
+		<li class="arrow"><a href="answer.php?url={urlencode($item->getLink())}&amp;q={$q}">
+			{$item->getTitle()}
+		</a></li>
 	{/foreach}
 	</ol>
 	{else if $q}
@@ -25,3 +22,5 @@
 	{/if}
 </div>
 {/block}
+http://ucf.custhelp.com/cgi-bin/ucf.cfg/php/enduser/std_adp.php?p_faqid=549&p_created=1015631783
+http://ucf.custhelp.com/cgi-bin/ucf.cfg/php/enduser/prnt_adp.php?p_faqid=549&p_created=1015631783

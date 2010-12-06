@@ -6,7 +6,7 @@
  * @author Douglas Beck
  * @author Jared Lang
  */
-class FaqModule extends Module {
+class FaqModule extends UCFModule {
 	
 	protected $id = 'faq';
 	
@@ -36,7 +36,7 @@ class FaqModule extends Module {
 		return $feed->items();
 	}
 	
-	function initializeForPage(){
+	function indexPage(){
 		$q = $this->getArg('q', '');
 		if ($q != ''){
 			$items = $this->search($q);
@@ -45,6 +45,39 @@ class FaqModule extends Module {
 		}else{
 			$this->assign('items', array());
 			$this->assign('q', null);
+		}
+	}
+	
+	function answerPage(){
+		$url = $this->getArg('url', '');
+		$q   = $this->getArg('q', '');
+
+		$url  = str_replace('std_adp.php', 'prnt_adp.php', $url);
+		$page = $this->fetchHTTP($url);
+		$top  = "<\!-- Incident Text ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>- -->";
+		$bot  = "<\!-- Custom Fields \(if any\) ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>- -->";
+		$page = preg_match("/{$top}(.*){$bot}/is", $page, $match);
+		if (count($match)){
+			$content = $match[1];
+		}else{
+			$content = null;
+		}
+		
+		$this->assign('url', $url);
+		$this->assign('q', $q);
+		$this->assign('content', $content);
+		
+	}
+	
+	function initializeForPage(){
+		switch($this->page){
+			default:
+			case 'index':
+				$this->indexPage();
+				break;
+			case 'answer':
+				$this->answerPage();
+				break;
 		}
 		
 		
