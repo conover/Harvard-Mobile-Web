@@ -7,7 +7,6 @@
     {/capture}
 {/block}
 
-
 {block name="homeFooter"}
 <br clear="both"/>
 <table border="0"><tr>
@@ -22,4 +21,4 @@
     </a>
     <br />
   </div>
-{/block}
+{/block} 

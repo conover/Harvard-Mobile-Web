@@ -5,11 +5,11 @@
 {/block}
 
 {block name="header"}
-    {include file="findInclude:common/header-compliant-bbplus.tpl" customHeader=$banner scalable=false}
+    {include file="findInclude:common/header-compliant-blackberry.tpl" customHeader=$banner scalable=false}
 {/block}
 
-{block name="homeSearch"}
-  {include file="findInclude:common/search-compliant-bbplus.tpl" placeholder="Search "|cat:$SITE_NAME}
+{block name="searchsection"}
+  {include file="findInclude:common/search-compliant-blackberry.tpl" placeholder="Search "|cat:$SITE_NAME}
 {/block}
 
 {block name="moduleItems"}

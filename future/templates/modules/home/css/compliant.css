@@ -56,10 +56,3 @@ form {
 	margin: 0 0 -7px 0;
 }
 
-/* Added to support compliant bbplus devices. May have to move this out. */
-/* It's responding to changes to this, but not in the way I want. May have to fall 
-back to a table for bbplus. */
-.forminput {
-	width: 500px;
-	left: 40%;    
-}

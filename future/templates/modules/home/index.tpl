@@ -14,7 +14,7 @@
     {include file="findInclude:common/header.tpl" customHeader=$banner scalable=false}
 {/block}
 
-{block name="homeSearch"}
+{block name="searchsection"}
   {include file="findInclude:common/search.tpl" placeholder="Search "|cat:$SITE_NAME}  
 {/block}
 
