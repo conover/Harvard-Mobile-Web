@@ -20,7 +20,9 @@
 	{/foreach}
 	</ol>
 	{else if $q}
-	<p>No help found for '{$q}'.</p>
+	<div class="text">
+		<p class="block">No help found for '{$q}'.</p>
+	</div>
 	{else}
 		
 	{/if}
