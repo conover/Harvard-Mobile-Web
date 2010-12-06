@@ -26,9 +26,31 @@ class FaqModule extends UCFModule {
 		
 	}
 	
+	function getSlug(){
+		$suburl  = $GLOBALS['parts'][1];
+		$matched = preg_match('/([^\/]+)\//i', $suburl, $matches);
+		if ($matched){
+			$slug = $matches[1];
+		}else{
+			error_log("Couldn't parse feed slug from url: '$suburl'");
+			$slug = null;
+		}
+		$this->slug = $slug;
+	}
+	
 	function initialize(){
 		$this->options    = $GLOBALS['siteConfig']->getSection($this->id);
 		$this->getCategories();
+		$this->getSlug();
+	}
+	
+	function sluggify($text){
+		$slug = $text;
+		$slug = strtolower($slug);
+		$slug = preg_replace('/[\s]+/', ' ', $slug);
+		$slug = str_replace(array(' ', '.'), array('-', '-'), $slug);
+		$slug = preg_replace('/[^A-Z1-9\s\-]/i', '', $slug);
+		return $slug;
 	}
 	
 	function getCategories(){
@@ -46,9 +68,11 @@ class FaqModule extends UCFModule {
 		if (!$found){return;}
 		$categories = array();
 		foreach ($matches[0] as $key=>$match){
-			$categories[] = array(
-				'id'        => $matches['id'][$key],
-				'name'      => $matches['name'][$key],
+			$slug = $this->sluggify($matches['name'][$key]);
+			$categories[$slug] = array(
+				'id'         => $matches['id'][$key],
+				'name'       => $matches['name'][$key],
+				'slug'       => $slug,
 				'_long_id'   => $matches['long_id'][$key],
 				'_long_name' => $matches['long_name'][$key],
 				
@@ -63,20 +87,31 @@ class FaqModule extends UCFModule {
 	function search($q){
 		$url     = $this->options['FAQ_URL'].$this->options['FAQ_SEARCH'];
 		$qstring = str_replace('%q', urlencode($q), $this->options['FAQ_SEARCH_ARG']);
-		$feed    = $this->getFeed($url.'?'.$qstring);
+		
+		if ($this->slug != null and array_key_exists($this->slug, $this->categories)){
+			$id = $this->categories[$this->slug]['id'];
+			$qstring .= '&'.str_replace('%category', $id, $this->options['FAQ_CAT_ARG']);
+		}
+		
+		$url     = $url.'?'.$qstring;
+		$feed    = $this->getFeed($url);
 		return $feed->items();
 	}
 	
 	function indexPage(){
+		$this->page = 'index';
 		$q = $this->getArg('q', '');
-		if ($q != ''){
-			$items = $this->search($q);
-			$this->assign('items', $items);
-			$this->assign('q', $q);
-		}else{
-			$this->assign('items', array());
-			$this->assign('q', null);
+		$items = $this->search($q);
+		
+		if ($q === ''){
+			$items = array_slice($items, 0, 10);
 		}
+		$this->assign('items', $items);
+		$this->assign('q', $q);
+	}
+	
+	function categoryPage(){
+		$this->assign('categories', $this->categories);
 	}
 	
 	function answerPage(){
@@ -112,12 +147,14 @@ class FaqModule extends UCFModule {
 	
 	function initializeForPage(){
 		switch($this->page){
-			default:
-			case 'index':
-				$this->indexPage();
+			case 'categories':
+				$this->categoryPage();
 				break;
 			case 'answer':
 				$this->answerPage();
+				break;
+			default:
+				$this->indexPage();
 				break;
 		}
 		
