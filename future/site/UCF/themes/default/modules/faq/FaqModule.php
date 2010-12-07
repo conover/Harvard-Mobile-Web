@@ -10,6 +10,13 @@ class FaqModule extends UCFModule {
 	
 	protected $id         = 'faq';
 	protected $categories = array();
+	protected $default_cat= array(
+		'id'         => 0,
+		'name'       => 'All Categories',
+		'slug'       => 'all-categories',
+		'_long_id'   => '',
+		'_long_name' => '',
+	);
 	
 	function getFeed($url){
 		$dummy = array(
@@ -29,6 +36,7 @@ class FaqModule extends UCFModule {
 	function getCategory(){
 		$suburl  = $GLOBALS['parts'][1];
 		$matched = preg_match('/([^\/]+)\//i', $suburl, $matches);
+		
 		if ($matched){
 			$slug = $matches[1];
 		}else{
@@ -71,7 +79,7 @@ class FaqModule extends UCFModule {
 		$found        = preg_match_all("/{$category_re}/", $content, $matches);
 		
 		if (!$found){return;}
-		$categories = array();
+		$categories = array($this->default_cat['slug'] => $this->default_cat);
 		foreach ($matches[0] as $key=>$match){
 			$slug = $this->sluggify($matches['name'][$key]);
 			$categories[$slug] = array(
@@ -104,6 +112,9 @@ class FaqModule extends UCFModule {
 	}
 	
 	function indexPage(){
+		if ($this->category == null){
+			$this->redirectTo($this->default_cat['slug']);
+		}
 		$this->page = 'index';
 		$q = $this->getArg('q', '');
 		$items = $this->search($q);
