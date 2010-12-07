@@ -1,2 +1,12 @@
 h3 .sub{display: block; font-size: 14px; font-weight: normal;}
 .description{margin-bottom: 10px;}
+
+.group a {display: inline-block; margin: 0 10px; font-weight: bold;}
+.group {margin: 1em 0;}
+a.arrow { background-image: url(/media/img/chevron.png);  background-position: right center; background-repeat: no-repeat; }
+a.arrow-back{
+	padding-left: 28px; 
+	background-image: url(/media/img/chevron-flip.png);
+	background-position: left center;
+    background-repeat: no-repeat;
+}

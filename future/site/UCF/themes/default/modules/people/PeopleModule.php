@@ -46,7 +46,9 @@ class PeopleModule extends UCFModule{
 		if ($response == null){
 			return array();
 		}
-		return $response->results;
+		return array_filter($response->results, create_function('$r', '
+			return stripos($r->name, "FAX:") === False;
+		'));
 	}
 	
 	function initializeForPage(){
