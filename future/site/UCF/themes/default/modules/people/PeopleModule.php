@@ -36,7 +36,7 @@ class PeopleModule extends UCFModule{
 	function search($query){
 		$service   = $GLOBALS['siteConfig']->getVar('PEOPLE_SERVICE_URL');
 		$query_str = http_build_query(array(
-			'query' => $query,
+			'search' => $query,
 		));
 		
 		$url  = implode(array($service, '?', $query_str));
