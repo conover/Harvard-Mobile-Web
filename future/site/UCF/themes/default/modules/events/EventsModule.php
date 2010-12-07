@@ -30,22 +30,34 @@ class EventsModule extends UCFModule {
 		
 	}
 	
-	function todayPage(){
-		$q_str = date($this->options['EVENTS_DAY']);
-		$url   = $this->options["EVENTS_URL"].'?'.$q_str.'&'.$this->rss_arg;
+	function getNeighbors($stamp){
+		$next  = $stamp + 86400;
+		$prev  = $stamp - 86400;
+		return array($next, $prev);
+	}
+	
+	
+	function dayPage($day){
+		list($next, $prev) = $this->getNeighbors($day);
+		$q_arg = strftime($this->options['EVENTS_DAY'], $day);
+		$url   = $this->options["EVENTS_URL"].'?'.$q_arg.'&'.$this->rss_arg;
 		$feed  = $this->getFeed($url);
 		
+		$this->assign('next', $next);
+		$this->assign('prev', $prev);
 		$this->assign('events', $feed->items());
+		$this->setPageTitle('Events for '.$day);
+	}
+	
+	function todayPage(){
+		$day = time();
+		$this->dayPage($day);
 		$this->setPageTitle('Today\'s Events');
 	}
 	
 	function tomorrowPage(){
-		$tomorrow = 86400 + time();
-		$q_str = date($this->options['EVENTS_DAY'], $tomorrow);
-		$url   = $this->options["EVENTS_URL"].'?'.$q_str.'&'.$this->rss_arg;
-		$feed  = $this->getFeed($url);
-		
-		$this->assign('events', $feed->items());
+		$day = 86400 + time();
+		$this->dayPage($day);
 		$this->setPageTitle('Tomorrow\'s Events');
 	}
 	
@@ -81,6 +93,13 @@ class EventsModule extends UCFModule {
 				break;
 			case 'upcoming':
 				$this->upcomingPage();
+				break;
+			case 'day':
+				if (!$day = intval($this->getArg('day', null))){
+					todayPage();
+				}else{
+					$this->dayPage($day);
+				}
 				break;
 			case 'search':
 				$this->searchPage();
