@@ -5,5 +5,5 @@
 {/block}
 
 {block name="searchsection"}
-  {include file="findInclude:common/search-compliant-blackberry.tpl" placeholder="Search "|cat:$SITE_NAME}
+  {include file="findInclude:common/search-compliant-blackberry.tpl" placeholder="Search "|cat:$moduleName}
 {/block}
