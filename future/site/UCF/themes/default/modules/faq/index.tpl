@@ -5,16 +5,15 @@
 	<h2>FAQs{if $category}: {$category.name}{/if}</h2>
 	<ul class="gloss">
 		<li class="search">
-			<form action="" method="get"><div>
-				<input type="search" placeholder="Ask a question" name="q" id="faq-search-input" />
-				<input type="submit" value="Search" />
-			</div></form>
+			<form action="" method="get">
+				<div><input type="search" placeholder="Ask a question" name="q" id="faq-search-input" /></div>
+				<input type="submit" value="Search" /></form>
 		</li>
 	</ul>
 	
 	{if $items}
 	<ul class="gloss">
-		<li class="arrow"><a href="./categories.php">Select a different category to search </a></li>
+		<li class="arrow"><a href="categories/">Select a different category to search </a></li>
 	</ul>
 	<ul class="gloss">
 	{foreach $items as $item}
@@ -27,8 +26,6 @@
 	<div class="text">
 		<p class="block">No help found for '{$q}'.</p>
 	</div>
-	{else}
-		
 	{/if}
 </div>
 {/block}
