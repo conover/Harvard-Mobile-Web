@@ -9,223 +9,226 @@ define('TRANSIT_PREDICTION_THRESHOLD', 320); // 5 mins, 20 seconds
 define('TRANSIT_DEFAULT_ROUTE_COLOR', 'b12727'); // shade of red
 
 class TransitConfig {
-  static private $transitConfig = array(
-    array(
-      'routes' => array(
-      ),
-      'agencies' => array(
-        'harvard',
-      ),
-      'live' => array(
-        'class' => 'TranslocTransitDataParser',
-        'args' => array(
-          'hostname' => 'harvard',
-          'routeFieldOverrides' => array(
-            'description' => array(
-              'harvard-5'  => 'Runs 5:40am - 8:40am, Mon-Fri',  // Quad Stadium
-              'harvard-52' => 'Runs 7:40am - 4:33pm, Mon-Fri',  // Quad Express
-              'harvard-7'  => 'Runs 4:20pm - 12:33am, Sat-Sun', // 1636'er
-              'harvard-8'  => 'Runs 4:30pm - 12:37am, Mon-Fri', // River Houses A
-              'harvard-9'  => 'Runs 4:30pm - 12:37am, Mon-Fri', // River Houses B
-              'harvard-51' => 'Runs 4:30pm - 12:37am, Mon-Fri', // River Houses C
-              'harvard-27' => 'Runs 4:45pm - 12:32am, Mon-Fri', // Quad-Yard Express
-              'harvard-29' => 'Runs 7:40am - 4:15pm, Mon-Fri',  // Mather Express
-              'harvard-39' => 'Runs 12:05pm - 4:23pm, Sat-Sun', // Crimson Campus Cruiser
-              'harvard-40' => 'Runs 5:00pm - 7:55pm, Sat-Sun',  // Soldiers Field Park I
-              'harvard-41' => 'Runs 7:20am - 9:50am, Mon-Fri',  // Soldiers Field Park II
-              'harvard-11' => 'Runs 3:50pm - 9:10pm, Mon-Fri',  // Soldiers Field Park III
-              'harvard-13' => 'Runs 3:50pm - 9:10pm, Mon-Fri',  // Soldiers Field Park IV
-              // Extended Overnight
-              'harvard-14' => 'Runs 12:40am - 3:52am, Sun-Thurs Nights; 12:40am - 4:52am, Fri-Sat Nights', 
-            ),
-            'summary' => array(
-              'harvard-5'  => 'River Houses via Harvard Sq',                           // Quad Stadium
-              'harvard-52' => 'Memorial Hall via Harvard Sq',                          // Quad Express
-              'harvard-7'  => 'Quad - Memorial Hall - Lamont - Boylston',              // 1636'er
-              'harvard-8'  => 'Harvard Sq - Quad - Memorial Hall - Lamont',            // River Houses A
-              'harvard-9'  => 'Harvard Sq - Quad - Memorial Hall - Lamont',            // River Houses B
-              'harvard-51' => 'Harvard Sq - Quad - Memorial Hall - Lamont',            // River Houses C
-              'harvard-27' => 'Lamont - Harvard Sq',                                   // Quad-Yard Express
-              'harvard-29' => 'Memorial Hall via Harvard Sq',                          // Mather Express
-              'harvard-39' => 'Quad - Mather House - via Memorial Hall',               // Crimson Campus Cruiser
-              'harvard-40' => 'Quad - Lamont Library - via Harvard Sq',                // Soldiers Field Park I
-              'harvard-41' => 'Business School - Harvard Sq',                          // Soldiers Field Park II
-              'harvard-11' => 'Business School - Harvard Sq - Memorial Hall - Lamont', // Soldiers Field Park III
-              'harvard-13' => 'Business School - Harvard Sq - Memorial Hall - Lamont', // Soldiers Field Park IV
-              'harvard-14' => 'Quad - Mather House via Memorial Hall',                 // Extended Overnight
-            ),
-          ),
-        ),
-      ),
-    ),
-    array(
-      'routes' => array(
-      ),
-      'agencies' => array(
-        'masco',
-      ),
-      'live' => array(
-        'class' => 'TranslocTransitDataParser',
-        'args' => array(
-          'hostname' => 'masco',
-          'routeFieldOverrides' => array(
-            'description' => array(
-              'masco-3'  => 'Runs 6:40am - 11:30pm Mon-Fri, 8:00AM - 10:30pm Sat',  // M2 Cambridge - Coolidge Corner
-              'masco-10' => 'Runs 3:20pm - 8:05pm, Mon-Fri',                        // JFK/UMASS - PM
-              'masco-11' => 'Runs 5:40am - 9:30am, Mon-Fri',                        // M6 Chestnut Hill - AM
-              'masco-12' => 'Runs 2:35pm - 8:30pm, Mon-Fri',                        // M6 Chestnut Hill - PM
-              'masco-13' => 'Runs 6:00am - 9:35am, Mon-Fri',                        // JFK/UMASS - AM
-              'masco-14' => 'Runs 5:30am - 9:50am, Mon-Fri',                        // Ruggles Express - AM
-              'masco-16' => 'Runs 6:40am - 11:30pm, Mon-Fri, 8:00AM - 10:30pm Sat', // M2 Cambridge - Vanderbilt Hall
-              'masco-17' => 'Runs 5:35am - 10:30pm, Mon-Fri',                       // Wentworth Shuttle - AM
-              'masco-18' => 'Runs 2:25pm - 8:55pm, Mon-Fri',                        // Wentworth Shuttle - PM
-              'masco-19' => 'Runs 5:30am - 10:20am, Mon-Fri',                       // Crosstown - AM
-              'masco-20' => 'Runs 2:25pm - 8:55pm, Mon-Fri',                        // Crosstown - PM
-              'masco-25' => 'Runs 2:30pm - 8:45pm, Mon-Fri',                        // Ruggles Express - PM
-              'masco-27' => 'Runs 5:00am - 10:00am, Mon-Fri',                       // Fenway (Beacon/Kenmore) - AM
-              'masco-28' => 'Runs 5:30am - 10:00am, Mon-Fri',                       // Fenway (Lansdowne) - AM
-              'masco-29' => 'Runs 2:30pm - 9:30pm, Mon-Fri',                        // Fenway - PM
-              'masco-30' => 'Runs 10:12am - 2:28pm, Mon-Fri',                       // Fenway Mid-Day
-              'masco-31' => 'Runs 10:12am - 2:28pm, Mon-Fri',                       // Fenway Mid-Day Express
-            ),
-            'summary' => array(
-              'masco-3'  => 'Vanderbilt - Central Sq - Lamont',                     // M2 Cambridge - Coolidge Corner
-              'masco-10' => 'JFK/UMASS Station - Vanderbilt - Brigham Circle',      // JFK/UMASS - PM
-              'masco-11' => 'Chestnut Hill Lot - BIDMC Shapiro',                    // M6 Chestnut Hill - AM
-              'masco-12' => '70 Francis St - Chestnut Hill Lot',                    // M6 Chestnut Hill - PM
-              'masco-13' => 'JFK/UMASS MBTA Station - Vanderbilt - Brigham Circle', // JFK/UMASS - AM
-              'masco-14' => 'Ruggles Station - BIDMC Shapiro',                      // Ruggles Express - AM
-              'masco-16' => 'Vanderbilt - Central Square - Lamont',                 // M2 Cambridge - Vanderbilt Hall
-              'masco-17' => 'Wentworth Lot - Children’s Station',                   // Wentworth Shuttle - AM
-              'masco-18' => 'Vanderbilt - BIDMC Shapiro - Wentworth Lot',           // Wentworth Shuttle - PM
-              'masco-19' => 'Crosstown Garage - BIDMC Shapiro - BIDMC East ',       // Crosstown - AM
-              'masco-20' => 'Vanderbilt - 70 Francis St - Crosstown Garage',        // Crosstown - PM
-              'masco-25' => 'BIDMC West - Ruggles Station',                         // Ruggles Express - PM
-              'masco-27' => 'Beacon Street Lot - Landmark - Brookline Ave/Bank of America', // Fenway (Beacon/Kenmore) - AM
-              'masco-28' => 'Lansdowne Garage - Landmark - Brookline Ave/Bank of America',  // Fenway (Lansdowne) - AM
-              'masco-29' => 'Deaconess Rd - Brookline/BI East - Fenway Garage',     // Fenway - PM
-              'masco-30' => 'BIDMC West - BIDMC East - Kenmore Lot',                // Fenway Mid-Day
-              'masco-31' => 'BIDMC West - BIDMC East - Kenmore Lot',                // Fenway Mid-Day Express
-            ),
-          ),
-        ),
-      ),
-    ),
-    /*array( 
-      'routes' => array(
-        'boston', 
-        'tech', 
-        'saferidebostone', 
-        'saferidebostonw', 
-        'saferidebostonall', 
-        'saferidecambeast', 
-        'saferidecambwest', 
-        'saferidecamball', 
-        'morning', 
-        'midday', 
-        'evening', 
-      ),
-      'agencies' => array(
-        'mit',
-        'saferide',
-        'charles-river',
-      ),
-      'live' => array(
-        'class' => 'NextBusTransitDataParser',
-        'args' => array(
-          'isLoop' => true,
-          'agencyRemap' => array(
-            'saferide' => 'mit',
-          ),
-        ),
-      ),
-      'static' => array(
-        'class' => 'GTFSTransitDataParser',
-        'args' => array(
-          'directory' => 'mit',
-        ),
-      ),
-    ),
-    array( 
-      'routes' => array(
-        '1', 
-        '701', 
-        '747', 
-        '748',
-      ),
-      'agencies' => array(
-        'mbta',
-      ),
-      'live' => array(
-        'class' => 'NextBusTransitDataParser',
-        'args' => array(
-          'isLoop' => false,
-        ),
-      ),
-      'static' => array(
-        'class' => 'GTFSTransitDataParser',
-        'args' => array(
-          'directory' => 'mbta',
-          'routeFieldOverrides' => array(
-            'description' => array(
-              '1'   => 'Runs 5:10am-1:25am Mon-Sat, 6:10am-1:19am Sun',
-              '701' => 'Runs 6am-7:40pm Mon-Fri except holidays',
-              '747' => 'Runs 5:55am-7:15pm Mon-Fri except holidays',
-              '748' => 'Runs 6:35am-7:24pm Mon-Fri except holidays',
-            ),
-          ),
-        ),
-      ),
-    ),*/
-  );
+  private $parsers = array();
+  
+  function __construct($feedConfig) {
+    // Loads an array from an ini file
+    // See config/feeds/transit.ini for more details on the structure of the ini
 
-  static public function get() {
-    return self::$transitConfig;
+    foreach ($feedConfig as $id => $config) {
+      $liveParserClass = null;
+      if (isset($config['live_class']) && $config['live_class']) {
+        $liveParserClass = $config['live_class'];
+      }
+      unset($config['live_class']);
+
+      $staticParserClass = null;
+      if (isset($config['static_class']) && $config['static_class']) {
+        $staticParserClass = $config['static_class'];
+      }
+      unset($config['static_class']);
+
+      $this->addParser($id, $liveParserClass, $staticParserClass);
+      
+      if (isset($config['route_whitelist']) && count($config['route_whitelist'])) {
+        $this->setRouteWhitelist($id, $config['route_whitelist']);
+      }
+      unset($config['route_whitelist']);
+      
+      foreach ($config as $configKey => $configValue) {
+        $parts = explode('_', $configKey);
+        
+        $type = $parts[0];
+        $field = $parts[1];
+        $keyOrVal = end($parts);
+        
+        // skip values so we don't add twice
+        if ($keyOrVal == 'vals') { continue; }  
+        
+        if ($type != 'live' && $type != 'static') {
+          error_log("Warning: unknown transit configuration type '$type'");
+          continue;
+        }
+        
+        $configValueKey = implode('_', array_slice($parts, 0, -1)).'_vals';
+        if (!isset($config[$configValueKey])) {
+          error_log("Warning: transit configuration file missing value '$configValueKey' for key '$configKey'");
+          continue;
+        }
+        
+        $fieldKeys = $configValue;
+        $fieldValues = $config[$configValueKey];
+        
+        switch ($field) {
+          case 'argument': 
+            foreach ($fieldKeys as $i => $fieldKey) {
+              $this->setArgument($id, $type, $fieldKey, $fieldValues[$i]);
+            }
+            break;
+            
+          case 'override':
+            if (count($parts) == 5) {
+              $object = $parts[2];
+              $field = $parts[3];
+              
+              foreach ($fieldKeys as $i => $fieldKey) {
+                $this->setFieldOverride($id, $type, $object, $field, $fieldKey, $fieldValues[$i]);
+              }
+            }
+            break;
+          
+          default:
+            error_log("Warning: unknown transit configuration key '$configKey'");
+            break;
+        }
+      }
+    }
+  }
+  
+  public function addParser($id, $liveParserClass=null, $staticParserClass=null) {
+    if (isset($liveParserClass) || isset($staticParserClass)) {
+      $this->parsers[$id] = array();
+    }
+    if (isset($liveParserClass) && $liveParserClass) {
+      $this->parsers[$id]['live'] = array(
+        'class'     => $liveParserClass,
+        'arguments' => array(),
+        'overrides' => array(),
+      );
+    }
+    if (isset($staticParserClass) && $staticParserClass) {
+      $this->parsers[$id]['static'] = array(
+        'class'     => $staticParserClass,
+        'arguments' => array(),
+        'overrides' => array(),
+      );
+    }
+  }
+  
+  private function setArgument($id, $type, $key, $value) {
+    if (isset($this->parsers[$id], $this->parsers[$id][$type])) {
+      $this->parsers[$id][$type]['arguments'][$key] = $value;
+    }
+  }
+  
+  private function setFieldOverride($id, $type, $object, $field, $key, $value) {
+    if (isset($this->parsers[$id], $this->parsers[$id][$type])) {
+      if (!isset($this->parsers[$id][$type]['overrides'][$object])) {
+        $this->parsers[$id][$type]['overrides'][$object] = array();
+      }
+      if (!isset($this->parsers[$id][$type]['overrides'][$object][$field])) {
+        $this->parsers[$id][$type]['overrides'][$object][$field] = array();
+      }
+      $this->parsers[$id][$type]['overrides'][$object][$field][$key] = $value;
+    }
+  }
+
+  private function setRouteWhitelist($id, $routes) {
+    if (isset($this->parsers[$id])) {
+      $this->parsers[$id]['routes'] = $routes;
+    }
+  }
+  
+  //
+  // Query
+  //
+  
+  private function getParserValueForKey($id, $type, $key, $default) {
+    if (isset($this->parsers[$id], 
+              $this->parsers[$id][$type], 
+              $this->parsers[$id][$type][$key])) {
+              
+      return $this->parsers[$id][$type][$key];
+    } else {
+      return $default;
+    }    
+  }
+  
+  public function getParserIDs() {
+    return array_keys($this->parsers);
+  }
+  
+  public function hasLiveParser($id) {
+    return isset($this->parsers[$id], $this->parsers[$id]['live']);
+  }
+  public function hasStaticParser($id) {
+    return isset($this->parsers[$id], $this->parsers[$id]['static']);
+  }
+  
+  public function getLiveParserClass($id) {
+    return $this->getParserValueForKey($id, 'live', 'class', false);
+  }
+  public function getStaticParserClass($id) {
+    return $this->getParserValueForKey($id, 'static', 'class', false);
+  }
+  
+  public function getLiveParserRouteWhitelist($id) {
+    return $this->getParserValueForKey($id, 'live', 'routes', array());
+  }
+  public function getStaticParserRouteWhitelist($id) {
+    return $this->getParserValueForKey($id, 'static', 'routes', array());
+  }
+  
+  public function getLiveParserArgs($id) {
+    return $this->getParserValueForKey($id, 'live', 'arguments', array());
+  }
+  public function getStaticParserArgs($id) {
+    return $this->getParserValueForKey($id, 'static', 'arguments', array());
+  }
+  
+  public function getLiveParserOverrides($id) {
+    return $this->getParserValueForKey($id, 'live', 'overrides', array());
+  }
+  public function getStaticParserOverrides($id) {
+    return $this->getParserValueForKey($id, 'static', 'overrides', array());
   }
 }
 
 class TransitDataView {
-  private $transitConfig = array();
+  private $config = array();
   private $parsers = array();
-  private $routeIDs = array();
   
-  function __construct() {
-    $this->transitConfig = TransitConfig::get();
-    foreach ($this->transitConfig as $config) {
-      $this->routeIDs = array_merge($this->routeIDs, $config['routes']);
-      if (isset($config['live'])) {
+  function __construct($transitConfig) {
+    $this->config = $transitConfig;
+    
+    foreach ($this->config->getParserIDs() as $parserID) {
+    
+      if ($this->config->hasLiveParser($parserID)) {
+      
         $parser['live'] = TransitDataParser::factory(
-          $config['live']['class'], 
-          $config['agencies'], 
-          $config['routes'], 
-          $config['live']['args']
+          $this->config->getLiveParserClass($parserID), 
+          $this->config->getLiveParserArgs($parserID),
+          $this->config->getLiveParserOverrides($parserID),
+          $this->config->getLiveParserRouteWhitelist($parserID)
         );
       } else {
         $parser['live'] = false;
       }
-      if (isset($config['static'])) {
+      if ($this->config->hasStaticParser($parserID)) {
+      
         $parser['static'] = TransitDataParser::factory(
-          $config['static']['class'], 
-          $config['agencies'], 
-          $config['routes'], 
-          $config['static']['args']
+          $this->config->getStaticParserClass($parserID), 
+          $this->config->getStaticParserArgs($parserID),
+          $this->config->getStaticParserOverrides($parserID),
+          $this->config->getStaticParserRouteWhitelist($parserID)
         );
       } else {
         $parser['static'] = false;
       }
-      $this->parsers[] = $parser;
+      $this->parsers[$parserID] = $parser;
     }
   }
   
   public function refreshLiveParsers() {
-    foreach ($this->transitConfig as $i => $config) {
-      if (isset($config['live'])) {
-        unset($this->parsers[$i]['live']);
-        $this->parsers[$i]['live'] = TransitDataParser::factory(
-          $config['live']['class'], 
-          $config['agencies'], 
-          $config['routes'], 
-          $config['live']['args']
+    foreach ($this->config->getParserIDs() as $parserID) {
+      if ($this->config->hasLiveParser($parserID)) {
+      
+        unset($this->parsers[$parserID]['live']);
+        $this->parsers[$parserID]['live'] = TransitDataParser::factory(
+          $this->config->getLiveParserClass($parserID), 
+          $this->config->getLiveParserArgs($parserID),
+          $this->config->getLiveParserOverrides($parserID),
+          $this->config->getLiveParserRouteWhitelist($parserID)
         );
       }
     }
@@ -622,9 +625,13 @@ class TransitDataView {
 
 
 abstract class TransitDataParser {
-  private $routes   = array();
-  private $stops    = array();
-
+  protected $args = array();
+  protected $whitelist = false;
+  
+  private $routes    = array();
+  private $stops     = array();
+  private $overrides = array();
+  
   static protected $arrows = array(
     '1' => 'n',
     '2' => 'ne',
@@ -636,21 +643,23 @@ abstract class TransitDataParser {
     '8' => 'nw',
   );
   
-  private $args = array();
   
-  public static function factory($class, $agencyIDs, $routeIDs, $args) {
+  public static function factory($class, $args, $overrides, $whitelist) {
     $parser = null;
     $parserClassFile = realpath_exists(LIB_DIR."/$class.php");
     if ($parserClassFile) {
       require_once $parserClassFile;
-      $parser = new $class($agencyIDs, $routeIDs, $args);
+      $parser = new $class($args, $overrides, $whitelist);
     }
     return $parser;
   }
   
-  function __construct($agencyIDs, &$routeIDs, $args) {
+  function __construct($args, $overrides, $whitelist) {
     $this->args = $args;
-    $this->loadData($agencyIDs, &$routeIDs, $args);
+    $this->overrides = $overrides;
+    $this->whitelist = $whitelist ? $whitelist : false;
+    
+    $this->loadData();
   }
   
   protected function updatePredictionData($routeID) {
@@ -667,7 +676,7 @@ abstract class TransitDataParser {
     return array();
   }
   
-  abstract protected function loadData($agencyIDs, $routeIDs, $args);
+  abstract protected function loadData();
   
   abstract protected function isLive();
 
@@ -770,6 +779,8 @@ abstract class TransitDataParser {
       'live'        => $this->isLive(),
     );
     
+    $this->applyStopInfoOverrides($stopID, $stopInfo);
+    
     return $stopInfo;
   }
   
@@ -803,6 +814,8 @@ abstract class TransitDataParser {
       'routes'      => $routePredictions,
     );
     
+    $this->applyStopInfoOverrides($stopID, $stopInfo);
+
     return $stopInfo;
   }
  
@@ -1076,10 +1089,20 @@ abstract class TransitDataParser {
   }
   
   private function applyRouteInfoOverrides($routeID, &$routeInfo) {
-    if (isset($this->args['routeFieldOverrides'])) {
-      foreach ($this->args['routeFieldOverrides'] as $field => $overrides) {
+    if (isset($this->overrides['route'])) {
+      foreach ($this->overrides['route'] as $field => $overrides) {
         if (isset($overrides[$routeID])) {
           $routeInfo[$field] = $overrides[$routeID];
+        }
+      }
+    }
+  }
+  
+  private function applyStopInfoOverrides($stopID, &$stopInfo) {
+    if (isset($this->overrides['stop'])) {
+      foreach ($this->overrides['stop'] as $field => $overrides) {
+        if (isset($overrides[$stopID])) {
+          $stopInfo[$field] = $overrides[$stopID];
         }
       }
     }

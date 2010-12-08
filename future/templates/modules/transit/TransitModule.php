@@ -7,7 +7,6 @@ class TransitModule extends Module {
   protected $id = 'transit';
   
   protected function initialize() {
-
   }
 
   private function timesURL($routeID, $addBreadcrumb=true, $noBreadcrumb=false) {
@@ -39,7 +38,8 @@ class TransitModule extends Module {
   }
 
   protected function initializeForPage() {
-    $view = new TransitDataView();
+    $transitConfig = new TransitConfig($this->loadFeedData());
+    $view = new TransitDataView($transitConfig);
   
     switch ($this->page) {
       case 'index':

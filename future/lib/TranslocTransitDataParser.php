@@ -3,12 +3,6 @@
 require_once('TransitDataParser.php');
 require_once('DiskCache.php');
 
-define('TRANSLOC_SERVICE_URL_FORMAT', 'http://%s.transloc.com/itouch/feeds/%s?');
-define('TRANSLOC_MARKERS_URL_FORMAT', 'http://%s.transloc.com/m/markers/marker.php');
-define('TRANSLOC_ICON_PATH', '/shuttleschedule/shuttle-transloc.png');
-define('BUS_ICON_PATH', '/shuttleschedule/shuttle_stop_pin.png');
-define('TRANSLOC_UPDATE_FREQ', 200);
-
 class TranslocTransitDataParser extends TransitDataParser {
   private static $caches = array();
   private $routeColors = array();
@@ -27,12 +21,14 @@ class TranslocTransitDataParser extends TransitDataParser {
       if ($arrowIndex < 0) { $arrowIndex = 0; }
       $arrowIndex = floor($arrowIndex);
 
-      $feedURL = sprintf(TRANSLOC_MARKERS_URL_FORMAT, $vehicle['agencyID']).'?';
-      $iconURL = $feedURL.http_build_query(array(
+      $iconParams = array(
         'm' => 'bus',
         'c' => $this->getRouteColor($vehicle['routeID']),
         'h' => self::$arrows[$arrowIndex],
-      ));
+      );
+    
+      $iconURL = sprintf($GLOBALS['siteConfig']->getVar('TRANSLOC_MARKERS_URL_FORMAT'), 
+        $vehicle['agencyID']).http_build_query($iconParams);
 
       $query .= '&'.http_build_query(array(
         'markers' => "icon:{$iconURL}|{$vehicle['lat']},{$vehicle['lon']}",
@@ -94,11 +90,9 @@ class TranslocTransitDataParser extends TransitDataParser {
     return $vehicles;
   }
 
-  protected function loadData($agencyIDs, $routeIDs, $args) {
-    $this->translocHostname = $args['hostname'];
+  protected function loadData() {
+    $this->translocHostname = $this->args['hostname'];
   
-    $agencyIDs = array_unique($agencyIDs);
-
     $setupInfo = self::getData($this->translocHostname, 'setup');
         
     $segments = array();
@@ -112,6 +106,10 @@ class TranslocTransitDataParser extends TransitDataParser {
 
       foreach ($agency['routes'] as $i => $routeInfo) {
         $routeID = $routeInfo['id'];
+        
+        if ($this->whitelist && !in_array($routeID, $this->whitelist)) {
+          continue;  // skip entries not on whitelist
+        }
       
         $this->addRoute(new TransitRoute(
           $routeID, 
@@ -178,23 +176,24 @@ class TranslocTransitDataParser extends TransitDataParser {
     if (!isset(self::$caches[$cacheKey])) {
       $cacheTimeout = 20;
       $suffix = 'json';
-      
+
       switch ($action) {
         case 'setup': 
         case 'stops':
-          $cacheTimeout = 3600;
+          $cacheTimeout = $GLOBALS['siteConfig']->getVar('TRANSLOC_ROUTE_CACHE_TIMEOUT');
           break;
  
         case 'update':
-          $cacheTimeout = 120;
+          $cacheTimeout = $GLOBALS['siteConfig']->getVar('TRANSLOC_UPDATE_CACHE_TIMEOUT');
           break;
           
         case 'announcements':
-          $cacheTimeout = 120;
+          $cacheTimeout = $GLOBALS['siteConfig']->getVar('TRANSLOC_ANNOUNCEMENT_CACHE_TIMEOUT');
           break;          
      }
   
-      self::$caches[$cacheKey] = new DiskCache(CACHE_DIR.'/TranslocParser', $cacheTimeout, TRUE);
+      self::$caches[$cacheKey] = new DiskCache(
+        $GLOBALS['siteConfig']->getVar('TRANSLOC_CACHE_DIR'), $cacheTimeout, TRUE);
       self::$caches[$cacheKey]->preserveFormat();
       self::$caches[$cacheKey]->setSuffix(".$cacheKey.$suffix");
     }
@@ -218,10 +217,12 @@ class TranslocTransitDataParser extends TransitDataParser {
         $params['contents'] = 'true';
       }
 
-      $url = sprintf(TRANSLOC_SERVICE_URL_FORMAT, $hostname, $action).http_build_query($params);
+      $url = sprintf($GLOBALS['siteConfig']->getVar('TRANSLOC_SERVICE_URL_FORMAT'), 
+        $hostname, $action).http_build_query($params);
+      
       error_log("TranslocTransitDataParser requesting $url", 0);
       $contents = file_get_contents($url);
-      error_log("TranslocTransitDataParser done", 0);
+      error_log("TranslocTransitDataParser got data", 0);
       
       if (!$contents) {
         error_log("Failed to read contents from $url, reading expired cache");
