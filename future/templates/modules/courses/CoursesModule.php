@@ -93,7 +93,7 @@ class CoursesModule extends Module {
       }
       
       $listItems[] = array(
-        'title' => $class['name'].' : '.$class['title'].$staffNamesIfNeeded,
+        'title' => "<strong>{$class['name']}:</strong> {$class['title']}".$staffNamesIfNeeded,
         'url'   => $this->buildBreadcrumbURL($detailPath, array(
           'class' => $class['masterId'],
         ), !$externalLink),
