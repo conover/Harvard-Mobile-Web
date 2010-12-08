@@ -27,15 +27,24 @@
 
 {if count($events)}
 {foreach $events as $event}
-	<div class="block">
-		<h3>
-			{$event->get_title()}
-			<span>Starts {date('F jS, Y', strtotime($event->get_date()))}</span>
-		</h3>
+	<div class="block event{if $event->get_type() == 'ongoing'} ongoing{/if}">
+		<header>
+			<h3>{$event->get_title()}</h3>
+			<div class="starttime">Starts {date('F jS, Y', strtotime($event->get_startdate()))}</div>
+			<div class="starttime">Ends {date('F jS, Y', strtotime($event->get_enddate()))}</div>
+			{if $event->get_location_url() or $event->get_location_name()}
+			<div class="location">
+				{if $event->get_location_url() and $event->get_location_name()}
+				<a href="{$event->get_location_url()}">{$event->get_location_name()}</a>
+				{else if $event->get_location_name()}
+				{$event->get_location_name()}
+				{/if}
+			</div>
+			{/if}
+		</header>
 		<div class="description">
-		{$event->get_description()}
+			{$event->get_description()}
 		</div>
-		<a href="{$event->get_link()}">Details</a>
 	</div>
 {/foreach}
 {else}

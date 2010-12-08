@@ -17,14 +17,14 @@ class EventsModule extends UCFModule {
 	
 	function getFeed($url){
 		$feed = new SimplePie();
+		$feed->set_item_class('UCFEventSimplePie_Item');
 		$feed->set_feed_url($url);
 		$feed->set_cache_location(CACHE_DIR);
 		$feed->set_cache_duration($GLOBALS['siteConfig']->getVar('DEFAULT_CACHE_LIFESPAN'));
 		$feed->init();
 		return $feed;
-		
 	}
-	
+		
 	function getNeighbors($stamp){
 		$next  = $stamp + 86400;
 		$prev  = $stamp - 86400;
