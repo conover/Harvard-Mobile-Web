@@ -291,9 +291,9 @@ class CoursesModule extends Module {
           // from the top-level view where search results are > 100
           $schoolData = isset($data['schools']) ? $data['schools'] : NULL;
           foreach ($schoolData as $school) {
-            $schools[$class['school']] = array(
-              'title' => "{$class['short_name']} ({$school['count']})",
-              'url'   => $this->searchSchoolURL($searchTerms, $class['school'], $class['short_name']),
+            $schools[$school['name']] = array(
+              'title' => "{$school['name_short']} ({$school['count']})",
+              'url'   => $this->searchSchoolURL($searchTerms, $school['name'], $school['name_short']),
               'count' => $school['count'],
             );
           }
