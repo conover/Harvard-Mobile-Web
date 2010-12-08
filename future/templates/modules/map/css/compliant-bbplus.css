@@ -1,0 +1,16 @@
+#mapscrollers {
+    position: hidden;
+}
+
+.tabbody #mapscrollers {
+	left: 50%;
+	margin-left: -202px;
+	width: 294px;
+	height: 192px;
+	bottom: 44px;
+}
+
+#mapzoom {
+    margin-left: -2px;
+    width: 297px;
+}
