@@ -33,7 +33,7 @@
 			{if $event->get_location_url() or $event->get_location_name()}
 			<div class="location">
 				{if $event->get_location_url() and $event->get_location_name()}
-				<a href="{$event->get_location_url()}">{$event->get_location_name()}</a>
+				{$event->get_location_name()}
 				{else if $event->get_location_name()}
 				{$event->get_location_name()}
 				{/if}
