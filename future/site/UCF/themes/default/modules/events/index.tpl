@@ -20,8 +20,8 @@
 <div class="text">
 	{if $next and $prev}
 	<div class="group">
-		<a class="arrow-back previous" href="?list=day&amp;day={urlencode($prev)}">{date('M jS, Y', $prev)}</a>
-		<a class="arrow next" href="?list=day&amp;day={urlencode($next)}">{date('M jS, Y', $next)}</a>
+		<a class="arrow-back previous" href="?list=day&amp;day={urlencode($prev)}">{date('M j, Y', $prev)}</a>
+		<a class="arrow next" href="?list=day&amp;day={urlencode($next)}">{date('M j, Y', $next)}</a>
 	</div>
 	{/if}
 
@@ -30,8 +30,6 @@
 	<div class="block event{if $event->get_type() == 'ongoing'} ongoing{/if}">
 		<header>
 			<h3>{$event->get_title()}</h3>
-			<div class="starttime">Starts {date('F jS, Y', strtotime($event->get_startdate()))}</div>
-			<div class="starttime">Ends {date('F jS, Y', strtotime($event->get_enddate()))}</div>
 			{if $event->get_location_url() or $event->get_location_name()}
 			<div class="location">
 				{if $event->get_location_url() and $event->get_location_name()}
@@ -41,6 +39,8 @@
 				{/if}
 			</div>
 			{/if}
+			<div class="startdate">{date('M j, g:i a', strtotime($event->get_startdate()))}</div>
+			<div class="enddate">{date('M j, g:i a', strtotime($event->get_enddate()))}</div>
 		</header>
 		<div class="description">
 			{$event->get_description()}
