@@ -45,7 +45,7 @@
           <input class="forminput" type="text" id="{$inputName|default:'filter'}" name="{$inputName|default:'filter'}" placeholder="{$placeholder|default:''}" value="{$searchTerms|escape}" />
           
           {block name="searchbutton"}
-            <input class="combobutton1" id="sch_btn" src="/common/images/search-button.png" type="image" />
+            <input class="combobutton" id="sch_btn" src="/common/images/search-button.png" type="image" />
           {/block}
           {$hiddenArgHTML}
         </fieldset>
