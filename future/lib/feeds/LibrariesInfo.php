@@ -746,14 +746,26 @@ class Libraries{
                 
                 $stA = explode(" | ", $stat[0]);
 
+                $seachStringForCheckedOut = $stA[1];
+                for ($r=2; $r < count($stA); $r++)
+                $seachStringForCheckedOut = $seachStringForCheckedOut . $stA[$r];
+
+                $seachStringForCheckedOut = strtolower($seachStringForCheckedOut);
+
                 $itemArray['statMain'] = strtolower($stA[0]);
                 $itemArray['statSecondary'] = strtolower($stA[1]);
                 $itemArray['requestUrl'] = $reqUrl;
 
-                if (strtolower($stA[1]) == 'checked out')
+                $pos = strpos($seachStringForCheckedOut, 'checked out');
+
+                if ($pos === false){
+                     $itemArray['checkedOutItem'] = "NO";
+                }
+                else {
                     $itemArray['checkedOutItem'] = "YES";
-                else
-                    $itemArray['checkedOutItem'] = "NO";
+                }
+
+                   
 
                 if (($itemArray['available'] == "NO") && (strlen($itemArray['requestUrl']) == 0))
                     $itemArray['unavailable'] = "YES";
@@ -811,8 +823,8 @@ class Libraries{
                         if ($itm['available'] == 'YES') {
                             $statArr['availableItems'][] = $itm;
                         }
-
-                        else if ($itm['checkedOutItem'] == "YES")
+                        
+                        else if (($itm['checkedOutItem'] == "YES") || ($item['canRequest'] == "YES"))
                             $statArr['checkedOutItems'][] = $itm;
 
                         else
@@ -820,7 +832,10 @@ class Libraries{
 
                     }
                 }
-               
+
+                if (($availCount == 0) && ($unavailCount == 0) && ($checkedOutCount == 0) && ($requestCount > 0))
+                    $checkedOutCount++;
+                
                 $statArr['availCount'] = $availCount;
                 $statArr['unavailCount'] = $unavailCount;
                 $statArr['requestCount'] = $requestCount;
