@@ -9,6 +9,5 @@
 
 {block name="blackberrySearchForm"}
     {include file="findInclude:common/search-compliant-blackberry.tpl" 
-    placeholder="Search "|cat:$moduleName
-    inputName="search_terms"}
+    placeholder="Search "|cat:$moduleName}
 {/block}
