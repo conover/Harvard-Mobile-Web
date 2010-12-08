@@ -16,16 +16,11 @@ class EventsModule extends UCFModule {
 	}
 	
 	function getFeed($url){
-		$dummy = array(
-			'TITLE'            => "None",
-			'SLUG'             => "none",
-			'BASE_URL'         => $url,
-			'CONTROLLER_CLASS' => "GazetteRSSController",
-			'ITEM_CLASS'       => "GazetteRSSItem",
-			'ENCLOSURE_CLASS'  => "GazetteRSSEnclosure",
-			'MEDIAGROUP_CLASS' => "GazetteRSSMediaGroup",
-		);
-		$feed = RSSDataController::factory($dummy);
+		$feed = new SimplePie();
+		$feed->set_feed_url($url);
+		$feed->set_cache_location(CACHE_DIR);
+		$feed->set_cache_duration($GLOBALS['siteConfig']->getVar('DEFAULT_CACHE_LIFESPAN'));
+		$feed->init();
 		return $feed;
 		
 	}
@@ -45,7 +40,7 @@ class EventsModule extends UCFModule {
 		
 		$this->assign('next', $next);
 		$this->assign('prev', $prev);
-		$this->assign('events', $feed->items());
+		$this->assign('events', $feed->get_items());
 		$this->setPageTitle('Events for '.$day);
 	}
 	
@@ -66,7 +61,7 @@ class EventsModule extends UCFModule {
 		$url   = $this->options["EVENTS_URL"].'?'.$q_str.'&'.$this->rss_arg;
 		$feed  = $this->getFeed($url);
 		
-		$this->assign('events', $feed->items());
+		$this->assign('events', $feed->get_items());
 		$this->setPageTitle('Upcoming Events');
 	}
 	
@@ -76,7 +71,7 @@ class EventsModule extends UCFModule {
 		$url   = $this->options['EVENTS_URL'].'?'.$q_str.'&'.$this->rss_arg;
 		$feed  = $this->getFeed($url);
 		
-		$this->assign('events', $feed->items());
+		$this->assign('events', $feed->get_items());
 		$this->assign('search_q', $q);
 		$this->setPageTitle('Search UCF Events');
 	}

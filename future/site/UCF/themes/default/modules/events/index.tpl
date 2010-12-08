@@ -29,13 +29,13 @@
 {foreach $events as $event}
 	<div class="block">
 		<h3>
-			{$event->getTitle()}
-			<span>Starts {date('F jS, Y', strtotime($event->getPubDate()))}</span>
+			{$event->get_title()}
+			<span>Starts {date('F jS, Y', strtotime($event->get_date()))}</span>
 		</h3>
 		<div class="description">
-		{$event->getDescription()}
+		{$event->get_description()}
 		</div>
-		<a href="{$event->getLink()}">Details</a>
+		<a href="{$event->get_link()}">Details</a>
 	</div>
 {/foreach}
 {else}
