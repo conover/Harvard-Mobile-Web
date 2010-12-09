@@ -125,7 +125,7 @@ h1 a {
 	padding:10px 0 7px; }
 h1 a span {color:white; }
 h1 .beta { font-weight:normal; font-family:georgia; color:#FFD203; font-size:12px; text-transform:uppercase;  }
-h2 { padding:12px 0 0 9px; font-size:22px; margin:0; }
+h2 { padding:12px 0 0 9px; font-size:22px; margin:0; text-align:center; }
 h3 { color:white; padding:0 7px; }
 
 .c { text-align:center; }

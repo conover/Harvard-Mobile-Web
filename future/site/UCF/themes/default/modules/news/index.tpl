@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-	<h2 class="c">{block name="news_header"}{$feed->title}{/block}</h2>
+	<h2>{block name="news_header"}{$feed->title}{/block}</h2>
 
 	<ul class="gloss">
 		<li class="arrow"><a href="feeds/">Other Categories</a></li>

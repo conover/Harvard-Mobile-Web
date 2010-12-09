@@ -1,6 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
+<h2>Events</h2>
 <ul class="gloss">
 	<li class="search">
 		<form method="get">

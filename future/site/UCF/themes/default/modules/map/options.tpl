@@ -1,6 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
+	<h2>Campus Map</h2>
     <ul class="gloss">
       <li class="search">
         <form action="{if $directions}../directions/{else}../search/{/if}" method="get">

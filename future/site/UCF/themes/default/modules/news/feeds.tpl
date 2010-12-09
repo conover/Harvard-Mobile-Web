@@ -1,7 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-	<h2 class="c">Choose a category to read</h1>
+	<h2>Choose a category to read</h1>
 
 	<ul class="gloss">
 		<li class="arrow-back"><a href="../">Return to {$cfeed->title}</a></li>

@@ -2,7 +2,7 @@
 
 {block name="body"}
 <div id="people-search">
-	<h2>Search the UCF Directory</h2>
+	<h2>UCF Directory</h2>
 	<ul class="gloss">
 		<li class="search">
 			<form action="" method="get">
