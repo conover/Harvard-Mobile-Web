@@ -162,7 +162,8 @@ abstract class Module {
   // Minify URLs
   //
   private function getMinifyUrls() {
-    $minKey = "{$this->id}-{$this->page}-{$this->pagetype}-{$this->platform}-".md5(ROOT_DIR);
+    $page = preg_replace('/[\s-]+/', '+', $this->page);
+    $minKey = "{$this->id}-{$page}-{$this->pagetype}-{$this->platform}-".md5(ROOT_DIR);
     $minDebug = $GLOBALS['siteConfig']->getVar('MINIFY_DEBUG') ? '&debug=1' : '';
     
     return array(
