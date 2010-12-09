@@ -1,12 +1,5 @@
 *~
 *.DS_Store
 
-site/Harvard/cache/*
-site/Harvard/logs/*
-site/Modo/cache/*
-site/Modo/logs/*
-
-site/blank/cache/*
-site/blank/logs/*
-site/UCF/cache/*
-site/UCF/logs/*
+site/*/cache/*
+site/*/logs/*
