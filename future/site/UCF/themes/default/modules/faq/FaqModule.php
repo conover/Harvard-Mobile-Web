@@ -11,7 +11,6 @@ class FaqModule extends UCFModule {
 	protected $id         = 'faq';
 	protected $categories = array();
 	protected $category   = null;
-	protected $slug       = null;
 	protected $default_cat= array(
 		'id'         => 0,
 		'name'       => 'All Categories',
