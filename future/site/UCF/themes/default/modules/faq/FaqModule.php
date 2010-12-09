@@ -87,7 +87,7 @@ class FaqModule extends UCFModule {
 			$categories[$slug] = array(
 				'id'         => $matches['id'][$key],
 				'name'       => $matches['name'][$key],
-				'slug'       => $slug,
+				'slug'       => trim($slug),
 				'_long_id'   => $matches['long_id'][$key],
 				'_long_name' => $matches['long_name'][$key],
 				
@@ -103,8 +103,12 @@ class FaqModule extends UCFModule {
 		$url     = $this->options['FAQ_URL'].$this->options['FAQ_SEARCH'];
 		$qstring = str_replace('%q', urlencode($q), $this->options['FAQ_SEARCH_ARG']);
 		
-		if ($this->category != null and array_key_exists($this->slug, $this->categories)){
-			$id = $this->categories[$this->slug]['id'];
+		if (
+			$this->category != null and
+			array_key_exists($this->category['slug'], $this->categories) and
+			$this->category != $this->default_cat
+			){
+			$id       = $this->category['id'];
 			$qstring .= '&'.str_replace('%category', $id, $this->options['FAQ_CAT_ARG']);
 		}
 		
@@ -118,8 +122,8 @@ class FaqModule extends UCFModule {
 			$this->redirectTo($this->default_cat['slug']);
 		}
 		$this->page = 'index';
-		$q = $this->getArg('q', '');
-		$items = $this->search($q);
+		$q          = $this->getArg('q', '');
+		$items      = $this->search($q);
 		
 		if ($q === ''){
 			$items = array_slice($items, 0, 10);
