@@ -2,7 +2,7 @@
 /**
  * @author Jared Lang
  **/
-class NewsModule extends Module{
+class NewsModule extends UCFModule{
 	protected $id    = 'news';
 	protected $feeds = array();
 	
@@ -13,7 +13,6 @@ class NewsModule extends Module{
 			}
 		}
 		return null;
-		
 	}
 	
 	function getFeed($index){
@@ -28,6 +27,7 @@ class NewsModule extends Module{
 	}
 	
 	function initialize(){
+		parent::initialize();
 		$this->feeds      = $this->loadFeedData();
 		$this->maxPerPage = $GLOBALS['siteConfig']->getVar('NEWS_MAX_RESULTS');
 		

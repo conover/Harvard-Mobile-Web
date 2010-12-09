@@ -2,12 +2,24 @@
 
 abstract class UCFModule extends Module{
 	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 * @author Jared Lang
+	 **/
+	function initialize()
+	{
+		$this->options = $GLOBALS['siteConfig']->getSection($this->id);
+	}
+	
+	/**
 	 * Retreives data pointed to by URL.
 	 *
 	 * @return string
 	 * @author Jared Lang
 	 **/
-	function fetchHTTP($url){
+	function fetchHTTP($url)
+	{
 		$timeout = $GLOBALS['siteConfig']->getVar('HTTP_TIMEOUT');
 		$options = stream_context_create(array(
 			'http' => array(
