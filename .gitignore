@@ -1,13 +1,8 @@
-# Config file ignores
-config-*.ini
-
-# Application, OS, and backup files
 *~
 ._*
 .DS_Store
 Thumbs.db
 
-#Misc
 opt/mitmobile/bin/*mobi-*
 opt/mitmobile/mobi-config
 opt/mitmobile/mobi-lib
