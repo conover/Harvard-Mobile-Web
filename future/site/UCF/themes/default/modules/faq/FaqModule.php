@@ -159,6 +159,11 @@ class FaqModule extends UCFModule {
 			$answer = $match[1];
 		}
 		
+		if (!$answer and !$question){
+			#Redirect as fallback
+			header('location: ' . $url);
+		}
+		
 		$this->assign('url', $url);
 		$this->assign('q', $q);
 		$this->assign('question', $question);
