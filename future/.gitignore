@@ -1,5 +1,12 @@
-*~
-*.DS_Store
+# Config file ignores
+config-*.ini
 
+# Application, OS, and backup files
+*~
+._*
+.DS_Store
+Thumbs.db
+
+# Misc
 site/*/cache/*
 site/*/logs/*
