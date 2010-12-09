@@ -35,15 +35,8 @@ class FaqModule extends UCFModule {
 	}
 	
 	function getCategory(){
-		$suburl  = $GLOBALS['parts'][1];
-		$matched = preg_match('/([^\/]+)\//i', $suburl, $matches);
+		$slug = $this->getSlugFromURL();
 		
-		if ($matched){
-			$slug = $matches[1];
-		}else{
-			error_log("Couldn't parse feed slug from url: '$suburl'");
-			$slug = null;
-		}
 		if ($slug != null and array_key_exists($slug, $this->categories)){
 			$this->category = $this->categories[$slug];
 		}else{
@@ -56,15 +49,6 @@ class FaqModule extends UCFModule {
 		$this->options = $GLOBALS['siteConfig']->getSection($this->id);
 		$this->getCategories();
 		$this->getCategory();
-	}
-	
-	function sluggify($text){
-		$slug = $text;
-		$slug = strtolower($slug);
-		$slug = preg_replace('/[\s]+/', ' ', $slug);
-		$slug = str_replace(array(' ', '.'), array('-', '-'), $slug);
-		$slug = preg_replace('/[^A-Z1-9\s\-]/i', '', $slug);
-		return $slug;
 	}
 	
 	function getCategories(){

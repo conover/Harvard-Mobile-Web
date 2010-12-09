@@ -6,57 +6,42 @@ class NewsModule extends UCFModule{
 	protected $id    = 'news';
 	protected $feeds = array();
 	
-	function getFeedBySlug($slug){
-		foreach ($this->feeds as $index => $feed){
-			if ($feed['SLUG'] == $slug){
-				return $this->getFeed($index);
-			}
+	function getFeed(){
+		$slug = $this->getSlugFromURL();
+		if (array_key_exists($slug, $this->feeds)){
+			$feed = $this->feeds[$slug];
+		}else{
+			$feed = current($this->feeds);
+			$this->redirectTo($this->sluggify($feed->get_title()));
 		}
-		return null;
+		$feed->handle_content_type();
+		$this->feed = $feed;
 	}
 	
-	function getFeed($index){
-		if (isset($this->feeds[$index])) {
-			$feedData = $this->feeds[$index];
-			$controller = RSSDataControllerUCF::factory($feedData);
-			$controller->setDebugMode($GLOBALS['siteConfig']->getVar('DATA_DEBUG'));
-			return $controller;
-		} else {
-			throw new Exception("Error getting news feed for index $index");
+	function getFeeds(){
+		foreach($this->options['NEWS_FEEDS'] as $url){
+			$feed = new SimplePie();
+			$feed->set_feed_url($url);
+			$feed->set_cache_location(CACHE_DIR);
+			$feed->init();
+			$slug = $this->sluggify($feed->get_title());
+			$this->feeds[$slug] = $feed;
 		}
 	}
 	
 	function initialize(){
 		parent::initialize();
-		$this->feeds      = $this->loadFeedData();
-		$this->maxPerPage = $GLOBALS['siteConfig']->getVar('NEWS_MAX_RESULTS');
-		
-		$this->feedIndex = $this->getArg('section', 0);
-		if (!isset($this->feeds[$this->feedIndex])) {
-		  $this->feedIndex = 0;
-		}
-		
-		$this->feed = $this->getFeed($this->feedIndex);
+		$this->getFeeds();
+		$this->getFeed();
 	}
 	
 	function indexPage(){
-		$slug = $this->getSlugFromURL();
-		if (!$slug){
-			$slug = $GLOBALS['siteConfig']->getVar('NEWS_DEFAULT_FEED');
-			$this->redirectTo($slug);
-		}
-		
 		$page  = $this->getArg('page', 0);
-		$limit = $GLOBALS['siteConfig']->getVar('NEWS_ITEMS_PER_PAGE');
+		$limit = $this->options['NEWS_ITEMS_PER_PAGE'];
 		$start = $page * $limit;
 		
-		$feed     = $this->getFeedBySlug($slug);
-		if(!$feed){
-			#raise 404
-			$this->redirectToModule('error', array('code'=>'notfound', 'url'=>$_SERVER['REQUEST_URI']));
-			return;
-		}
-		$articles = $feed->items($start, $limit, $total);
+		$feed     = $this->feed;
+		$articles = $feed->get_items($start, $limit);
 		
 		$page = array(
 			'hasNext' => ($start + $limit < $total),
@@ -66,9 +51,9 @@ class NewsModule extends UCFModule{
 		
 		foreach($articles as $index=>$article){
 			$article->url = $this->buildURL('article', array(
-				'id'  => $article->getGUID(),
+				'id'  => $index,
 			));
-			$article->image   = $article->getImage();
+			$article->image   = $article->get_enclosure();
 			$articles[$index] = $article;
 		}
 		
@@ -81,30 +66,9 @@ class NewsModule extends UCFModule{
 		return;
 	}
 	
-	function getSlugFromURL(){
-		$suburl  = $GLOBALS['parts'][1];
-		$matched = preg_match('/([^\/]+)\//i', $suburl, $matches);
-		if ($matched){
-			$slug = $matches[1];
-			return $slug;
-		}else{
-			error_log("Couldn't parse feed slug from url: '$suburl'");
-			return null;
-		}
-	}
-	
 	function feedsPage(){
-		$slug  = $this->getSlugFromURL();
-		$cfeed = $this->getFeedBySlug($slug);
-		$feeds = array();
-		foreach($this->feeds as $index => $feed){
-			$feeds[$index] = array(
-				'title' => $feed['TITLE'],
-				'feed'  => $feed['BASE_URL'],
-				'slug'  => $feed['SLUG'],
-				'url'   => $this->buildURL($feed['SLUG']),
-			);
-		}
+		$feeds = $this->feeds;
+		$cfeed = $this->feed;
 		
 		$this->assign('feeds', $feeds);
 		$this->assign('cfeed', $cfeed);
@@ -113,15 +77,13 @@ class NewsModule extends UCFModule{
 	}
 	
 	function articlePage(){
-		$slug = $this->getSlugFromURL();
-		$feed = $this->getFeedBySlug($slug);
-		
-		$article = $this->getArg('id', null);
-		$article = $feed->getItem($article);
+		$feed    = $this->feed;
+		$id      = $this->getArg('id', null);
+		$article = $feed->get_item($id);
 		
 		$this->assign('feed', $feed);
 		$this->assign('article', $article);
-		$this->setPageTitle($article->getTitle());
+		$this->setPageTitle($article->get_title());
 		return;
 	}
 	

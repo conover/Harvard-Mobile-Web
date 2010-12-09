@@ -2,6 +2,41 @@
 
 abstract class UCFModule extends Module{
 	/**
+	 * Returns url slug for given string
+	 *
+	 * @return void
+	 * @author Jared Lang
+	 **/
+	function sluggify($text)
+	{
+		$slug = $text;
+		$slug = strtolower($slug);
+		$slug = preg_replace('/[^A-Z1-9\s\-]/i', '', $slug);
+		$slug = preg_replace('/[\s]+/', ' ', $slug);
+		$slug = str_replace(array(' ', '.'), array('-', '-'), $slug);
+		return $slug;
+	}
+	
+	/**
+	 * Returns the slug from the url, if found
+	 *
+	 * @return void
+	 * @author Jared Lang
+	 **/
+	function getSlugFromURL()
+	{
+		$suburl  = $GLOBALS['parts'][1];
+		$matched = preg_match('/([^\/]+)\//i', $suburl, $matches);
+		if ($matched){
+			$slug = $matches[1];
+			return $slug;
+		}else{
+			error_log("Couldn't parse feed slug from url: '$suburl'");
+			return null;
+		}
+	}
+	
+	/**
 	 * undocumented function
 	 *
 	 * @return void

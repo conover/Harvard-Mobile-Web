@@ -15,13 +15,13 @@
 				<article{if !$article->image} class="no-image"{/if}>
 		
 					<header>
-						<a href="{$article->url}">{$article->getTitle()}</a>
+						<a href="{$article->url}">{$article->get_title()}</a>
 					</header>
 					<section>
 						{if $article->image}
-						<a href="{$article->url}" class="img"><img src="{$article->image->getURL()}"></a>
+						<a href="{$article->url}" class="img"><img src="{if $article->image->get_thumbnail()}{$article->image->get_thumbnail()}{else}{$article->image->get_link()}{/if}"></a>
 						{/if}
-						<a href="{$article->url}">{$article->getDescription()}</a>
+						<a href="{$article->url}">{$article->get_description()}</a>
 					</section>	
 					<footer>
 				
