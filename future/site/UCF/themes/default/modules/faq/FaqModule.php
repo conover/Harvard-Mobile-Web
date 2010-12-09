@@ -120,9 +120,9 @@ class FaqModule extends UCFModule {
 	}
 	
 	function answerPage(){
-		$url   = $this->getArg('url', '');
+		$o_url = $this->getArg('url', '');
 		$q     = $this->getArg('q', '');
-		$url   = str_replace('std_adp.php', 'prnt_adp.php', $url);
+		$url   = str_replace('std_adp.php', 'prnt_adp.php', $o_url);
 		$page  = $this->fromCache($url);
 
 		$quote = "['\"]"; #Double or single quotes
@@ -144,8 +144,8 @@ class FaqModule extends UCFModule {
 		}
 		
 		if (!$answer and !$question){
-			#Redirect as fallback
-			header('location: ' . $url);
+			$question = 'Oops!';
+			$answer = 'We were unable to pull the information for this answer, but here is the <a href="'.$o_url.'">link to the original</a>.';
 		}
 		
 		$this->assign('url', $url);
