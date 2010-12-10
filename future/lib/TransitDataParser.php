@@ -284,6 +284,12 @@ class TransitDataView {
             $parserInfo['routes'][$routeID] = $staticParserInfo['routes'][$routeID];
           }
         }
+      } else {
+        foreach ($parserInfo['routes'] as $routeID => $stopTimes) {
+          if (!isset($stopTimes['arrives'])) {
+            $parserInfo['routes'][$routeID]['arrives'] = 0;
+          }
+        }
       }
       
       if ($parserInfo) {

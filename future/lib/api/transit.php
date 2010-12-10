@@ -16,12 +16,13 @@ switch ($command) {
       exitWithError("Missing configuration file '/feeds/transit-info.ini'");
     }
     
+    $type = ($command == 'calendar') ? 'calendar' : $_REQUEST['agency'];
+
     $infoConfig = parse_ini_file($feedConfigFile, true);
     if (!isset($infoConfig[$type])) {
       exitWithError("unknown agency '{$_REQUEST['agency']}'");
     }
     
-    $type = ($command == 'calendar') ? 'calendar' : $_REQUEST['agency'];
     $data['html'] = $infoConfig[$type];
     break;
   
@@ -80,7 +81,7 @@ switch ($command) {
       $routeInfo = $view->getRouteInfo($routeID);      
       $data = formatRouteInfo($routeID, $routeInfo);
 
-      $vehicles = $view->getRouteVehicles($routeID);error_log(print_r($vehicles, true));
+      $vehicles = $view->getRouteVehicles($routeID);
       $data['vehicleLocations'] = array_values($vehicles);
 
       $stops = array();
@@ -244,6 +245,7 @@ function formatStopInfo($routeID, $stopID, $stopInfo, $stopTimes) {
     'next'        => $stopTimes['arrives'],
     'gps'         => isset($routeInfo['live']) && $routeInfo['live'] ? true : false,
   );
+  
   if (isset($stopTimes['predictions']) && count($stopTimes['predictions']) > 1) {
     array_shift($stopTimes['predictions']); // remove prediction corresponding to $stop['next']
     $stop['predictions'] = $stopTimes['predictions'];
