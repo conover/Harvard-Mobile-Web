@@ -4,7 +4,7 @@ abstract class UCFModule extends Module{
 	/**
 	 * Returns url slug for given string
 	 *
-	 * @return void
+	 * @return string
 	 * @author Jared Lang
 	 **/
 	function sluggify($text)
@@ -20,7 +20,7 @@ abstract class UCFModule extends Module{
 	/**
 	 * Returns the slug from the url, if found
 	 *
-	 * @return void
+	 * @return string, null on failure
 	 * @author Jared Lang
 	 **/
 	function getSlugFromURL()
@@ -68,7 +68,7 @@ abstract class UCFModule extends Module{
 	/**
 	 * Return the contents of a given url using framework's caching system.
 	 *
-	 * @return void
+	 * @return string
 	 * @author Jared Lang
 	 **/
 	function fromCache($url)
@@ -81,7 +81,7 @@ abstract class UCFModule extends Module{
 	/**
 	 * Define where this module's cache belongs.
 	 *
-	 * @return void
+	 * @return string
 	 * @author Jared Lang
 	 **/
 	function cacheFolder()
@@ -93,7 +93,7 @@ abstract class UCFModule extends Module{
 	/**
 	 * Return a unique key for the given url.
 	 *
-	 * @return void
+	 * @return string
 	 * @author Jared Lang
 	 **/
 	function cacheKey($url)
@@ -104,25 +104,10 @@ abstract class UCFModule extends Module{
 	
 	
 	/**
-	 * Write content to cache defined by key
-	 *
-	 * @return void
-	 * @author Jared Lang
-	 **/
-	function setCache($key, $content)
-	{
-		$file     = $key;
-		$lifespan = $GLOBALS['siteConfig']->getVar('DEFAULT_CACHE_LIFESPAN');
-		$cache    = new DiskCache($this->cacheFolder(), $lifespan, TRUE);
-		$cache->write($content, $file);
-	}
-	
-	
-	/**
 	 * Return contents of url, creating new version of cache if out of date or
 	 * non-existent
 	 *
-	 * @return void
+	 * @return string
 	 * @author Jared Lang
 	 **/
 	function getCache($url)
