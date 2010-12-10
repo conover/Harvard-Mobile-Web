@@ -96,6 +96,7 @@ class Libraries{
                  $hrsOpenToday = explode(":", $timeOpen);
                  
                  $institute['name'] = $name[0];
+                 $institute['primaryName'] = $name[0];
                  $institute['id'] = $id[0];
                  $institute['type'] = $type;
                  $institute['address'] = HTML2TEXT($address[0]);
@@ -154,6 +155,7 @@ class Libraries{
                  $latitude = explode(":", $institution->location->latitude);
 
                  $institute['name'] = $name[0];
+                 $institute['primaryName'] = $name[0];
                  $institute['id'] = $id[0];
                  $institute['type'] = $type;
                  $institute['address'] = HTML2TEXT($address[0]);
