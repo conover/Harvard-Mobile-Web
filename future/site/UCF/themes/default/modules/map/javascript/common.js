@@ -74,7 +74,7 @@ Campus_Map.gmap = function(){
 		zoom: 16,
 		center: myLatlng,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		mapTypeControl: false,
+		mapTypeControl: true,
 		mapTypeControlOptions: {
 			style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
 		}

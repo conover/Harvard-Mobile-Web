@@ -7,11 +7,8 @@
 		"map-options" : "{$options_url}"
 	}
 	Campus_Map.gmap();
-</script>
-
 
 {if $locate_me}
-<script type="text/javascript">
 /******************************************************************************\
   Display's User's positions and offer directions
 \******************************************************************************/
@@ -36,13 +33,10 @@ Campus_Map.showGeoLoc = function(){
 	Campus_Map.meLocWin.open(map);
 };
 Campus_Map.geoLocate('showGeoLoc');
-</script>
 {/if}
 
 
-
 {if $location}
-<script type="text/javascript">
 /******************************************************************************\
   Location - display directions and/or info window
 \******************************************************************************/
@@ -71,9 +65,12 @@ Campus_Map.geoLocate('showGeoLoc');
 	}
 	
 })();
-</script>
 {/if}
 
-
+{if $traffic}
+	var trafficLayer = new google.maps.TrafficLayer();
+	trafficLayer.setMap(Campus_Map.map);
+{/if}
+</script>
 </body>
 </html>
