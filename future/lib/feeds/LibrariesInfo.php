@@ -112,6 +112,65 @@ class Libraries{
        }
 
 
+       public static function extractSpecificRepoDetails($idTag, $typeString) {
+
+        $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
+
+        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+        $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR') . '/librariesInfo.xml';
+
+        if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'))) {
+
+        } else {
+            $handle = fopen($filenm, "w");
+            fwrite($handle, file_get_contents($xmlURLPath));
+            //$urlString = $filenm;
+        }
+
+        $xml = file_get_contents($filenm);
+
+        if ($xml == "") {
+            // if failed to grab xml feed, then run the generic error handler
+            throw new DataServerException('COULD NOT GET XML');
+        }
+
+        $xml_obj = simplexml_load_string($xml);
+        
+         $institute = array();
+         foreach ($xml_obj->institution as $institution) {
+
+             $found = "NO";
+             
+             $type = explode(":",$institution->type[0]);
+             $type = $type[0];
+             $id = explode(":", $institution->id[0]);
+
+             if (($type == $typeString) && ($id[0] == $idTag)){
+
+                 $name = explode(":", $institution->name[0]);
+                 
+                 $address = explode(":", $institution->location->address[0]);
+                 $longitude = explode(":",$institution->location->longitude);
+                 $latitude = explode(":", $institution->location->latitude);
+
+                 $institute['name'] = $name[0];
+                 $institute['id'] = $id[0];
+                 $institute['type'] = $type;
+                 $institute['address'] = HTML2TEXT($address[0]);
+                 $institute['latitude'] = $latitude[0];
+                 $institute['longitude'] = $longitude[0];
+
+                 $found = "YES";
+             }
+
+             if ($found == "YES")
+                 break;
+        }
+
+        return $institute;
+    }
+
+
 
        public static function getOpenNow() {
 
@@ -275,6 +334,14 @@ class Libraries{
                  }
                     
                  $direction = HTML2TEXT($direction);
+
+                 $latitude = explode(":",$institution->location->latitude[0]);
+                 $latitude = $latitude[0];
+                 $longitude = explode(":",$institution->location->longitude[0]);
+                 $longitude = $longitude[0];
+
+                 $address = explode(":",$institution->location->address[0]);
+                 $address = HTML2TEXT($address[0]);
                     
                  $ur = explode(":", $institution->url);
                   if (count($ur) > 1)
@@ -338,9 +405,13 @@ class Libraries{
 
 
                   $details['name'] = $nameToReturn;
+                  $details['primaryname'] = $primaryName;
                   $details['id'] = $id;
                   $details['type'] = $type;
                   $details['directions'] = $direction;
+                  $details['longitude'] = $longitude;
+                  $details['latitude'] = $latitude;
+                  //$details['address'] = $address;
                   $details['website'] = $url;
                   $details['email'] = $email;
                   $details['phone'] = $phoneNumberArray;
@@ -709,6 +780,10 @@ class Libraries{
             $libId = explode(":", $branch->repository->id[0]);
             $libType = explode(":", $branch->repository->type[0]);
 
+            $repoDetails = array();
+            $repoDetails = self::extractSpecificRepoDetails($libId[0], $libType[0]);
+
+
             $collection = $branch->collection;
             $parentCallNumber = "";
             $parentCallNumber = explode(":",$collection->callnumber);
@@ -849,6 +924,7 @@ class Libraries{
             $lib['name'] = $libName[0];
             $lib['id'] = $libId[0];
             $lib['type'] = $libType[0];
+            $lib['details'] = $repoDetails;
             //$lib['items'] = $itemsToReturn;
             $lib['itemsByStat'] = $statsToReturn;
 
