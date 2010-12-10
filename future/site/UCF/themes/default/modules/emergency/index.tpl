@@ -3,6 +3,12 @@
 {block name="body"}
 	
 <div class="text">
+	{if $emergency}
+	<div class="emergency">
+		{$emergency->get_content()}
+	</div>
+	{/if}
+	
 	<h2>Emergency Contact Numbers</h2>
 	
 	<div class="block">
