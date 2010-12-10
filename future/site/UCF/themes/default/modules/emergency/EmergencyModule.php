@@ -8,7 +8,9 @@
  */
 class EmergencyModule extends UCFModule {
 	
-	protected $id = 'emergency';
+	protected $id     = 'emergency';
+	protected $status = False;
+	protected $feed   = null;
 	
 	/**
 	 * Pulls emergency status from status page and sets instance attribute to
