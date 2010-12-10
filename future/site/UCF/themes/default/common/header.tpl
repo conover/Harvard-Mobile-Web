@@ -3,7 +3,7 @@
 {strip}  
 	<head>
 		<meta charset="utf-8" />
-		<title>{$moduleName}{if !$isModuleHome}: {$pageTitle}{/if}</title>
+		<title>{$pageTitle}</title>
 		<link href="{$minify['css']}" rel="stylesheet" media="all" type="text/css"/>
 		
 		{foreach $inlineCSSBlocks as $css}
