@@ -7,9 +7,6 @@
 	{$item['opt'] = "options/"}
 	{/if}
 	<li class="Application arrow"><a href="{$item['url']}{$item['opt']|default:''}" class="{$item['class']|default:''}">{$item['title']}</a></li>
-	{if stristr($item['title'], 'events')}
-	<li class="Application arrow"><a href="http://m.youtube.com/ucf">UCF on YouTube</a></li>
-	{/if}
 {/foreach}
 </ul>
 
