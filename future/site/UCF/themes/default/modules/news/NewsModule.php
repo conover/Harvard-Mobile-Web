@@ -41,6 +41,7 @@ class NewsModule extends UCFModule{
 		$start = $page * $limit;
 		
 		$feed     = $this->feed;
+		$total    = $feed->get_item_quantity();
 		$articles = $feed->get_items($start, $limit);
 		
 		$page = array(
@@ -62,7 +63,7 @@ class NewsModule extends UCFModule{
 		$this->assign('articles', $articles);
 		$this->assign('feed', $feed);
 		$this->page = 'index';
-		$this->setPageTitle($feed->title);
+		$this->setPageTitle($feed->get_title());
 		return;
 	}
 	
