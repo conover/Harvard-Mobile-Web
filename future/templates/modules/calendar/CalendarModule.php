@@ -10,6 +10,11 @@ class CalendarModule extends Module {
   protected $id = 'calendar';
   protected $feeds = array();
   protected $timezone;
+  
+  public function timezone()
+  {
+    return $this->timezone;
+  }
 
   private $searchOptions = array(
     array("phrase" => "in the next 7 days",   "offset" => 7),
