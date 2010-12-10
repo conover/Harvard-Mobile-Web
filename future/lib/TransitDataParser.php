@@ -2,12 +2,6 @@
 
 require_once('Polyline.php');
 
-define('STATIC_MAPS_URL', 'http://maps.google.com/maps/api/staticmap?');
-
-define('TRANSIT_MAX_ARRIVAL_DELAY', 120*60); // 2 hours
-define('TRANSIT_PREDICTION_THRESHOLD', 320); // 5 mins, 20 seconds
-define('TRANSIT_DEFAULT_ROUTE_COLOR', 'b12727'); // shade of red
-
 class TransitConfig {
   private $parsers = array();
   
@@ -286,7 +280,7 @@ class TransitDataView {
         $parserInfo = $staticParserInfo;
       } else if (isset($staticParserInfo['routes'])) {
         foreach ($parserInfo['routes'] as $routeID => $stopTimes) {
-          if (!count($stopTimes) && isset($staticParserInfo['routes'][$routeID])) {
+          if (!isset($stopTimes['arrives']) && isset($staticParserInfo['routes'][$routeID])) {
             $parserInfo['routes'][$routeID] = $staticParserInfo['routes'][$routeID];
           }
         }
@@ -318,7 +312,6 @@ class TransitDataView {
         }
       }
     }
-    
     return $stopInfo;
   }
 
@@ -465,7 +458,8 @@ class TransitDataView {
     
           // Suppress any soonest stops which are more than 2 hours from now
           $routeInfo['stops'][$stopID]['upcoming'] = 
-              (abs($arrives - $now) < TRANSIT_MAX_ARRIVAL_DELAY) && $arrives <= $prevArrives;
+              (abs($arrives - $now) < $GLOBALS['siteConfig']->getVar('TRANSIT_MAX_ARRIVAL_DELAY')) && 
+              $arrives <= $prevArrives;
         }
       }
       
@@ -632,7 +626,7 @@ abstract class TransitDataParser {
   private $stops     = array();
   private $overrides = array();
   
-  static protected $arrows = array(
+  static private $arrows = array(
     '1' => 'n',
     '2' => 'ne',
     '3' => 'e',
@@ -736,22 +730,66 @@ abstract class TransitDataParser {
   public function hasStop($id) {
     return isset($this->stops[$id]);
   }
-  
+ 
+  protected function getMapIconUrlForRouteStop($routeID) {
+    if($_SERVER['SERVER_NAME'] != 'localhost') {
+      $iconURL = "http://".SERVER_HOST."/modules/transit/images/shuttle_stop_dot.png";
+    } else {
+      return $GLOBALS['siteConfig']->getVar('GOOGLE_CHART_API_URL').http_build_query(array(
+        'chst' => 'd_simple_text_icon_left',
+        'chld' => '|9|000|glyphish_target|12|'.$this->getRouteColor($routeID).'|FFF',
+      ));
+    }
+  }
+ 
+  protected function getMapIconUrlForRouteStopPin($routeID) {
+    if($_SERVER['SERVER_NAME'] != 'localhost') {
+      $iconURL = "http://".SERVER_HOST."/modules/transit/images/shuttle_stop_pin.png";
+    } else {
+      return $GLOBALS['siteConfig']->getVar('GOOGLE_CHART_API_URL').http_build_query(array(
+        'chst' => 'd_map_pin_icon',
+        'chld' => 'bus|'.$this->getRouteColor($routeID),
+      ));
+    }
+  }
+ 
+  protected function getMapIconUrlForRouteVehicle($routeID, $vehicle=null) {
+    // same icon for every vehicle by default
+    return $GLOBALS['siteConfig']->getVar('GOOGLE_CHART_API_URL').http_build_query(array(
+      'chst' => 'd_map_pin_icon',
+      'chld' => 'bus|'.$this->getRouteColor($routeID),
+    ));
+  }
+ 
   protected function getMapMarkersForVehicles($vehicles) {
     $query = '';
     
-    foreach ($vehicles as $vehicle) {
-      $markers .= "|{$vehicle['lat']},{$vehicle['lon']}";
+    if (count($vehicles)) {
+      $firstVehicle = reset($vehicles);
+    
+      $markers = "icon:".$this->getMapIconUrlForRouteVehicle($firstVehicle['routeID']);
+      foreach ($vehicles as $vehicle) {
+        $markers .= "|{$vehicle['lat']},{$vehicle['lon']}";
+      }
+      $query .= '&'.http_build_query(array(
+        'markers' => $markers,
+      ));
     }
-    $query .= '&'.http_build_query(array(
-      'markers' => $markers,
-    ));
     
     return $query;
   }  
   
+  protected function getDirectionForHeading($heading) {
+    $arrowIndex = ($heading / 45) + 1.5;
+    if ($arrowIndex > 8) { $arrowIndex = 8; }
+    if ($arrowIndex < 0) { $arrowIndex = 0; }
+    $arrowIndex = floor($arrowIndex);
+    
+    return self::$arrows[$arrowIndex];
+}
+  
   protected function getRouteColor($routeID) {
-    return TRANSIT_DEFAULT_ROUTE_COLOR;
+    return $GLOBALS['siteConfig']->getVar('TRANSIT_DEFAULT_ROUTE_COLOR');
   }
 
   //
@@ -798,13 +836,9 @@ abstract class TransitDataParser {
         $this->updatePredictionData($route->getID());
         
         $routePredictions[$routeID] = $route->getPredictionsForStop($stopID, $now);
-        if (isset($routePredictions[$routeID]['arrives'])) {
-          $routePredictions[$routeID]['live'] = $this->isLive();
-        }
+        $routePredictions[$routeID]['name'] = $this->getRoute($routeID)->getName();
+        $routePredictions[$routeID]['live'] = $this->isLive();
       }
-    }
-    foreach ($routePredictions as $routeID => $prediction) {
-      $routePredictions[$routeID]['name'] = $this->getRoute($routeID)->getName();
     }
     
     $stopInfo = array(
@@ -818,7 +852,6 @@ abstract class TransitDataParser {
 
     return $stopInfo;
   }
- 
   public function getMapImageForStop($id, $width=270, $height=270) {
     if (!isset($this->stops[$id])) {
       error_log(__FUNCTION__."(): Warning no such stop '$id'");
@@ -827,17 +860,7 @@ abstract class TransitDataParser {
     
     $stop = $this->stops[$id];
     $coords = $stop->getCoordinates();
-    
-    $iconURL = false;
-    if($_SERVER['SERVER_NAME'] != 'localhost') {
-      $iconURL = "http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}".
-          "/modules/transit/images/shuttle_stop_pin.png";
-    } else {
-      $iconURL = "http://chart.apis.google.com/chart?".http_build_query(array(
-        'chst' => 'd_map_pin_icon',
-        'chld' => 'bus|'.TRANSIT_DEFAULT_ROUTE_COLOR,
-      ));
-    }
+    $iconURL = $this->getMapIconUrlForStopPin();
     
     $query = http_build_query(array(
       'sensor'  => 'false',
@@ -845,7 +868,7 @@ abstract class TransitDataParser {
       'markers' => "icon:$iconURL|{$coords['lat']},{$coords['lon']}",
     ));
     
-    return STATIC_MAPS_URL.$query;
+    return $GLOBALS['siteConfig']->getVar('GOOGLE_STATIC_MAPS_URL').$query;
   }
 
   public function getMapImageForRoute($id, $width=270, $height=270) {
@@ -883,7 +906,7 @@ abstract class TransitDataParser {
       ), 0, '&amp;');
     }
     
-    return STATIC_MAPS_URL.$query;
+    return $GLOBALS['siteConfig']->getVar('GOOGLE_STATIC_MAPS_URL').$query;
   }
 
   public function routeIsRunning($routeID, $time=null) {
@@ -923,14 +946,17 @@ abstract class TransitDataParser {
     $route = $this->routes[$routeID];
 
     $routeInfo = array(
-      'agency'      => $route->getAgencyID(),
-      'name'        => $route->getName(),
-      'description' => $route->getDescription(),
-      'live'        => $this->isLive(),
-      'frequency'   => $route->getServiceFrequency($time),
-      'running'     => $route->isRunning($time, $inService),
-      'inService'   => $inService,
-      'stops'       => array(),
+      'agency'         => $route->getAgencyID(),
+      'name'           => $route->getName(),
+      'description'    => $route->getDescription(),
+      'color'          => $this->getRouteColor($routeID),
+      'live'           => $this->isLive(),
+      'frequency'      => $route->getServiceFrequency($time),
+      'running'        => $route->isRunning($time, $inService),
+      'inService'      => $inService,
+      'stopIconUrl'    => $this->getMapIconUrlForRouteStop($routeID),
+      'vehicleIconUrl' => $this->getMapIconUrlForRouteVehicle($routeID),
+      'stops'          => array(),
     );
 
     // Check if there are a valid services and segments
@@ -1076,8 +1102,10 @@ abstract class TransitDataParser {
       $routes[$routeID] = array(
         'name'        => $route->getName(),
         'description' => $route->getDescription(),
+        'color'       => $this->getRouteColor($routeID),
         'frequency'   => round($route->getServiceFrequency($time) / 60),
         'agency'      => $route->getAgencyID(),
+        'live'        => $this->isLive(),
       );
       $routes[$routeID]['running'] = $route->isRunning($time, $inService);
       $routes[$routeID]['inService'] = $inService;
@@ -1140,6 +1168,29 @@ define('HOUR_MULTIPLIER', 10000);
 define('MINUTE_MULTIPLIER', 100);
 
 class TransitTime {   
+  static $localTimezone = null;
+  static $gmtTimezone = null;
+  
+  private static function getLocalTimezone() {
+    if (!isset(self::$localTimezone)) {
+      self::$localTimezone = new DateTimeZone(LOCAL_TIMEZONE);
+    }
+    return self::$localTimezone;
+  }
+
+  private static function getGMTTimezone() {
+    if (!isset(self::$gmtTimezone)) {
+      self::$gmtTimezone = new DateTimeZone('GMT');
+    }
+    return self::$gmtTimezone;
+  }
+  
+  public static function getLocalDatetimeFromTimestamp($timestamp) {
+    $datetime = new DateTime('@'.$timestamp, self::getGMTTimezone());
+    $datetime->setTimeZone(self::getLocalTimezone()); 
+    return $datetime;
+  }
+
   static public function getCurrentTime() {
     return time();
     //return strtotime("01:45:00 11/3/2010");
@@ -1198,16 +1249,19 @@ class TransitTime {
   }
   
   public static function getTimestampOnDate($tt, $dateTimestamp) {
-    $date = new DateTime('@'.$dateTimestamp);
+    $date = self::getLocalDatetimeFromTimestamp($dateTimestamp);
 
     list($hours, $minutes, $seconds) = explode(':', $date->format('G:i:s'));
     $dateTT = self::createFromComponents($hours, $minutes, $seconds);
   
     if (self::compare($tt, $dateTT) < 0) {
-      date_modify($date, '+1 day'); // earlier than date -- will be for the next day
+      $date->modify('+1 day'); // earlier than date -- will be for the next day
     }
     
-    return strtotime($date->format('Y-m-d').' '.self::getString($tt));
+    list($hours, $minutes, $seconds) = self::getComponents($tt);
+    $date->setTime($hours, $minutes, $seconds);
+    
+    return $date->format('U');
   }
   
   public static function compare($tt1, $tt2) {
@@ -1242,14 +1296,15 @@ class TransitTime {
   }
   
   public static function isTimeInRange($timestamp, $fromTT, $toTT) {
-    $time = new DateTime('@'.$timestamp);
+    $time = self::getLocalDatetimeFromTimestamp($timestamp);
+    
     $tt = TransitTime::createFromString($time->format('G:i:s'));
     
     $afterStart = TransitTime::compare($fromTT, $tt) <= 0;
     $beforeEnd  = TransitTime::compare($toTT, $tt) >= 0;
     $inRange = $afterStart && $beforeEnd;
     
-    //error_log($tt->getString()." is ".($inRange ? '' : 'not ')."in range ".$this->from->getString().' - '.$this->to->getString());
+    //error_log(TransitTime::getString($tt)." is ".($inRange ? '' : 'not ')."in range ".TransitTime::getString($fromTT).' - '.TransitTime::getString($toTT));
     return $inRange;
   }
 }
@@ -1455,22 +1510,18 @@ class TransitRoute {
     return false;
   }
   
-  private function getArrivalTimesForStop($time, $stopID=null) {
-    $arrivalOffsets = array();
-    foreach ($this->directions as $direction) {
+  private function getFirstStopIDAndDirection() {
+    foreach ($this->directions as $directionID => $direction) {
       foreach ($direction['segments'] as $segment) {
-        if ($segment->getService()->isRunning($time)) {
-          $arrivalOffsets = array_merge(
-            $arrivalOffsets, $segment->getArrivalTimesForStop($stopID));
+        foreach ($segment->getStops() as $stopInfo) {
+          return array($stopInfo['stopID'], $directionID);
         }
       }
     }
-    $arrivalOffsets = array_unique($arrivalOffsets);
-    sort($arrivalOffsets);
-    return $arrivalOffsets;
+    return array(false, false);
   }
   
-  public function getServiceFrequency($time, $stopID=null) {
+  public function getServiceFrequency($time) {
     // Time between shuttles at the same stop
     $frequency = 0;
     
@@ -1486,18 +1537,33 @@ class TransitRoute {
         if ($frequency > 0) { break; }
       }
     } else {
-      $arrivalTimes = $this->getArrivalTimesForStop($time, $stopID);
-      for ($i = 0; $i < count($arrivalTimes); $i++) {
-        if ($arrivalTimes[$i] > $time) {
-          if (isset($arrivalTimes[$i+1])) {
-            $frequency = $arrivalTimes[$i+1] - $arrivalTimes[$i];
-          } else if (isset($arrivalTimes[$i-1])) {
-            $frequency = $arrivalTimes[$i] - $arrivalTimes[$i-1];
+      // grab the first stop and check how often vehicles arrive at it
+      list($stopID, $directionID) = $this->getFirstStopIDAndDirection();
+            
+      if ($stopID) {
+        $arrivalTimes = array();
+        
+        foreach ($this->directions[$directionID]['segments'] as $segment) {
+          if ($segment->getService()->isRunning($time)) {
+            $segmentArrivalTimes = $segment->getArrivalTimesForStop($stopID);
+            $arrivalTimes = array_merge($arrivalTimes, $segmentArrivalTimes);
           }
         }
-        if ($frequency > 0) { break; }
+        $arrivalTimes = array_unique($arrivalTimes);
+        sort($arrivalTimes);
+      
+        for ($i = 0; $i < count($arrivalTimes); $i++) {
+          if ($arrivalTimes[$i] > $time) {
+            if (isset($arrivalTimes[$i+1])) {
+              $frequency = $arrivalTimes[$i+1] - $arrivalTimes[$i];
+            } else if (isset($arrivalTimes[$i-1])) {
+              $frequency = $arrivalTimes[$i] - $arrivalTimes[$i-1];
+            }
+          }
+          if ($frequency > 0 && $frequency < MAX_ARRIVAL_DELAY) { break; }
+        }
       }
-
+      if ($frequency == 0) { $frequency = 60*60; } // default to 1 hour
     }
     return $frequency;
   }
@@ -1554,13 +1620,15 @@ class TransitService {
   public function isRunning($time) {
     if ($this->live) { return true; }
   
-    $date = intval(strftime('%Y%m%d', $time));
-    $dayName = strftime('%A', $time);
+    $datetime = TransitTime::getLocalDatetimeFromTimestamp($time);
     
-    $hour = intval(strftime('%H', $time));
+    $hour = intval($datetime->format('H'));
     if ($hour < 5) {
-      $date--; // before 5am is part of the previous day
+      $datetime->modify('-1 day'); // before 5am is part of the previous day
     }
+    
+    $date = intval($datetime->format('Ymd'));
+    $dayName = $datetime->format('l');
     
     $insideValidDateRange = false;
     foreach ($this->dateRanges as $dateRange) {

@@ -220,14 +220,20 @@ class TransitModule extends Module {
         break;
       
       case 'info':
-        $infoConfig = $this->loadWebAppConfigFile('transit-info', 'infoConfig');
         $infoType = $this->getArg('id');
+
+        $feedConfigFile = realpath_exists(SITE_CONFIG_DIR."/feeds/{$this->id}-info.ini");
+        if ($feedConfigFile) {
+          $infoConfig = parse_ini_file($feedConfigFile, true);
+        }
         
-        if (!isset($infoConfig[$infoType], $infoConfig[$infoType]['content']) || 
-            !count($infoConfig[$infoType]['content'])) {
+        if (!isset($infoConfig[$infoType]) || !strlen($infoConfig[$infoType])) {
           $this->redirectTo('index', array());
         }
-        $this->assign('infoType', $infoType);        
+        
+        $this->addInlineCSS('h2 { padding-top: 10pt; }');
+
+        $this->assign('content', $infoConfig[$infoType]);
         break;
         
       case 'announcement':
