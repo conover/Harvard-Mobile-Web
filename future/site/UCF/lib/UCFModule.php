@@ -61,7 +61,7 @@ abstract class UCFModule extends Module{
 				'timeout' => (string)$timeout,
 			),
 		));
-		$data = file_get_contents($url, false, $options);
+		$data = @file_get_contents($url, false, $options);
 		return $data;
 	}
 	
