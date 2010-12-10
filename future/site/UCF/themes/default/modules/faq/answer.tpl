@@ -7,7 +7,7 @@
 	</ul>
 	<div class="text">
 		<div class='block'>
-			<h2>{$question}</h2>
+			<h3>{$question}</h3>
 			<div class="answer">
 				{$answer}
 			</div>
