@@ -87,7 +87,7 @@ class MapModule extends UCFModule {
     $this->assign('search_q', $query);
     $url = $map_api . urlencode($query);
     
-    $contents = file_get_contents($url);
+    $contents = $this->fromCache($url);
     $contents = utf8_encode($contents);
     $results = json_decode($contents);
     
@@ -111,7 +111,7 @@ class MapModule extends UCFModule {
       // TODO: move url to config/web/map.ini
       $map_api = $this->options['MAP_SERVICE_LOCATION'];
       $url = $map_api . urlencode($this->location);
-      $contents = file_get_contents($url);
+      $contents = $this->fromCache($url);
       $loc = utf8_encode($contents);
       $this->assign('location', $loc);
       $this->assign('location_id', $this->location);
