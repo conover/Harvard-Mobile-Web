@@ -16,9 +16,9 @@
 		<li class="arrow"><a href="categories/">Select a different category to search </a></li>
 	</ul>
 	<ul class="gloss">
-	{foreach $items as $item}
-		<li class="arrow"><a href="answer.php?url={urlencode($item->getLink())}&amp;q={$q}">
-			{$item->getTitle()}
+	{foreach $items as $id=>$item}
+		<li class="arrow"><a href="answer/?url={urlencode($item->get_link())}&amp;q={$q}">
+			{$item->get_title()}
 		</a></li>
 	{/foreach}
 	</ul>

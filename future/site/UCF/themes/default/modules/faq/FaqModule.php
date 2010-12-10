@@ -20,16 +20,10 @@ class FaqModule extends UCFModule {
 	);
 	
 	function getFeed($url){
-		$dummy = array(
-			'TITLE'            => "None",
-			'SLUG'             => "none",
-			'BASE_URL'         => $url,
-			'CONTROLLER_CLASS' => "GazetteRSSController",
-			'ITEM_CLASS'       => "GazetteRSSItem",
-			'ENCLOSURE_CLASS'  => "GazetteRSSEnclosure",
-			'MEDIAGROUP_CLASS' => "GazetteRSSMediaGroup",
-		);
-		$feed = RSSDataController::factory($dummy);
+		$feed = new SimplePie();
+		$feed->set_feed_url($url);
+		$feed->set_cache_location(CACHE_DIR);
+		$feed->init();
 		return $feed;
 		
 	}
@@ -97,7 +91,7 @@ class FaqModule extends UCFModule {
 		
 		$url     = $url.'?'.$qstring;
 		$feed    = $this->getFeed($url);
-		return $feed->items();
+		return $feed->get_items();
 	}
 	
 	function indexPage(){
