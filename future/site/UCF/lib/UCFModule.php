@@ -10,6 +10,7 @@ abstract class UCFModule extends Module{
 	function sluggify($text)
 	{
 		$slug = $text;
+		$slug = trim($slug);
 		$slug = strtolower($slug);
 		$slug = preg_replace('/[^A-Z1-9\s\-]/i', '', $slug);
 		$slug = preg_replace('/[\s]+/', ' ', $slug);
