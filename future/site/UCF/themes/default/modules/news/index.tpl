@@ -1,8 +1,7 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-
-	<h2>{block name="news_header"}{$feed->title}{/block}</h2>
+	<h2>{block name="news_header"}{$feed->get_title()}{/block}</h2>
 
 	<ul class="gloss">
 		<li class="arrow"><a href="feeds/">View Stories by Category</a></li>
@@ -22,13 +21,7 @@
 						<a href="{$article->url}" class="img"><img src="{if $article->image->get_thumbnail()}{$article->image->get_thumbnail()}{else}{$article->image->get_link()}{/if}"></a>
 						{/if}
 						<a href="{$article->url}">{$article->get_description()}</a>
-					</section>	
-					<footer>
-				
-					</footer>
-		
-		
-		
+					</section>
 				</article>
 			</li>
 			{/foreach}
