@@ -4,7 +4,7 @@
 * Web Communications - Fall 2010
 */
 
-class MapModule extends Module {
+class MapModule extends UCFModule {
   protected $id = 'map';
   protected $location = false;
   protected $locate_me = false;
@@ -17,7 +17,6 @@ class MapModule extends Module {
       - initializes private vars based on URL
   \****************************************************************************/
   function __construct($page='index', $args=array()){
-    
     parent::__construct($page, $args);
     
     // accept building numbers
@@ -81,8 +80,7 @@ class MapModule extends Module {
     
     if(!isset($_GET['q'])) return;
     
-    // TODO: move to config/web/map.ini
-    $map_api = 'http://webcom.dev.smca.ucf.edu/map/json/search?q=';
+    $map_api = $this->options['MAP_SERVICE_SEARCH'];
     
     $query = trim(stripslashes(strip_tags($_GET['q'])));
     if(empty($query)) return;
@@ -111,7 +109,7 @@ class MapModule extends Module {
     
     if($this->location){
       // TODO: move url to config/web/map.ini
-      $map_api = 'http://webcom.dev.smca.ucf.edu/map/json/location/';
+      $map_api = $this->options['MAP_SERVICE_LOCATION'];
       $url = $map_api . urlencode($this->location);
       $contents = file_get_contents($url);
       $loc = utf8_encode($contents);
