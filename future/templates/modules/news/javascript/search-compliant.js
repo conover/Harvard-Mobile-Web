@@ -1,1 +1,1 @@
-index-mobile.js
+index-compliant.js
