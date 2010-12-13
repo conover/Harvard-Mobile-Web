@@ -1,7 +1,7 @@
 <?php
 
-require_once('TransitDataParser.php');
-require_once('DiskCache.php');
+require_once realpath(LIB_DIR.'/TransitDataParser.php');
+require_once realpath(LIB_DIR.'/DiskCache.php');
 
 class TranslocTransitDataParser extends TransitDataParser {
   private static $caches = array();

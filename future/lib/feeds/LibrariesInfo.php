@@ -2,60 +2,69 @@
 
 //require_once 'lib_constants.inc';
 require_once realpath(LIB_DIR.'/feeds/html2text.php');
+require_once realpath(LIB_DIR.'/DiskCache.php');
 
 class Libraries{
+  private static $cache = null;
+
+  private static function getLibraryCache() {
+    if (!isset(self::$cache)) {
+      self::$cache = new DiskCache(
+        $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR'), 
+        $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'), TRUE);
+      self::$cache->preserveFormat();
+      self::$cache->setSuffix('.xml');
+    }
+    
+    return self::$cache;
+  }
+
+  private static function query($cacheName, $url) {
+    $cache = self::getLibraryCache();
+    $xml = null;
+    
+    if ($cache->isFresh($cacheName)) {
+      $xml = simplexml_load_string($cache->read($cacheName));
+      
+    } else {
+      $contents = file_get_contents($url);
+      if ($contents == "") {
+        error_log("Failed to read contents from $url, reading expired cache");
+        $xml = simplexml_load_string($cache->read($cacheName));
+        
+      } else {
+        $xml = simplexml_load_string($contents);
+        if (!$xml) {
+          error_log("Failed to parse contents from $url, reading expired cache");
+          $xml = simplexml_load_string($cache->read($cacheName));
+        
+        } else {
+          $cache->write($contents, $cacheName);
+        }
+      }
+    }
+    return $xml;
+  }
 
     public static function getAllLibraries() {
 
       $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
-
       error_log("LIBRARIES DEBUG: " . $xmlURLPath);
-      $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR').'/librariesInfo.xml';
-
-      if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'))) {
-      }
-      else {
-          $handle = fopen($filenm, "w");
-          fwrite($handle, file_get_contents($xmlURLPath));
-          //$urlString = $filenm;
-      }
-
-      $xml = file_get_contents($filenm);
-
-        if ($xml == "") {
-            // if failed to grab xml feed, then run the generic error handler
-            throw new DataServerException('COULD NOT GET XML');
-        }
-
-        $xml_obj = simplexml_load_string($xml);
-        return self::getAllLibrariesOrArchives('library', $xml_obj);
+        
+      $xml_obj = self::query('librariesInfo', $xmlURLPath);
+        
+      return self::getAllLibrariesOrArchives('library', $xml_obj);
     }
 
 
     public static function getAllArchives() {
 
       $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
-
       error_log("LIBRARIES DEBUG: " . $xmlURLPath);
-      $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR').'/librariesInfo.xml';
-
-      if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'))) {
-      }
-      else {
-          $handle = fopen($filenm, "w");
-          fwrite($handle, file_get_contents($xmlURLPath));
-          //$urlString = $filenm;
-      }
-
-      $xml = file_get_contents($filenm);
-
-        if ($xml == "") {
-            // if failed to grab xml feed, then run the generic error handler
-            throw new DataServerException('COULD NOT GET XML');
-        }
-
-        $xml_obj = simplexml_load_string($xml);
-        return self::getAllLibrariesOrArchives('archive', $xml_obj);
+        
+      $xml_obj = self::query('librariesInfo', $xmlURLPath);
+      
+      return self::getAllLibrariesOrArchives('archive', $xml_obj);
     }
 
 
@@ -115,27 +124,10 @@ class Libraries{
 
        public static function extractSpecificRepoDetails($idTag, $typeString) {
 
-        $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
-
-        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
-        $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR') . '/librariesInfo.xml';
-
-        if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'))) {
-
-        } else {
-            $handle = fopen($filenm, "w");
-            fwrite($handle, file_get_contents($xmlURLPath));
-            //$urlString = $filenm;
-        }
-
-        $xml = file_get_contents($filenm);
-
-        if ($xml == "") {
-            // if failed to grab xml feed, then run the generic error handler
-            throw new DataServerException('COULD NOT GET XML');
-        }
-
-        $xml_obj = simplexml_load_string($xml);
+         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
+         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+        
+         $xml_obj = self::query('librariesInfo', $xmlURLPath);
         
          $institute = array();
          foreach ($xml_obj->institution as $institution) {
@@ -181,25 +173,9 @@ class Libraries{
        public static function getOpenNow() {
 
         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
-
         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
-        $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR').'/librariesInfo.xml';
-
-        if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'))) {
-        } else {
-            $handle = fopen($filenm, "w");
-            fwrite($handle, file_get_contents($xmlURLPath));
-            //$urlString = $filenm;
-        }
-
-        $xml = file_get_contents($filenm);
-
-        if ($xml == "") {
-            // if failed to grab xml feed, then run the generic error handler
-            throw new DataServerException('COULD NOT GET XML');
-        }
-
-        $xml_obj = simplexml_load_string($xml);
+        
+        $xml_obj = self::query('librariesInfo', $xmlURLPath);
 
         $institutes = array();
 
@@ -237,31 +213,10 @@ class Libraries{
 
        public static function getLibraryDetails($libId, $libName){
 
-       $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIB_DETAIL_BASE'). $libId;
-
-        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
-
-        $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR'). '/lib-' .$libId. $libName . '.xml';
-
-        if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT')*24)) {
-        }
-       else {
-            $handle = fopen($filenm, "w");
-            fwrite($handle, file_get_contents($xmlURLPath));
-            //$urlString = $filenm;
-        }
-
-        //$xml = file_get_contents($filenm);
-         
-
-        $xml = file_get_contents($xmlURLPath);
-
-        if ($xml == "") {
-            // if failed to grab xml feed, then run the generic error handler
-            throw new DataServerException('COULD NOT GET XML');
-        }
-
-        $xml_obj = simplexml_load_string($xml);
+         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIB_DETAIL_BASE').$libId;
+         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+        
+         $xml_obj = self::query("lib-{$libId}{$libName}", $xmlURLPath);
 
            return self::getLibOrArchiveDetails($xml_obj, $libName);
        }
@@ -270,30 +225,10 @@ class Libraries{
 
        public static function getArchiveDetails($archiveId, $archiveName){
 
-       $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_ARCHIVE_DETAIL_BASE'). $archiveId;
-
-        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
-
-        $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR'). '/lib-' .$archiveId. $archiveName . '.xml';
-
-        if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT')*24)) {
-        }
-       else {
-            $handle = fopen($filenm, "w");
-            fwrite($handle, file_get_contents($xmlURLPath));
-            //$urlString = $filenm;
-        }
-
-        $xml = file_get_contents($filenm);
-
-        //$xml = file_get_contents($xmlURLPath);
-
-        if ($xml == "") {
-            // if failed to grab xml feed, then run the generic error handler
-            throw new DataServerException('COULD NOT GET XML');
-        }
-
-        $xml_obj = simplexml_load_string($xml);
+       $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_ARCHIVE_DETAIL_BASE').$archiveId;
+       error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+        
+       $xml_obj = self::query("lib-{$archiveId}{$archiveName}", $xmlURLPath);
 
            return self::getLibOrArchiveDetails($xml_obj, $archiveName);
        }
@@ -582,30 +517,12 @@ class Libraries{
 
        public static function searchItems($queryTerms) {
 
-        $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_SEARCH_BASE') . 'q=' . urlencode($queryTerms);
-
-          error_log("LIBRARIES SEARCH DEBUG: " . $xmlURLPath);
-          $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR').'/search-' .$queryTerms .'.xml';
-
-          if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'))) {
-          }
-          else {
-          $handle = fopen($filenm, "w");
-          fwrite($handle, file_get_contents($xmlURLPath));
-          //$urlString = $filenm;
-          }
-
-          $xml = file_get_contents($filenm);
-         
-       // $xml = file_get_contents($xmlURLPath);
-        //print_r(json_encode($xml));
-
-        if ($xml == "") {
-            // if failed to grab xml feed, then run the generic error handler
-            throw new DataServerException('COULD NOT GET XML');
-        }
-
-        $xml_obj = simplexml_load_string($xml);
+        $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_SEARCH_BASE').http_build_query(array(
+          'q' => $queryTerms,
+        ));
+        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+        
+        $xml_obj = self::query("search-{$queryTerms}", $xmlURLPath);
         //print_r($xml_obj);
 
         $totalResults = explode(":", $xml_obj->totalResults[0]);
@@ -761,24 +678,11 @@ class Libraries{
 
 
     public static function getFullAvailability($itemId) {
-         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_AVAILABILITY_BASE') . $itemId;
+         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_AVAILABILITY_BASE').$itemId;
+         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+        
+         $xml_obj = self::query("fullAvailability-{$itemId}", $xmlURLPath);
 
-          error_log("LIBRARIES FULL AVAILABILITY DEBUG: " . $xmlURLPath);
-          $filenm = $GLOBALS['siteConfig']->getVar('LIB_CACHE_DIR').'/fullAvailability-' .$itemId .'.xml';
-
-          if (file_exists($filenm) && ((time() - filemtime($filenm)) < $GLOBALS['siteConfig']->getVar('LIB_DIR_CACHE_TIMEOUT'))) {
-          }
-          else {
-          $handle = fopen($filenm, "w");
-          fwrite($handle, file_get_contents($xmlURLPath));
-          //$urlString = $filenm;
-          }
-
-          $xml = file_get_contents($filenm);
-
-          
-          $xml_obj = simplexml_load_string($xml);
-          
           $librariesToReturn = array();
         foreach ($xml_obj->branch as $branch) {
 
@@ -1040,4 +944,3 @@ class Libraries{
 
 }
 
-?>
