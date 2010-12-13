@@ -150,7 +150,11 @@ class Libraries{
 
                  $name = explode(":", $institution->name[0]);
                  
-                 $address = explode(":", $institution->location->address[0]);
+                 $addressArray = explode(":", $institution->location->address[0]);
+                 $address = HTML2TEXT($addressArray[0]);
+                 for($y=1; $y < count($addressArray); $y++)
+                    $address = $address . ":" . HTML2TEXT($address[$y]);
+
                  $longitude = explode(":",$institution->location->longitude);
                  $latitude = explode(":", $institution->location->latitude);
 
@@ -158,7 +162,7 @@ class Libraries{
                  $institute['primaryName'] = $name[0];
                  $institute['id'] = $id[0];
                  $institute['type'] = $type;
-                 $institute['address'] = HTML2TEXT($address[0]);
+                 $institute['address'] = $address; //HTML2TEXT($address[0]);
                  $institute['latitude'] = $latitude[0];
                  $institute['longitude'] = $longitude[0];
 
@@ -785,13 +789,16 @@ class Libraries{
             $repoDetails = array();
             $repoDetails = self::extractSpecificRepoDetails($libId[0], $libType[0]);
 
-
-            $collection = $branch->collection;
-            $parentCallNumber = "";
-            $parentCallNumber = explode(":",$collection->callnumber);
-
             $itemsToReturn = array();
             $statsList = array();
+
+            $collectionItemOnly = array();
+            foreach($branch->collection as $collection) {
+            $parentCallNumber = "";
+            $parentCallNumber = explode(":",$collection->callnumber);
+            
+            
+            $itemCount = 0;
             foreach($collection->items->itemrecord as $item){
 
                 $isAvailable = "N";
@@ -814,31 +821,30 @@ class Libraries{
                 else
                      $itemArray['available'] = "NO";
 
-                if (strlen($callNumber[0]) > 0)
-                    $itemArray['callNumber'] = $callNumber[0];
+                //if (strlen($callNumber[0]) > 0)
+                $itemArray['callNumber'] = $callNumber[0];
 
-                else
-                    $itemArray['callNumber'] = $parentCallNumber[0];
+               // else
+                 //   $itemArray['callNumber'] = $parentCallNumber[0];
 
                 
                 $stA = explode(" | ", $stat[0]);
 
                 $seachStringForCheckedOut = $stA[1];
                 for ($r=2; $r < count($stA); $r++)
-                $seachStringForCheckedOut = $seachStringForCheckedOut . $stA[$r];
+                    $seachStringForCheckedOut = $seachStringForCheckedOut . " " . $stA[$r];
 
                 $seachStringForCheckedOut = strtolower($seachStringForCheckedOut);
 
                 $itemArray['statMain'] = strtolower($stA[0]);
-                $itemArray['statSecondary'] = strtolower($stA[1]);
+                $itemArray['statSecondary'] = $seachStringForCheckedOut;
                 $itemArray['requestUrl'] = $reqUrl;
 
                 $pos = strpos($seachStringForCheckedOut, 'checked out');
+                $pos2 = strpos($seachStringForCheckedOut, 'not checked out');
 
-                if ($pos === false){
-                     $itemArray['checkedOutItem'] = "NO";
-                }
-                else {
+                $itemArray['checkedOutItem'] = "NO";
+                if (($pos >= 0) && ($pos2 === FALSE)){
                     $itemArray['checkedOutItem'] = "YES";
                 }
 
@@ -859,15 +865,63 @@ class Libraries{
                 if (!in_array(strtolower($stA[0]), $statsList)){
                     $statsList[] = strtolower($stA[0]);
                 }
-                
+                $itemCount++;
+            }
+
+                if ($itemCount == 0){
+                    $collectionNameArray = explode(":",$collection->collectionname[0]);
+                    $collectionName = $collectionNameArray[0];
+
+                    for($e=1; $e < count($collectionNameArray); $e++)
+                        $collectionName = $collectionName . $collectionNameArray[$e];
+
+
+                    $collectionCallNumber = $parentCallNumber[0];
+
+                    $collectionAvailVals = array();
+
+                    foreach($collection->holdtag as $holdtag) {
+                        $collectionAvailValArray = explode(":",$holdtag->availval[0]);
+                    
+                        $collectionAvailVal = $collectionAvailValArray[0];
+                        for($w=1; $w < count($collectionAvailValArray); $w++)
+                            $collectionAvailVal = $collectionAvailVal . $collectionAvailValArray[$w];
+
+                        $collectionAvailVals[] = $collectionAvailVal;
+                    }
+
+                    if (strlen($collectionName) == 0)
+                        $collectionName = $collectionCallNumber;
+
+                    $noItemMessage = "";
+                    $noItemMessageArray = $branch->noitems[0];
+                    $noItemMessage = $noItemMessage . $noItemMessageArray[0];
+
+                    for($t=1; $t < count($noItemMessageArray); $t++)
+                        $noItemMessage = $noItemMessage . $noItemMessageArray[$t];
+                    
+                    $collectionItem = array();
+                    $collectionItem['collectionName'] = $collectionName;
+                    $collectionItem['collectionCallNumber'] = $collectionCallNumber;
+                    $collectionItem['collectionAvailVal'] = $collectionAvailVals;
+                    $collectionItem['noItemMessage'] = $noItemMessage;
+
+
+                    if (((strlen($collectionName) > 0) || (count($collectionAvailVals) > 0)) || (strlen($noItemMessage) > 0))
+                        $collectionItemOnly[] = $collectionItem;
+
+                }
+
             }
 
             $statsToReturn = array();
+
             for($j=0; $j < count($statsList); $j++){
             $statArr = array();
             $statArr['availableItems'] = array();
             $statArr['checkedOutItems'] = array();
             $statArr['unavailableItems'] = array();
+            $statArr['collectionOnlyItems'] = array();
             $availCount = 0;
             $requestCount = 0;
             $unavailCount = 0;
@@ -911,17 +965,37 @@ class Libraries{
                 }
 
                 if (($availCount == 0) && ($unavailCount == 0) && ($checkedOutCount == 0) && ($requestCount > 0))
-                    $checkedOutCount++;
+                    $checkedOutCount = $requestCount;
                 
                 $statArr['availCount'] = $availCount;
                 $statArr['unavailCount'] = $unavailCount;
                 $statArr['requestCount'] = $requestCount;
                 $statArr['checkedOutCount'] = $checkedOutCount;
+                $statArr['collectionOnlyCount'] = 0;// $collectionOnlyCount;
                 $statArr['callNumber'] = $callNo;
 
                 $statsToReturn[] = $statArr;
             }
 
+            if (count($collectionItemOnly) > 0) {
+                $collectionOnlyStat = array();
+
+                $collectionOnlyStat['availableItems'] = array();
+                $collectionOnlyStat['checkedOutItems'] = array();
+                $collectionOnlyStat['unavailableItems'] = array();
+                $collectionOnlyStat['collectionOnlyItems'] = $collectionItemOnly;
+
+                $collectionOnlyStat['availCount'] = 0;
+                $collectionOnlyStat['unavailCount'] = 0;
+                $collectionOnlyStat['requestCount'] = 0;
+                $collectionOnlyStat['checkedOutCount'] = 0;
+                $collectionOnlyStat['collectionOnlyCount'] = count($collectionItemOnly);
+                $collectionOnlyStat['callNumber'] = "";
+
+                $statsToReturn[] = $collectionOnlyStat;
+                
+            }
+            
             $lib = array();
             $lib['name'] = $libName[0];
             $lib['id'] = $libId[0];
@@ -930,7 +1004,8 @@ class Libraries{
             //$lib['items'] = $itemsToReturn;
             $lib['itemsByStat'] = $statsToReturn;
 
-            $librariesToReturn[] = $lib;
+            if (count($repoDetails) > 0)
+                $librariesToReturn[] = $lib;
         }
 
         return $librariesToReturn;
