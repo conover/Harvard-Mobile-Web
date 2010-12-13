@@ -271,10 +271,16 @@ class Libraries{
                  $directionArray = explode(":",$institution->location->directions[0]);
                  $direction = $directionArray[0];
                  for ($j=1; $j < count($directionArray); $j++){
-                    $direction = $direction .":" .$directionArray[$j];
-                 }
-                    
+                    $direction .= ":" .$directionArray[$j];
+                 }  
                  $direction = HTML2TEXT($direction);
+                  
+                 $addressArray = explode(":",$institution->location->address[0]);
+                 $address = $addressArray[0];
+                 for ($j=1; $j < count($addressArray); $j++){
+                    $address .= ":" .$addressArray[$j];
+                 }
+                 $address = HTML2TEXT($address);
 
                  $latitude = explode(":",$institution->location->latitude[0]);
                  $latitude = $latitude[0];
@@ -349,6 +355,7 @@ class Libraries{
                   $details['primaryname'] = $primaryName;
                   $details['id'] = $id;
                   $details['type'] = $type;
+                  $details['address'] = $address;
                   $details['directions'] = $direction;
                   $details['longitude'] = $longitude;
                   $details['latitude'] = $latitude;

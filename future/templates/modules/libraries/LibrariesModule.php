@@ -4,6 +4,7 @@ require_once realpath(LIB_DIR.'/Module.php');
 require_once realpath(LIB_DIR.'/feeds/LibrariesInfo.php');
 
 define('LIBRARY_LIBRARIES_COOKIE', 'libraries');
+define('LIBRARY_ARCHIVES_COOKIE', 'archives');
 define('LIBRARY_LIBRARY_ITEMS_COOKIE', 'libraryItems');
 
 
@@ -33,6 +34,22 @@ class LibrariesModule extends Module {
     ));
   }
   
+  private function locationAndHoursURL($type, $id, $name) {
+    return $this->buildBreadcrumbURL('locationAndHours', array(
+      'type' => $type,
+      'id'   => $id,
+      'name' => $name,
+    ));
+  }
+  
+  private function fullHoursURL($type, $id, $name) {
+    return $this->buildBreadcrumbURL('fullHours', array(
+      'type' => $type,
+      'id'   => $id,
+      'name' => $name,
+    ));
+  }
+  
   protected function initializeForPage() {
     switch ($this->page) {
       case 'index':
@@ -48,16 +65,10 @@ class LibrariesModule extends Module {
         
           $section = array();
           foreach ($config['titles'] as $i => $title) {
-            $entry = array('title' => $title);
-            
-            $params = array();
-            if (isset($config['bookmarkTypes']) && $config['bookmarkTypes'][$i]) {
-              $section['bookmarks'] = true;
-              $params['type'] = $config['bookmarkTypes'][$i];
-            }
-            $entry['url'] = $this->buildBreadcrumbURL($config['pages'][$i], $params);
-            
-            $section['items'][] = $entry;
+            $section['items'][] = array(
+              'title' => $title,
+              'url'   => $config['urls'][$i],
+            );
           }
           $sections[] = $section;
         }
@@ -70,7 +81,7 @@ class LibrariesModule extends Module {
         $item = unserialize($this->getArg('item'));
         if ($item && is_array($item)) {
           $data = Libraries::getFullAvailability($item['id']);
-          error_log(print_r($data, true));
+          //error_log(print_r($data, true));
           
           $locations = array();
           /*foreach ($data as $entry) {
@@ -127,7 +138,7 @@ class LibrariesModule extends Module {
         
         if ($this->args['filter']) {
           $data = Libraries::searchItems($searchTerms);
-          error_log(print_r($data, true));
+          //error_log(print_r($data, true));
           $results = array();
           foreach ($data as $entry) {
             $results[] = array(
@@ -156,22 +167,130 @@ class LibrariesModule extends Module {
         
       case 'libraries':
         $data = Libraries::getAllLibraries();
-        error_log(print_r($data, true));
+        //error_log(print_r($data, true));
         
         $libraries = array();
         foreach ($data as $entry) {
           $libraries[] = array(
             'title' => $entry['name'],
-            'url' => $this->libraryURL($entry),
+            'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
           );
         }
         
+        $this->assign('libraries', $libraries);
         break;
         
       case 'archives':
+        $data = Libraries::getAllArchives();
+        //error_log(print_r($data, true));
+        
+        $archives = array();
+        foreach ($data as $entry) {
+          $archives[] = array(
+            'title' => $entry['name'],
+            'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
+          );
+        }
+        
+        $this->assign('archives', $archives);
         break;
         
       case 'locationAndHours':
+        $type = $this->getArg('type');
+        $id = $this->getArg('id');
+        $name = $this->getArg('name');
+        
+        if ($type == 'library') {
+          $data = Libraries::getLibraryDetails($id, $name);
+          //error_log(print_r($data, true));
+          
+        } else if ($type == 'archive') {
+          $data = Libraries::getArchiveDetails($id, $name);
+          //error_log(print_r($data, true));
+        
+        } else {
+          $this->redirectTo('index');
+        }
+        
+        $info['hours'] = array();
+        if (count($data['weeklyHours'])) {
+          $now = new DateTime();
+          $today = intval($now->format('Ymd'));
+          
+          foreach ($data['weeklyHours'] as $entry) {
+            if (intval($entry['date']) >= $today && count($info['hours']) < 3) {
+              $info['hours'][] = array(
+                'label' => $entry['day'],
+                'title' => $entry['hours'],
+              );
+            }
+          }
+          $info['hours'][] = array(
+            'label' => '',
+            'title' => "Full week's schedule",
+            'url'   => $this->fullHoursURL($type, $id, $name),            
+          );
+        }
+        if (!count($info['hours'])) {
+          unset($info['hours']);
+        }
+        
+        $info['directions'] = array();
+        if ($data['address']) {
+          $info['directions'][] = array(
+            'label' => 'Location',
+            'title' => $data['address'],
+            'url'   => '/map/search.php?'.http_build_query(array(
+              'filter' => $data['address'],
+            )),
+            'class' => 'map',
+          );
+        }
+        if ($data['directions']) {
+          $info['directions'][] = array(
+              'label' => 'Directions',
+              'title' => $data['directions'],
+          );
+        }
+        if (!count($info['directions'])) {
+          unset($info['directions']);
+        }
+        
+        $info['contact'] = array();
+        if ($data['website']) {
+          $info['contact'][] = array(
+            'label' => 'Website',
+            'title' => $data['website'],
+            'url' => $data['website'],
+          );
+        }
+        if ($data['email']) {
+          $info['contact'][] = array(
+            'label' => 'Email',
+            'title' => str_replace('@', '@&shy;', $data['email']),
+            'url'   => "mailto:{$data['email']}",
+            'class' => 'email',
+          );
+        }
+        foreach ($data['phone'] as $phone) {
+          $info['contact'][] = array(
+            'label' => $phone['description'] ? $phone['description'] : 'Phone',
+            'title' => str_replace('-', '-&shy;', $phone['number']),
+            'url'   => 'tel:'.strtr($phone['number'], '-', ''),
+            'class' => 'phone',
+          );
+        }
+        if (!count($info['contact'])) {
+          unset($info['contact']);
+        }
+        
+        $item = array(
+          'name' => $name,
+          'cookie' => ($type == 'library') ? LIBRARY_LIBRARIES_COOKIE : LIBRARY_ARCHIVES_COOKIE,
+          'infoSections' => $info,
+        );
+        
+        $this->assign('item', $item);
         break;
         
       case 'links':
