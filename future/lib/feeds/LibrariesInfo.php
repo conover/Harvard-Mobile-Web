@@ -98,6 +98,7 @@ class Libraries{
                  $institute = array();
 
                  $name = explode(":", $institution->name[0]);
+                 $primaryName = explode(":", $institution->primaryname);
                  $id = explode(":", $institution->id[0]);
                  $address = explode(":", $institution->location->address[0]);
                  $longitude = explode(":",$institution->location->longitude);
@@ -105,7 +106,7 @@ class Libraries{
                  $hrsOpenToday = explode(":", $timeOpen);
                  
                  $institute['name'] = $name[0];
-                 $institute['primaryName'] = $name[0];
+                 $institute['primaryName'] = $primaryName[0];
                  $institute['id'] = $id[0];
                  $institute['type'] = $type;
                  $institute['address'] = HTML2TEXT($address[0]);
@@ -141,7 +142,7 @@ class Libraries{
              if (($type == $typeString) && ($id[0] == $idTag)){
 
                  $name = explode(":", $institution->name[0]);
-                 
+                 $primaryName = explode(":", $institution->primaryname);
                  $addressArray = explode(":", $institution->location->address[0]);
                  $address = HTML2TEXT($addressArray[0]);
                  for($y=1; $y < count($addressArray); $y++)
@@ -151,7 +152,7 @@ class Libraries{
                  $latitude = explode(":", $institution->location->latitude);
 
                  $institute['name'] = $name[0];
-                 $institute['primaryName'] = $name[0];
+                 $institute['primaryName'] = $primaryName[0];
                  $institute['id'] = $id[0];
                  $institute['type'] = $type;
                  $institute['address'] = $address; //HTML2TEXT($address[0]);
