@@ -49,6 +49,11 @@ class MapModule extends UCFModule {
 		Manditory, abstract method of Module.php
 	\****************************************************************************/
 	protected function initializeForPage() {
+		
+		// will always want the Campus_Map object, should be
+		// the only variable exposed to the window
+		$this->addInlineJavascript('var Campus_Map = { };');
+		
 		switch ($this->page) {
 			
 			case 'index':
@@ -105,12 +110,16 @@ class MapModule extends UCFModule {
 	protected function map() {
 		
 		// add script to header
-		// the only variable exposed to the window should be Campus_Map
 		// rest of the js is in theme/map/index template
 		$this->addExternalJavascript('http://maps.google.com/maps/api/js?sensor=false');
+		
 		$url = URL_PREFIX . 'map/options/';
 		$this->assign('options_url', $url);
-		$this->addInlineJavascript('var Campus_Map = { };');
+		
+		if($this->location || $this->locate_me){
+			$this->addExternalJavascript('http://code.google.com/apis/gears/gears_init.js');
+			$this->addExternalJavascript('/media/-/geo.js');
+		}
 		
 		if($this->location){
 			// TODO: move url to config/web/map.ini

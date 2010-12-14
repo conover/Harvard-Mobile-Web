@@ -141,47 +141,32 @@ Campus_Map.directions = function(){
 
 /******************************************************************************\
  Geolocation
-	http://code.google.com/apis/maps/documentation/javascript/basics.html#DetectingUserLocation
+	Fails on android (super lame):
+		http://code.google.com/apis/maps/documentation/javascript/basics.html#DetectingUserLocation
+	Using google gears: 
+		http://code.google.com/p/geo-location-javascript/
+	
+	Sets Campus_Map.me then calls callback fuction
 \******************************************************************************/
 Campus_Map.me = false;
 Campus_Map.geoLocate = function(callback){
-	// Note that using Google Gears requires loading the Javascript
-	// at http://code.google.com/apis/gears/gears_init.js
-	var handleNoGeolocation = function(errorFlag) {
+	
+	var geo_fail = function(e) {
 		Campus_Map.me = false;
-		if (errorFlag == true) {
-			alert("Geolocation service failed.");
-		} else {
-			alert("Your browser doesn't support geolocation.");
-		}
+		var error = "Geolocation service failed"
+		if(e) error += ": " + e.message;
+		alert(error);
+		
 	}
-	var browserSupportFlag = true;
-	// Try W3C Geolocation (Preferred)
-	if(navigator.geolocation) {
-		Campus_Map.geoContinue = true;
-		navigator.geolocation.getCurrentPosition(function(position) {
-			// for some reason, occassionally gets called twice, fixed with 'geoContinue'
-			if(Campus_Map.geoContinue){
-				Campus_Map.me = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-				Campus_Map[callback]();
-				Campus_Map.geoContinue = false;
-			}
-		}, function() {
-			handleNoGeolocation(browserSupportFlag);
-		});
-	// Try Google Gears Geolocation
-	} else if (google.gears) {
-		browserSupportFlag = true;
-		var geo = google.gears.factory.create('beta.geolocation');
-		geo.getCurrentPosition(function(position) {
-			Campus_Map.me = new google.maps.LatLng(position.latitude,position.longitude);
-			Campus_Map[callback]();
-		}, function() {
-			handleNoGeoLocation(browserSupportFlag); 
-		});
-	// Browser doesn't support Geolocation
-	} else {
-		browserSupportFlag = false;
-		handleNoGeolocation(browserSupportFlag);
+	
+	var geo_success = function(p) {
+		Campus_Map.me = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+		Campus_Map[callback]();
+	}
+	
+	if(geo_position_js.init()){
+		geo_position_js.getCurrentPosition(geo_success,geo_fail,{enableHighAccuracy:true,options:5000});
+	} else{
+		geo_fail({'message': 'Geolocation not available'});
 	}
 }
