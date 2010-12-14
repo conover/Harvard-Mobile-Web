@@ -227,9 +227,9 @@ class TranslocTransitDataParser extends TransitDataParser {
       $url = sprintf($GLOBALS['siteConfig']->getVar('TRANSLOC_SERVICE_URL_FORMAT'), 
         $hostname, $action).http_build_query($params);
       
-      error_log("TranslocTransitDataParser requesting $url", 0);
+      //error_log("TranslocTransitDataParser requesting $url", 0);
       $contents = file_get_contents($url);
-      error_log("TranslocTransitDataParser got data", 0);
+      //error_log("TranslocTransitDataParser got data", 0);
       
       if (!$contents) {
         error_log("Failed to read contents from $url, reading expired cache");
