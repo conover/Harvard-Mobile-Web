@@ -35,7 +35,7 @@
       {block name="item"}
         <div class="itemType {$class}">
           {$info['available']} of {$info['total']}
-          {if $itemTypes['type'] != collection}available {$itemTypes['type']}{else}restricted{/if}<br/>
+          {if $info['type'] != collection}available - {$info['type']}{else}restricted{/if}<br/>
         </div>
       {/block}
     {/foreach}
