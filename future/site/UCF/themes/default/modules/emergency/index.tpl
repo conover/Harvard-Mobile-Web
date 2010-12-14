@@ -17,11 +17,11 @@
 		<h3>University Police</h3>
 		<p><a id="call911" href="tel:911">Emergency Call 911</a></p>
 		<dl>
-			<dt>Safety Escort Patrol Services [SEPS]</dt><dd>407-823-2424</dd>
-			<dt>Victim Services</dt><dd>407-823-2425</dd>
-			<dt>Victim Services (after hours)</dt><dd>407-823-5555</dd>
-			<dt>Parking Services</dt><dd>407-823-5812</dd>
-			<dt>Health Services Information</dt><dd>407-823-2701</dd>
+			<dt>Safety Escort Patrol Services [SEPS]</dt><dd><a href="tel:4078232424">407-823-2424</a></dd>
+			<dt>Victim Services</dt><dd><a href="tel:4078232425">407-823-2425</a></dd>
+			<dt>Victim Services (after hours)</dt><dd><a href="tel:4078235555">407-823-5555</a></dd>
+			<dt>Parking Services</dt><dd><a href="tel:4078235812">407-823-5812</a></dd>
+			<dt>Health Services Information</dt><dd><a href="tel:4078232701">407-823-2701</a></dd>
 		</dl>
 		<div class="clear">&nbsp;</div>
 	</div>
@@ -29,15 +29,15 @@
 	<div class="block">
 		<h3>University Housing</h3>
 		<dl>
-			<dt>Main Office</dt><dd>407-823-4663</dd>
-			<dt>Maintenance</dt><dd>407-823-5587</dd>
+			<dt>Main Office</dt><dd><a href="tel:4078234663">407-823-4663</a></dd>
+			<dt>Maintenance</dt><dd><a href="tel:4078235587">407-823-5587</a></dd>
 		</dl>
 		<div class="clear">&nbsp;</div>
 	</div>
 	
 	<div class="block">
 		<h3>Dept of Environmental Health &amp; Safety</h3>
-		<p>407-823-6300</p>
+		<p><a href="tel:4078236300">407-823-6300</a></p>
 	</div>
 	
 </div>

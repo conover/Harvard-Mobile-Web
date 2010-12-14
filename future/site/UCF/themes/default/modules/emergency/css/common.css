@@ -7,4 +7,4 @@
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F00), to(#9F0000)); 
 	background: -moz-linear-gradient(top,  #F00,  #9F0000);
 	margin-bottom:12px; padding:14px; }
-
+.text .block a { text-decoration:none; border-bottom:1px dotted #808080; }
