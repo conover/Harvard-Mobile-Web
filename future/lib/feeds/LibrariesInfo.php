@@ -376,7 +376,11 @@ class Libraries{
                       $phoneNumberEntry['description'] = HTML2TEXT($description);
                       $phoneNumberEntry['number'] = $phoneNumber;
 
-                      $phoneNumberArray[] = $phoneNumberEntry;
+                      $shouldDisplay = explode(":",$phone['mobiledisplay']);
+                      $shouldDisplay = $shouldDisplay[0];
+
+                      if ($shouldDisplay != "false")
+                       $phoneNumberArray[] = $phoneNumberEntry;
                   }
 
 
@@ -795,8 +799,11 @@ class Libraries{
             $collectionItemOnly = array();
             foreach($branch->collection as $collection) {
             $parentCallNumber = "";
-            $parentCallNumber = explode(":",$collection->callnumber);
-            
+            $parentCallNumberArray = explode(":",$collection->callnumber);
+            $parentCallNumber = $parentCallNumberArray[0];
+
+                for($z=1; $z < count($callNumberArray); $z++)
+                    $parentCallNumber = $parentCallNumber . ":" . $parentCallNumberArray[$z];
             
             $itemCount = 0;
             foreach($collection->items->itemrecord as $item){
@@ -808,7 +815,13 @@ class Libraries{
                 
                 $itemArray = array();
                 $isAvailable = explode(":", $item->isavail);
-                $callNumber = explode(":", $item->call);
+                $callNumber = "";
+                $callNumberArray = explode(":", $item->call);
+                $callNumber = $callNumberArray[0];
+                
+                for($q=1; $q < count($callNumberArray); $q++)
+                    $callNumber = $callNumber . ":" . $callNumberArray[$q];
+                
                 $stat = explode(":", $item->stat);
                 $req = explode(":", $item->req->url);
                 $reqUrl = $req[0];
@@ -821,8 +834,8 @@ class Libraries{
                 else
                      $itemArray['available'] = "NO";
 
-                //if (strlen($callNumber[0]) > 0)
-                $itemArray['callNumber'] = $callNumber[0];
+                
+                $itemArray['callNumber'] = $callNumber;
 
                // else
                  //   $itemArray['callNumber'] = $parentCallNumber[0];
@@ -876,7 +889,7 @@ class Libraries{
                         $collectionName = $collectionName . $collectionNameArray[$e];
 
 
-                    $collectionCallNumber = $parentCallNumber[0];
+                    $collectionCallNumber = $parentCallNumber;
 
                     $collectionAvailVals = array();
 
@@ -945,7 +958,7 @@ class Libraries{
                             $checkedOutCount++;
 
                         if (strlen($parentCallNumber[0]) > 0)
-                             $callNo = $parentCallNumber[0];
+                             $callNo = $parentCallNumber;
 
                         else
                             $callNo = $itm['callNumber'];
