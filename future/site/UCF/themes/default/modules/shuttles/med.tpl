@@ -3,15 +3,16 @@
 {block name="body"}
 <div class="text">
 	<h2>College of Medicine shuttle</h2>
-	<div class="block" id="med">
-		<h3>Fall 2010 - Spring 2011 schedule</h3>
-
-		<p>
-			HSC (Health Sciences Campus) stop locations: 1)Veteran's Way and 2)Sanger Rd.
-			<br>UCF Main Campus stop location: Physical Sciences building
-			<br>Shuttle service runs Monday-Friday*
-		</p>
+	<div class="block">
+		<h3>Stop Locations</h3>
+		<h4>HSC (Health Sciences Campus)</h4>
+		<p>Veteran's Way and Sanger Rd.</p>
 		
+		<h4>UCF Main Campus</h4>
+		<p>Physical Sciences building</p>
+	</div>
+	<div class="block" id="med">
+		<h3>Schedule</h3>
 		<table>
 			<tr><th>Depart UCF Main Campus			 </th><td> 7:20 AM</td></tr>
 			<tr><th>Arrive University Tower			 </th><td> 7:30 AM</td></tr>
@@ -77,8 +78,8 @@
 		</table>
 
 		<p>If shuttle does not arrive at the designated location/time please call 407-826-9999.</p>
-
-		<p>*Shuttle service is not available on observed university holidays.</p>
+		<p>Shuttle service runs Monday-Friday</p>
+		<p>Shuttle service is not available on observed university holidays.</p>
 
 	</div>
 </div>

@@ -3,11 +3,13 @@
 {block name="body"}
 <div class="text">
 	<h2>On-campus shuttles routes</h2>
-	<p>The routes are designed to provide close access to as many of the most populated and important buildings and facilities on the campus on approximate 15 to 20 minute headways.</p>
+	
+	<div class="block">
+		<p>The routes are designed to provide close access to as many of the most populated and important buildings and facilities on the campus on approximate 15 to 20 minute headways.</p>
+	</div>
 	
 	<div class="block">
 		<h3>Black Route <span>(runs clockwise around the campus)</span></h3>
-        <h4>Fall and Spring semesters</h4>
 		<p>(7:00 A.M. to 7:00 P.M.)</p>
         <table>
 			<tr><th>Stop #</th><th>Route</th></tr>
@@ -25,8 +27,7 @@
 	</div>
 	
 	<div class="block">	
-		<h3>Gold Route <span>(runs counter-clockwise around the campus)</span> </h3>
-		<h4>Fall and Spring semesters</h4>
+		<h3>Gold Route <span>(runs counter-clockwise around the campus)</span></h3>
 		<p>(7:00 A.M. to 7:00 P.M.)</p>
 		<table>
 			<tr><th>Stop #</th><th>Route</th></tr>
