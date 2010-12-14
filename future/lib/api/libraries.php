@@ -44,6 +44,11 @@ switch ($_REQUEST['command']) {
         $data = Libraries::getFullAvailability($itemid);
         break;
 
+    case 'itemdetail':
+        $itemid = urldecode($_REQUEST['itemid']);
+        $data = Libraries::getItemRecord($itemid);
+        break;
+
 }
 
     echo json_encode($data);

@@ -937,6 +937,121 @@ class Libraries{
 
 
 
+    public static function getItemRecord($itemId){
+
+
+        $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_ITEM_RECORD_BASE').$itemId;
+        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+
+        $xml_obj = self::query("item-{$itemId}", $xmlURLPath);
+
+        $item = $xml_obj;
+
+            $editionArray = explode(":", $item->edition);
+            $edition = $editionArray[0];
+            for ($j = 1; $j < count($editionArray); $j++) {
+                $edition = $edition . ":" . $editionArray[$j];
+            }
+
+            $namespaces = $item->getNameSpaces(true);
+            $dc = $item->children($namespaces['dc']);
+
+            $creatorArray = explode(":", $dc->creator);
+            $creator = $creatorArray[0];
+            for ($i = 1; $i < count($creatorArray); $i++) {
+                $creator = $creator . ":" . $creatorArray[$i];
+            }
+
+            $titleArray = explode(":", $dc->title);
+            $title = $titleArray[0];
+            for ($j = 1; $j < count($titleArray); $j++) {
+                $title = $title . ":" . $titleArray[$j];
+            }
+
+            $dateArray = explode(":", $dc->date);
+            $date = $dateArray[0];
+            for ($k = 1; $k < count($dateArray); $k++) {
+                $date = $date . ":" . $dateArray[$k];
+            }
+
+            $pubArray = explode(":", $dc->publisher);
+            $publisher = $pubArray[0];
+            for ($k = 1; $k < count($dateArray); $k++) {
+                $publisher = $publisher . ":" . $pubArray[$k];
+            }
+
+
+            $format = array();
+
+            foreach ($dc->format as $formats) {
+                $type = "";
+                $val = "";
+                if ($formats->attributes()) {
+
+                    foreach ($formats->attributes() as $tp => $value) {
+                        $type = $tp;
+                        $val = explode(":", $value);
+                        $val = $val[0];
+                    }
+                }
+
+                $formatArray = explode(":", $formats[0]);
+                $fm = $formatArray[0];
+                for ($k = 1; $k < count($formatArray); $k++) {
+                    $fm = $fm . ":" . $formatArray[$k];
+                }
+
+                if (strlen($val) > 0) {
+                    $format['type'] = $val;
+                    $format['typeDetail'] = $fm;
+                }
+                else
+                    $format['formatDetail'] = $fm;
+            }
+
+
+            $identifierArray = array();
+            foreach ($dc->identifier as $identifier) {
+                $identifierToAdd = array();
+                $type = "";
+                $val = "";
+                if ($identifier->attributes()) {
+
+                    foreach ($identifier->attributes() as $tp => $value) {
+                        $type = $tp;
+                        $val = explode(":", $value);
+                        $val = $val[0];
+                    }
+                }
+
+                $idenArray = explode(":", $identifier[0]);
+                $iden = $idenArray[0];
+                for ($k = 1; $k < count($idenArray); $k++) {
+                    $iden = $iden . ":" . $idenArray[$k];
+                }
+
+                $identifierToAdd['type'] = $val;
+                $identifierToAdd['typeDetail'] = $iden;
+
+                $identifierArray[] = $identifierToAdd;
+            }
+
+
+            $itemDetails = array();
+
+            $itemDetails['title'] = $title;
+            $itemDetails['creator'] = $creator;
+            $itemDetails['date'] = $date;
+            $itemDetails['publisher'] = $publisher;
+            $itemDetails['edition'] = $edition;
+            $itemDetails['format'] = $format;
+            $itemDetails['identifier'] = $identifierArray;
+
+            return $itemDetails;
+    }
+
+
+
     public static function isPM ($timeString) {
 
         $posPM = strpos($timeString,'pm');
