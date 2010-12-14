@@ -191,6 +191,11 @@ h3 { color:white; padding:0 7px; }
 .text tr th:first-child { padding-right:10px; }
 .text .block table { width:auto; }
 .text .c td { text-align:center; }
+.alert { padding-bottom:16px; }
+.alert .block { 
+	background: #481616; 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#600000), to(#161616));  
+	background: -moz-linear-gradient(top,  #600000,  #161616); }
 
 .articles { padding: 0; margin: 0; list-style-type: none; border:0; }
 .articles li { padding:0 7px 7px; }

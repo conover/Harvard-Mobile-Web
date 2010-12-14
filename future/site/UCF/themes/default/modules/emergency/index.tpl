@@ -4,17 +4,19 @@
 	
 <div class="text">
 	{if $emergency}
-	<div class="emergency">
-		{$emergency->get_content()}
+	<div class="alert">
+		<h2>Alert</h2>
+		<div class="block">
+			{$emergency->get_content()}
+		</div>
 	</div>
 	{/if}
 	
 	<h2>Emergency Contact Numbers</h2>
-	
 	<div class="block">
 		<h3>University Police</h3>
+		<p><a id="call911" href="tel:911">Emergency Call 911</a></p>
 		<dl>
-			<dt>Emergency</dt><dd>911</dd>
 			<dt>Safety Escort Patrol Services [SEPS]</dt><dd>407-823-2424</dd>
 			<dt>Victim Services</dt><dd>407-823-2425</dd>
 			<dt>Victim Services (after hours)</dt><dd>407-823-5555</dd>

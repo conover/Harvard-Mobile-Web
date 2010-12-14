@@ -1,0 +1,10 @@
+#call911 { 
+	display:inline-block; border:1px solid black;
+	border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px;
+	color:white; font-size:20px; font-weight:bold; 
+	text-shadow: 0 2px 3px rgba(0, 0, 0, .3); text-decoration:none;
+	background: red;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F00), to(#9F0000)); 
+	background: -moz-linear-gradient(top,  #F00,  #9F0000);
+	margin-bottom:12px; padding:14px; }
+
