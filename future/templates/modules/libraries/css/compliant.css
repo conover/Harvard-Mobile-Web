@@ -1,0 +1,10 @@
+.ellipsis_wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.ellipsis {
+  font-size: 17px;
+  line-height: 20px;
+  overflow: hidden;
+  max-height: 41px;
+}
