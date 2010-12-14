@@ -59,7 +59,6 @@ switch ($_REQUEST['command']) {
       
       if (strlen($id) > 0) {
         $feed = $module->getFeed($type);
-        $feed->setObjectClass('event', $eventClass);
         
         $start = new DateTime(date('Y-m-d H:i:s', $start), $module->timezone());
         $start->setTime(0,0,0);
