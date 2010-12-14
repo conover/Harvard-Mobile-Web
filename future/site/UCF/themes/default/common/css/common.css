@@ -154,6 +154,8 @@ h3 { color:white; padding:0 7px; }
 #Header h1{ text-align: center; }
 #Header h1 a{ text-decoration: none; color: #ffd203; border:0; }
 #Content { padding:0; }
+#Footer ul{}
+#Footer ul li{}
 
 
 /******************************************************************************\

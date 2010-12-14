@@ -1,4 +1,4 @@
-		<footer>
+		<div id="Footer">
 			{strip}
 			{if $moduleDebug && count($moduleDebugStrings)}
 			<p class="legend nonfocal">
@@ -23,6 +23,15 @@
 			
 			{$footerHTML}
 			
+			<ul id="FooterNav">
+				{if $moduleName == 'Home'}
+				<li class="customize"><a href="/customize/">Customize</a></li>
+				{/if}
+				<li class="bookmark"><a href="javascript:bookmark()">Bookmark</a></li>
+				<li class="main"><a href="http://www.ucf.edu">Full Website<a></li>
+				<li class="copyright">&copy; 2010 University of Central Florida</li>
+			</ul>
+			
 			{foreach $inlineJavascriptFooterBlocks as $script}
 			<script type="text/javascript">
 			{$script} 
@@ -30,7 +39,7 @@
 			{/foreach}
 			{/block}
 			{/strip}
-		</footer>
+		</div>
 		
 		
 		{if $platform=="computer"}
