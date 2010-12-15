@@ -15,7 +15,12 @@
     {if isset($item['url'])}
       </a>
     {/if}
-    {$subtitleHTML}
+    {if isset($item['subtitle'])}
+      <span class="smallprint">
+        {if $subTitleNewline|default:true}<br/>{else}&nbsp;{/if}
+        {$item['subtitle']}
+      </span>
+    {/if}
     
   {else}
     <span class="{$item['class']|default:''}">

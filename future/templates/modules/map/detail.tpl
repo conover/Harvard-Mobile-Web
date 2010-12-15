@@ -3,7 +3,6 @@
 {$tabBodies = array()}
 
 {capture name="mapPane" assign="mapPane"}
-  {strip}
   {block name="mapPane"}
     {if $hasMap}
       <div id="mapscrollers">
@@ -68,7 +67,6 @@
       <img id="mapimage" width="{$imageWidth}" height="{$imageHeight}" alt="" onload="hide('loadingimage')" src="{$imageUrl}"/> 
     {/if}
   {/block}
-  {strip}
 {/capture}
 {$tabBodies['map'] = $mapPane}
 

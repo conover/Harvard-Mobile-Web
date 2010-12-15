@@ -4,7 +4,6 @@
   <h2>{$today|date_format:"%A %b %e, %Y"}</h2>
 </div>
 
-{strip}
   {$navlistItems = array()}
   
   {$navlistItems[0] = array()}
@@ -18,7 +17,6 @@
   {$navlistItems[2] = array()}
   {$navlistItems[2]['title'] = "Academic calendar"}
   {$navlistItems[2]['url']   = $academicUrl}
-{/strip}
 
 {include file="findInclude:common/navlist.tpl" navlistItems=$navlistItems}
 

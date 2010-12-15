@@ -1,5 +1,3 @@
-{strip}
-
 {block name="navlistStart"}
   <ul class="nav{if $secondary} secondary{/if}{if $nested} nested{/if}"{if $navlistID} id="{$navlistID}"{/if}>
 {/block}
@@ -19,5 +17,3 @@
 {block name="navlistEnd"}
   </ul>
 {/block}
-
-{/strip}

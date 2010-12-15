@@ -3,25 +3,21 @@
 {$tabBodies = array()}
 
 {capture name="mapPane" assign="mapPane"}
-  {strip}
   {block name="mapPane"}
     <div id="map">
       <img src="{$mapImageSrc}" height="{$mapImageSize}" width="{$mapImageSize}" />
     </div>
   {/block}
-  {strip}
 {/capture}
 {$tabBodies['map'] = $mapPane}
 
 {capture name="stopsPane" assign="stopsPane"}
-  {strip}
   {block name="stopsPane"}
     <span class="smallprint">{$routeConfig['stopTimeHelpText']}</span>
     <div id="schedule">
       {include file="findInclude:common/results.tpl" results=$routeInfo['stops']}
     </div>
   {/block}
-  {strip}
 {/capture}
 {$tabBodies['stops'] = $stopsPane}
 
