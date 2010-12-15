@@ -780,12 +780,13 @@ class Libraries{
                     if (strlen(stristr($seachStringForCheckedOut, 'not checked out')) >0){
                         
                     }
-                    else
+                    else {
                         $itemArray['checkedOutItem'] = "YES";
+                    }
                 }
                    
 
-                if (($itemArray['available'] == "NO") && (strlen($itemArray['requestUrl']) == 0))
+                if (($itemArray['available'] == "NO") && ($itemArray['checkedOutItem'] == "NO"))
                     $itemArray['unavailable'] = "YES";
                 else
                     $itemArray['unavailable'] = "NO";
@@ -907,7 +908,7 @@ class Libraries{
                             $statArr['availableItems'][] = $itm;
                         }
                         
-                        else if (($itm['checkedOutItem'] == "YES") || ($item['canRequest'] == "YES"))
+                        else if ($itm['checkedOutItem'] == "YES")
                             $statArr['checkedOutItems'][] = $itm;
 
                         else
@@ -916,8 +917,8 @@ class Libraries{
                     }
                 }
 
-                if (($availCount == 0) && ($unavailCount == 0) && ($checkedOutCount == 0) && ($requestCount > 0))
-                    $checkedOutCount = $requestCount;
+                //if (($availCount == 0) && ($unavailCount == 0) && ($checkedOutCount == 0) && ($requestCount > 0))
+                  //  $checkedOutCount = $requestCount;
                 
                 $statArr['availCount'] = $availCount;
                 $statArr['unavailCount'] = $unavailCount;
