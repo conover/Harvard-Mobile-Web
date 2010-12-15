@@ -4,7 +4,10 @@ require_once realpath(LIB_DIR.'/TemplateEngine.php');
 require_once realpath(LIB_DIR.'/HTMLPager.php');
 require_once realpath(LIB_DIR.'/User.php');
 
+define('MODULE_BREADCRUMB_PARAM', '_b');
+
 abstract class Module {
+
   protected $id = 'none';
   
   protected $session;
@@ -461,10 +464,30 @@ abstract class Module {
   // Breadcrumbs
   //
   private function loadBreadcrumbs() {
-    if (isset($this->args['breadcrumbs'])) {
-      $breadcrumbs = unserialize(rawurldecode($this->args['breadcrumbs']));
+    if (isset($this->args[MODULE_BREADCRUMB_PARAM])) {
+      $breadcrumbs = unserialize($this->args[MODULE_BREADCRUMB_PARAM]);
       if (is_array($breadcrumbs)) {
+        for ($i = 0; $i < count($breadcrumbs); $i++) {
+          $b = $breadcrumbs[$i];
+          
+          $breadcrumbs[$i]['url'] = "{$b['page']}.php";
+          if (strlen($b['args'])) {
+            $breadcrumbs[$i]['url'] .= "?{$b['args']}";
+          }
+          
+          $linkCrumbs = array_slice($breadcrumbs, 0, $i);
+          if (count($linkCrumbs)) { 
+            $crumbParam = http_build_query(array(
+              MODULE_BREADCRUMB_PARAM => serialize($linkCrumbs)
+            ));
+            if (strlen($crumbParam)) {
+              $breadcrumbs[$i]['url'] .= (strlen($b['args']) ? '&' : '?').$crumbParam;
+            }
+          }
+        }
+
         $this->breadcrumbs = $breadcrumbs;
+        
       }
     }
     //error_log(__FUNCTION__."(): loaded breadcrumbs ".print_r($this->breadcrumbs, true));
@@ -473,20 +496,28 @@ abstract class Module {
   private function getBreadcrumbString($addBreadcrumb=true) {
     $breadcrumbs = $this->breadcrumbs;
     
+    foreach ($breadcrumbs as $index => $breadcrumb) {
+      unset($breadcrumbs[$index]['url']);
+    }
+    
     if ($addBreadcrumb && $this->page != 'index') {
+      $args = $this->args;
+      unset($args[MODULE_BREADCRUMB_PARAM]);
+      
       $breadcrumbs[] = array(
         'title'     => $this->breadcrumbTitle,
         'longTitle' => $this->breadcrumbLongTitle,
-        'url'       => self::buildURL($this->page, $this->args),
+        'page'      => $this->page,
+        'args'      => http_build_query($args),
       );
     }
     //error_log(__FUNCTION__."(): saving breadcrumbs ".print_r($breadcrumbs, true));
-    return rawurlencode(serialize($breadcrumbs));
+    return serialize($breadcrumbs);
   }
   
   private function getBreadcrumbArgs($addBreadcrumb=true) {
     return array(
-      'breadcrumbs' => $this->getBreadcrumbString($addBreadcrumb),
+      MODULE_BREADCRUMB_PARAM => $this->getBreadcrumbString($addBreadcrumb),
     );
   }
 

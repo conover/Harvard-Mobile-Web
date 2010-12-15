@@ -748,13 +748,13 @@ abstract class TransitDataParser {
     }
   }
  
-  protected function getMapIconUrlForRouteStopPin($routeID) {
+  protected function getMapIconUrlForStopPin($stopID) {
     if($_SERVER['SERVER_NAME'] != 'localhost') {
       $iconURL = "http://".SERVER_HOST."/modules/transit/images/shuttle_stop_pin.png";
     } else {
       return $GLOBALS['siteConfig']->getVar('GOOGLE_CHART_API_URL').http_build_query(array(
         'chst' => 'd_map_pin_icon',
-        'chld' => 'bus|'.$this->getRouteColor($routeID),
+        'chld' => 'bus|'.$GLOBALS['siteConfig']->getVar('TRANSIT_DEFAULT_ROUTE_COLOR'),
       ));
     }
   }
@@ -858,6 +858,7 @@ abstract class TransitDataParser {
 
     return $stopInfo;
   }
+  
   public function getMapImageForStop($id, $width=270, $height=270) {
     if (!isset($this->stops[$id])) {
       error_log(__FUNCTION__."(): Warning no such stop '$id'");
@@ -866,7 +867,7 @@ abstract class TransitDataParser {
     
     $stop = $this->stops[$id];
     $coords = $stop->getCoordinates();
-    $iconURL = $this->getMapIconUrlForStopPin();
+    $iconURL = $this->getMapIconUrlForStopPin($id);
     
     $query = http_build_query(array(
       'sensor'  => 'false',

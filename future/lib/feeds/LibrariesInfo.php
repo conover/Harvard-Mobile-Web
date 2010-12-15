@@ -330,9 +330,10 @@ class Libraries{
 
                   $hrsOpenToday = "closed";
                   $today = date('l');
-                    foreach ($institution->dailyhours as $hours) {
+                    foreach ($institution->hoursofoperation as $hours) {
                         $openHours = array();
 
+                        $hours = $hours->dailyhours[0];
                         $date = explode(":",$hours->date[0]);
                         $date = $date[0];
 
@@ -772,16 +773,20 @@ class Libraries{
                 $itemArray['statSecondary'] = $seachStringForCheckedOut;
                 $itemArray['requestUrl'] = $reqUrl;
 
-                $pos = strpos($seachStringForCheckedOut, 'checked out');
-                $pos2 = strpos($seachStringForCheckedOut, 'not checked out');
 
                 $itemArray['checkedOutItem'] = "NO";
-                if (($pos >= 0) && ($pos2 === FALSE)){
-                    $itemArray['checkedOutItem'] = "YES";
+                if (strlen(stristr($seachStringForCheckedOut, 'checked out')) >0){
+
+                    if (strlen(stristr($seachStringForCheckedOut, 'not checked out')) >0){
+                        
+                    }
+                    else {
+                        $itemArray['checkedOutItem'] = "YES";
+                    }
                 }
                    
 
-                if (($itemArray['available'] == "NO") && (strlen($itemArray['requestUrl']) == 0))
+                if (($itemArray['available'] == "NO") && ($itemArray['checkedOutItem'] == "NO"))
                     $itemArray['unavailable'] = "YES";
                 else
                     $itemArray['unavailable'] = "NO";
@@ -903,7 +908,7 @@ class Libraries{
                             $statArr['availableItems'][] = $itm;
                         }
                         
-                        else if (($itm['checkedOutItem'] == "YES") || ($item['canRequest'] == "YES"))
+                        else if ($itm['checkedOutItem'] == "YES")
                             $statArr['checkedOutItems'][] = $itm;
 
                         else
@@ -912,8 +917,8 @@ class Libraries{
                     }
                 }
 
-                if (($availCount == 0) && ($unavailCount == 0) && ($checkedOutCount == 0) && ($requestCount > 0))
-                    $checkedOutCount = $requestCount;
+                //if (($availCount == 0) && ($unavailCount == 0) && ($checkedOutCount == 0) && ($requestCount > 0))
+                  //  $checkedOutCount = $requestCount;
                 
                 $statArr['availCount'] = $availCount;
                 $statArr['unavailCount'] = $unavailCount;
@@ -950,7 +955,7 @@ class Libraries{
             $lib['name'] = $libName[0];
             $lib['id'] = $libId[0];
             $lib['type'] = $libType[0];
-            $lib['details'] = $repoDetails;
+            //$lib['details'] = $repoDetails;
             //$lib['items'] = $itemsToReturn;
             $lib['itemsByStat'] = $statsToReturn;
 
