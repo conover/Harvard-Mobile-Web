@@ -773,12 +773,15 @@ class Libraries{
                 $itemArray['statSecondary'] = $seachStringForCheckedOut;
                 $itemArray['requestUrl'] = $reqUrl;
 
-                $pos = strpos($seachStringForCheckedOut, 'checked out');
-                $pos2 = strpos($seachStringForCheckedOut, 'not checked out');
 
                 $itemArray['checkedOutItem'] = "NO";
-                if (($pos >= 0) && ($pos2 === FALSE)){
-                    $itemArray['checkedOutItem'] = "YES";
+                if (strlen(stristr($seachStringForCheckedOut, 'checked out')) >0){
+
+                    if (strlen(stristr($seachStringForCheckedOut, 'not checked out')) >0){
+                        
+                    }
+                    else
+                        $itemArray['checkedOutItem'] = "YES";
                 }
                    
 
@@ -951,7 +954,7 @@ class Libraries{
             $lib['name'] = $libName[0];
             $lib['id'] = $libId[0];
             $lib['type'] = $libType[0];
-            $lib['details'] = $repoDetails;
+            //$lib['details'] = $repoDetails;
             //$lib['items'] = $itemsToReturn;
             $lib['itemsByStat'] = $statsToReturn;
 
