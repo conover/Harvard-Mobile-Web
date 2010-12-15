@@ -330,9 +330,10 @@ class Libraries{
 
                   $hrsOpenToday = "closed";
                   $today = date('l');
-                    foreach ($institution->dailyhours as $hours) {
+                    foreach ($institution->hoursofoperation as $hours) {
                         $openHours = array();
 
+                        $hours = $hours->dailyhours[0];
                         $date = explode(":",$hours->date[0]);
                         $date = $date[0];
 
