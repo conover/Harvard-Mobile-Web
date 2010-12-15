@@ -172,7 +172,7 @@ class CalendarModule extends Module {
   private function categoryDayURL($time, $categoryID, $name, $addBreadcrumb=true) {
     return $this->buildBreadcrumbURL('category', array(
       'time' => $time,
-      'id'   => $categoryID,
+      'catid'   => $categoryID,
       'name' => $name, 
     ), $addBreadcrumb);
   }
@@ -276,7 +276,6 @@ class CalendarModule extends Module {
   public function getFeed($index)
   {
     if (isset($this->feeds[$index])) {
-        
         $feedData = $this->feeds[$index];
         $controller = CalendarDataController::factory($feedData);
         $controller->setDebugMode($GLOBALS['siteConfig']->getVar('DATA_DEBUG'));
@@ -330,7 +329,7 @@ class CalendarModule extends Module {
       
       case 'category':
         $type    = $this->getArg('type', 'events');
-        $id      = $this->getArg('catid', '');
+        $catid      = $this->getArg('catid', '');
         $name    = $this->getArg('name', '');
         $current = $this->getArg('time', time());
         $next    = $current + DAY_SECONDS;
@@ -346,15 +345,14 @@ class CalendarModule extends Module {
         $this->assign('current', $current);
         $this->assign('next',    $next);
         $this->assign('prev',    $prev);
-        $this->assign('nextUrl', $this->categoryDayURL($next, $id, $name, false));
-        $this->assign('prevUrl', $this->categoryDayURL($prev, $id, $name, false));
+        $this->assign('nextUrl', $this->categoryDayURL($next, $catid, $name, false));
+        $this->assign('prevUrl', $this->categoryDayURL($prev, $catid, $name, false));
         $this->assign('isToday', $dayRange->contains(new TimeRange($current)));
 
         $events = array();
         
-        if (strlen($id) > 0) {
+        if (strlen($catid) > 0) {
             $feed = $this->getFeed($type); // this allows us to have multiple feeds in the future
-            
             $start = new DateTime(date('Y-m-d H:i:s', $current), $this->timezone);
             $start->setTime(0,0,0);
             $end = clone $start;
@@ -362,7 +360,7 @@ class CalendarModule extends Module {
     
             $feed->setStartDate($start);
             $feed->setEndDate($end);
-            $feed->addFilter('category', $id);
+            $feed->addFilter('category', $catid);
             $iCalEvents = $feed->items();
           
           foreach($iCalEvents as $iCalEvent) {
@@ -373,7 +371,7 @@ class CalendarModule extends Module {
             }
           
             $events[] = array(
-              'url'      => $this->detailURL($iCalEvent,array('catid'=>$id)),
+              'url'      => $this->detailURL($iCalEvent,array('catid'=>$catid)),
               'title'    => $iCalEvent->get_summary(),
               'subtitle' => $subtitle,
             );
