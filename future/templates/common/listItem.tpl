@@ -1,11 +1,3 @@
-{strip}
-{capture name="subtitleHTML" assign="subtitleHTML"}
-  {if isset($item['subtitle'])}
-    {if $subTitleNewline|default:true}<br/>{else}&nbsp;{/if}
-    <span class="smallprint">{$item['subtitle']}</span>
-  {/if}
-{/capture}
-
 {if isset($item['label'])}
   {if $boldLabels}
     <strong>
@@ -26,7 +18,11 @@
         alt="{$item['imgAlt']}"{/if} />
     {/if}
     {$item['title']}
-    {$subtitleHTML}
+    {if isset($item['subtitle'])}
+      {if $subTitleNewline|default:true}<div{else}&nbsp;<span{/if} class="smallprint">
+        {$item['subtitle']}
+      {if $subTitleNewline|default:true}</div>{else}</span>{/if}
+    {/if}
     {if isset($item['badge'])}
       <span class="badge">{$item['badge']}</span>
     {/if}
@@ -34,4 +30,3 @@
     </a>
   {/if}
 {/block}
-{/strip}

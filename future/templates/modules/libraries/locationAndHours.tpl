@@ -1,22 +1,31 @@
 {include file="findInclude:common/header.tpl"}
 
 <div class="nonfocal">
-  <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
-  <h2>{$item['name']}</h2>
+  {block name="header"}
+    <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
+    <h2>{$item['name']}</h2>
+  {/block}
 </div>
 
 {foreach $item['infoSections'] as $key => $section}
+  {$sectionIsLast = $section@last}
   {$entries = array()}
   {foreach $section as $entry}
-    {capture name="title" assign="title"}
-      <div class="label">{$entry['label']}</div>
-      <div class="value">{$entry['title']}</div>
-    {/capture}
-    {$entry['title'] = $title}
-    {$entry['label'] = null}
-    {$entries[] = $entry}
+    {$itemIsLast = $entry@last}
+    {block name="item"}
+      {capture name="title" assign="title"}
+        {if $entry['label']}
+          <span class="label">{$entry['label']}<br/></span>
+        {/if}
+        <span class="value">{$entry['title']}</span>
+      {/capture}
+      {$section[$entry@index]['title'] = $title}
+      {$section[$entry@index]['label'] = null}
+    {/block}
   {/foreach}
-  {include file="findInclude:common/navlist.tpl" navlistItems=$entries accessKey=false labelColon=false}
+  {block name="itemList"}
+    {include file="findInclude:common/navlist.tpl" navlistItems=$section accessKey=false labelColon=false}
+  {/block}
 {/foreach}
 
 

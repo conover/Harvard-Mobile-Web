@@ -9,9 +9,9 @@
     <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
     <h2>{$item['title']}</h2>
     <br/>
-    {$item['creator']}<br/>
+    {if $item['creator']}{$item['creator']}<br/>{/if}
     {if $item['edition']}{$item['edition']}<br/>{/if}
-    {$item['date']}<br/>
+    {if $item['date']}{$item['date']}<br/>{/if}
     {$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
   {/block}
 {/capture}
@@ -21,16 +21,18 @@
 {foreach $locations as $location}
   {$results[$i] = array()}
   {capture name="title" assign="title"}
-    <strong>{$location['name']}</strong><br/>
-    <div id="location_{$location@index}"></div>
+    {block name="locationHeader"}
+      <strong>{$location['name']}</strong><br/>
+      <div id="location_{$location@index}"></div>
+    {/block}
     {foreach $location['items'] as $info}
       
       {if $info['available'] > 0}
-        {$class = 'itemAvailable'}
+        {$class = 'available'}
       {elseif $info['requestable'] > 0}
-        {$class = 'itemRequestable'}
+        {$class = 'requestable'}
       {else}
-        {$class = 'itemUnavailable'}
+        {$class = 'unavailable'}
       {/if}
       {block name="item"}
         <div class="itemType {$class}">
@@ -45,6 +47,8 @@
   {$i = $i + 1} 
 {/foreach}
 
-{include file="findInclude:common/navlist.tpl" navlistItems=$results accessKey=false}
+{block name="fulllist"}
+  {include file="findInclude:common/navlist.tpl" navlistItems=$results accessKey=false}
+{/block}
 
 {include file="findInclude:common/footer.tpl"}
