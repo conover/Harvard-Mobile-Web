@@ -1,9 +1,5 @@
 {extends file="findExtends:modules/{$moduleID}/index.tpl"}
 
-{block name="headersection"}
-    {include file="findInclude:common/header-compliant-blackberry.tpl"}
-{/block}
-
 {capture name="selectSection" assign="selectSection"}
   <select id="timeframe" name="timeframe">
     {foreach $searchOptions as $key => $option}

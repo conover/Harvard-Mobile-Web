@@ -1,4 +1,4 @@
-{extends file="findExtends:common/header.tpl"}
+{extends file="findExtends:common/header-compliant.tpl"}
 
 {block name="additionalHeadTags"}
     <meta name="HandheldFriendly" content="true" />
