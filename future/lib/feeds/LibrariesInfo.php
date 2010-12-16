@@ -528,14 +528,17 @@ class Libraries{
        }
 
 
-       public static function searchItems($queryTerms) {
+       public static function searchItems($queryTerms, $libTerms, $fmtTerms) {
 
         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_SEARCH_BASE').http_build_query(array(
-          'q' => $queryTerms,
+          'q' => $queryTerms, 'lib' => $libTerms, 'fmt' => $fmtTerms,
         ));
+
+        //print($xmlURLPath);
         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
-        
-        $xml_obj = self::query("search-{$queryTerms}", $xmlURLPath);
+
+        $fullquery = $queryTerms . "lib-" . $libTerms . "fmt-" .$fmtTerms;
+        $xml_obj = self::query("search-{$fullquery}", $xmlURLPath);
         //print_r($xml_obj);
 
         $totalResults = explode(":", $xml_obj->totalResults[0]);
@@ -955,7 +958,7 @@ class Libraries{
             $lib['name'] = $libName[0];
             $lib['id'] = $libId[0];
             $lib['type'] = $libType[0];
-            //$lib['details'] = $repoDetails;
+            $lib['details'] = $repoDetails;
             //$lib['items'] = $itemsToReturn;
             $lib['itemsByStat'] = $statsToReturn;
 

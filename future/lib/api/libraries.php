@@ -35,8 +35,17 @@ switch ($_REQUEST['command']) {
         break;
 
     case 'search':
-        $queryTerms = $_REQUEST['q'];
-        $data = Libraries::searchItems($queryTerms);
+        $queryTerms =($_REQUEST['q']);
+        $queryTerms = str_replace("\\", "", $queryTerms);
+        $libTerm = ($_REQUEST['lib']);
+        if (strlen($libTerm) == 0)
+            $libTerm = "";
+        
+        $fmtTerm = ($_REQUEST['fmt']);
+        if (strlen($fmtTerm) == 0)
+            $fmtTerm = "";
+        
+        $data = Libraries::searchItems($queryTerms, $libTerm, $fmtTerm);
         break;
 
     case 'fullavailability':
