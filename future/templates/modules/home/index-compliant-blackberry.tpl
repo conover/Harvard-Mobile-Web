@@ -1,10 +1,8 @@
 {extends file="findExtends:modules/home/index-compliant-bbplus.tpl"}
 
-{block name="bannercapture"}
-    {capture name="banner" assign="banner"}
-        <h1><img id="logo" src="/modules/home/images/logo-home.png" 
-            width="210" height="35" alt="{$SITE_NAME}" /></h1>
-    {/capture}
+{block name="banner"}
+    <h1><img id="logo" src="/modules/home/images/logo-home.png" 
+        width="210" height="35" alt="{$SITE_NAME}" /></h1>
 {/block}
 
 {block name="homeFooter"}

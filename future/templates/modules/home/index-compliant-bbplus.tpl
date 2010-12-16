@@ -1,23 +1,7 @@
-{block name="bannercapture"}
-    {capture name="banner" assign="banner"}
-        <h1><img id="logo" src="/modules/home/images/logo-home.png" width="400" height="67" alt="{$SITE_NAME}" /></h1>
-    {/capture}
-{/block}
+{extends file="findExtends:modules/{$moduleID}/index.tpl"}
 
-{block name="header"}
-    {include file="findInclude:common/header-compliant-blackberry.tpl" customHeader=$banner scalable=false}
-{/block}
-
-{block name="searchsection"}
-  {include file="findInclude:common/search-compliant-blackberry.tpl" placeholder="Search "|cat:$SITE_NAME}
-{/block}
-
-{block name="moduleItems"}
-    {if $home['springboard']}
-      {include file="findInclude:common/springboard.tpl" springboardItems=$modules springboardID="homegrid"}
-    {else}
-      {include file="findInclude:common/navlist.tpl" navlistItems=$modules}
-    {/if}
+{block name="banner"}
+    <h1><img id="logo" src="/modules/home/images/logo-home.png" width="400" height="67" alt="{$SITE_NAME}" /></h1>
 {/block}
 
 {block name="homeFooter"}
