@@ -552,8 +552,10 @@ class Libraries{
             $item = $result;
             $itemIndex = explode(":",$item['position']);
             $itemIndex = $itemIndex[0];
-            $itemId = explode(":",$item['id']);
-            $itemId = $itemId[0];
+            $itemIdArray = explode(":",$item['id']);
+            $itemId = $itemIdArray[0];
+            for($n=1; $n < count($itemIdArray); $n++)
+                $itemId = $itemId . ":" . $itemIdArray[$n];
 
             $editionArray = explode(":", $item->edition);
             $edition = $editionArray[0];
