@@ -52,5 +52,4 @@
 	<p class="block">No events found.</p>
 {/if}
 </div>
-
 {/block}

@@ -1,12 +1,12 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<ul class="gloss">
-	<li class="arrow-back"><a href="../home/">Return to Home</a></li>
-</ul>
 
-<div class="nonfocal smallprint"> 
-  Use the arrow buttons to customize the order of icons on your homepage, and the checkboxes to toggle visibility. Your changes will be automatically saved.
+<div class="text">
+	<h2>Customize</h2>
+	<div class="block">
+		Use the arrow buttons to customize the order of icons on your homepage, and the checkboxes to toggle visibility. Your changes will be automatically saved.
+	</div>
 </div> 
 
 <ul class="gloss nav iconic" id="homepageList">
@@ -30,6 +30,9 @@
       </span>                   
     </li>
   {/foreach}
+</ul>
+<ul class="gloss">
+	<li class="arrow-back"><a href="../home/">Return to Home</a></li>
 </ul>
 {/block}
 
