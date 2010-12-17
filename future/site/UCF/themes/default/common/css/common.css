@@ -46,7 +46,6 @@ ul.individual li a { color: #fff; line-height: 16px; margin: -11px -10px -14px -
 \******************************************************************************/
 body > div { background:none; }
 h1, h2 { color: #fff; margin:0; }
-#body{}
 .gloss{ margin:10px 0; padding: 0 7px; border:0; }
 .gloss li a { display:block; padding:10px 10px 10px 0; line-height:21px; height:21px;}
 .gloss li { 
@@ -108,7 +107,7 @@ h1, h2 { color: #fff; margin:0; }
   General Styles
 \******************************************************************************/
 html { margin:0; padding:0; }
-body { margin: 0; padding: 0; background-color: #333; font-family: Helvetica; color: #ddd; }
+body { margin: 0; padding: 0; background-color: #000; font-family: Helvetica; color: #ddd; }
 
 a { color:white; outline:none; text-decoration:none; }
 a:hover { color:#FFD203; }
@@ -125,7 +124,7 @@ h1 a {
 	padding:10px 0 7px; }
 h1 a span {color:white; }
 h1 .beta { font-weight:normal; font-family:georgia; color:#FFD203; font-size:12px; text-transform:uppercase;  }
-h2 { padding:12px 0 0 9px; font-size:22px; margin:0; text-align:center; }
+h2 { padding:0 0 0 9px; font-size:22px; margin:0; text-align:center; }
 h3 { color:white; padding:0 7px; }
 
 .c { text-align:center; }
@@ -149,18 +148,19 @@ h3 { color:white; padding:0 7px; }
 \******************************************************************************/
 #Header{ 
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#000));
-	border-bottom: 2px solid #ffd203; background-color: #000;	
+	border-bottom: 2px solid #ffd203; background-color: #000;
 	color: #fff; padding:0; }
 #Header h1{ text-align: center; }
 #Header h1 a{ text-decoration: none; color: #ffd203; border:0; }
-#Content { padding:0; }
-#Footer #FooterNav{ margin-top: 30px;}
-#Footer #FooterNav #Customize{}
-#Footer #FooterNav #Main,
-#Footer #FooterNav #Bookmark{display: inline-block; width: 49%; text-align: center; padding: 0; margin: 10px 0;}
-#Footer #FooterNav #Main{margin-left: 1%;}
-#Footer #FooterNav #Bookmark{margin-right: 1%;}
-#Footer #FooterNav #Copyright{background: none; text-align: center; color: #fff;}
+
+#Content{background: #333; padding: 20px 0;}
+
+#Footer{background: #000; border-top: 2px solid #ffd203; background-color: #000; padding: 10px 0;}
+#Footer #FooterNav{border: none; padding: 0; margin: 0; height: 100%;}
+#Footer #FooterNav li{border: none; color: #fff; font-weight: normal; padding: 0; margin: 0; text-align: center;}
+#Footer #FooterNav li a{font-weight: bold;}
+
+
 
 
 /******************************************************************************\

@@ -10,4 +10,8 @@
 {/foreach}
 </ul>
 
+<ul class="gloss" id="Customize">
+	<li id="Customize" class="arrow"><a href="/customize/">Customize</a></li>
+</ul>
+
 {/block}

@@ -1,5 +1,6 @@
-{include file="findInclude:common/header.tpl"}
+{extends file="findExtends:common/base.tpl"}
 
+{block name="body"}
 <ul class="gloss">
 	<li class="arrow-back"><a href="../home/">Return to Home</a></li>
 </ul>
@@ -30,5 +31,5 @@
     </li>
   {/foreach}
 </ul>
+{/block}
 
-{include file="findInclude:common/footer.tpl"}

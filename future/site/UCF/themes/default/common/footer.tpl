@@ -23,12 +23,8 @@
 			
 			{$footerHTML}
 			
-			<ul class="gloss" id="FooterNav">
-				{if $moduleName == 'Home'}
-				<li id="Customize" class="arrow"><a href="/customize/">Customize</a></li>
-				{/if}
-				<li id="Bookmark"><a href="javascript:bookmark()">Bookmark</a></li>
-				<li id="Main"><a href="http://www.ucf.edu">UCF.edu</a></li>
+			<ul id="FooterNav">
+				<li id="Main"><a href="http://www.ucf.edu">UCF Main Site</a></li>
 				<li id="Copyright">&copy; 2010 University of Central Florida</li>
 			</ul>
 			
