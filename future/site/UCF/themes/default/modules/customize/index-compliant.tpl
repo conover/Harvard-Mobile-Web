@@ -1,5 +1,9 @@
 {include file="findInclude:common/header.tpl"}
 
+<ul class="gloss">
+	<li class="arrow-back"><a href="../home/">Return to Home</a></li>
+</ul>
+
 <div class="nonfocal smallprint"> 
   Use the arrow buttons to customize the order of icons on your homepage, and the checkboxes to toggle visibility. Your changes will be automatically saved.
 </div> 
@@ -26,8 +30,5 @@
     </li>
   {/foreach}
 </ul>
-<div class="formbuttons">
-  <a class="formbutton" href="../home/"><div>Return to Home</div></a>
-</div>
 
 {include file="findInclude:common/footer.tpl"}

@@ -1,5 +1,8 @@
 {include file="findInclude:common/header.tpl"}
 
+<ul class="gloss">
+	<li class="arrow-back"><a href="../home/">Return to Home</a></li>
+</ul>
 {if $newCount > 0}
   <div id="statusmsg" class="focal collapsed" onclick="showHideFuller(this);">
     <strong>{$newCount} New App{if $newCount > 1}s{/if}</strong>
@@ -20,8 +23,6 @@
     </span>
   </div>
   <h3 id="allapps">All Apps</h3>
-{else}
-  <h3 id="allapps"></h3>
 {/if}
 
 <ul id="dragReorderList">
@@ -36,9 +37,6 @@
     </li>
   {/foreach}
 </ul>
-<div class="formbuttons">
-<a class="formbutton" href="../home/"><div>Return to Home</div></a>
-</div>
 <p id="savedMessage">Saved</p>
 
 {include file="findInclude:common/footer.tpl"}
