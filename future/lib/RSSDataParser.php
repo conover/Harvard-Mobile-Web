@@ -59,7 +59,8 @@ class RSSDataParser extends DataParser
             case 'ENTRY': //for atom feeds
                 $this->elementStack[] = new $this->itemClass($attribs);
                 break;
-            case 'ENCLOSURE';
+            case 'ENCLOSURE':
+            case 'MEDIA:CONTENT':
                 $this->elementStack[] = new $this->enclosureClass($attribs);
                 break;
             case 'IMAGE':
@@ -117,6 +118,7 @@ class RSSDataParser extends DataParser
         {
             case 'CONTENT:ENCODED':
             case 'CONTENT':
+            case 'BODY':
                 $strip_tags = false;
                 break;
         }
