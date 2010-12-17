@@ -8,7 +8,7 @@
   Use the arrow buttons to customize the order of icons on your homepage, and the checkboxes to toggle visibility. Your changes will be automatically saved.
 </div> 
 
-<ul class="nav iconic" id="homepageList">
+<ul class="gloss nav iconic" id="homepageList">
   {foreach $modules as $id => $info}
     <li id="{$id}">
       {if $info['disableable']}
