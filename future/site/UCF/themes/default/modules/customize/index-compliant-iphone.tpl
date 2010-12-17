@@ -3,29 +3,8 @@
 <ul class="gloss">
 	<li class="arrow-back"><a href="../home/">Return to Home</a></li>
 </ul>
-{if $newCount > 0}
-  <div id="statusmsg" class="focal collapsed" onclick="showHideFuller(this);">
-    <strong>{$newCount} New App{if $newCount > 1}s{/if}</strong>
-    <span class="smallprint">
-      <span class="summary">
-        <span class="more">show</span>
-      </span>
-      <span class="fulltext">
-        <span class="more">hide</span>
-        <ul class="newapps{if $newCount >= 2} twoPlus{/if}{if $newCount >= 3} threePlus{/if}">
-          {foreach $modules as $id => $info}
-            {if $info['new']}
-              <li><a href="#{$id}">{$info['title']}</a></li>
-            {/if}
-          {/foreach}
-        </ul>
-      </span>
-    </span>
-  </div>
-  <h3 id="allapps">All Apps</h3>
-{/if}
 
-<ul id="dragReorderList">
+<ul class="gloss" id="dragReorderList">
   {foreach $modules as $id => $info}
     <li>
       <a name="{$id}"></a>

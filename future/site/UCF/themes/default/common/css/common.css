@@ -157,9 +157,9 @@ h3 { color:white; padding:0 7px; }
 #Footer #FooterNav{ margin-top: 30px;}
 #Footer #FooterNav #Customize{}
 #Footer #FooterNav #Main,
-#Footer #FooterNav #Bookmark{display: inline-block; width: 49.5%; text-align: center; padding: 0; margin: 10px 0;}
-#Footer #FooterNav #Main{margin-left: .5%;}
-#Footer #FooterNav #Bookmark{margin-right: .5%;}
+#Footer #FooterNav #Bookmark{display: inline-block; width: 49%; text-align: center; padding: 0; margin: 10px 0;}
+#Footer #FooterNav #Main{margin-left: 1%;}
+#Footer #FooterNav #Bookmark{margin-right: 1%;}
 #Footer #FooterNav #Copyright{background: none; text-align: center; color: #fff;}
 
 
