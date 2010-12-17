@@ -23,13 +23,13 @@
 			
 			{$footerHTML}
 			
-			<ul id="FooterNav">
+			<ul class="gloss" id="FooterNav">
 				{if $moduleName == 'Home'}
-				<li class="customize"><a href="/customize/">Customize</a></li>
+				<li id="Customize" class="arrow"><a href="/customize/">Customize</a></li>
 				{/if}
-				<li class="bookmark"><a href="javascript:bookmark()">Bookmark</a></li>
-				<li class="main"><a href="http://www.ucf.edu">Full Website<a></li>
-				<li class="copyright">&copy; 2010 University of Central Florida</li>
+				<li id="Bookmark"><a href="javascript:bookmark()">Bookmark</a></li>
+				<li id="Main"><a href="http://www.ucf.edu">UCF.edu</a></li>
+				<li id="Copyright">&copy; 2010 University of Central Florida</li>
 			</ul>
 			
 			{foreach $inlineJavascriptFooterBlocks as $script}
