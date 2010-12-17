@@ -20,12 +20,13 @@ class TemplateEngine extends Smarty {
   
     $checkDirs = array(
       'THEME_DIR'     => THEME_DIR,
-      'TEMPLATES_DIR' => TEMPLATES_DIR,
+      'SITE_DIR'     => SITE_DIR,
+      'TEMPLATES_DIR' => TEMPLATES_DIR
     );
     $checkFiles = array(
       "$subDir$page-$pagetype-$platform.tpl", // platform-specific
       "$subDir$page-$pagetype.tpl",           // pagetype-specific
-      "$subDir$page.tpl",                     // default
+      "$subDir$page.tpl"                      // default
     );
     
     foreach ($checkDirs as $type => $dir) {
