@@ -42,8 +42,4 @@
 	
 </div>
 
-<ul class="gloss seperate">
-	<li class="arrow-back"><a href="../home/">Return to Home</a></li>
-</ul>
-	
 {/block}
