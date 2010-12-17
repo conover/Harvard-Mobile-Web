@@ -296,17 +296,12 @@ class CalendarModule extends Module {
         break;
         
       case 'index':
-        $today = strtotime(date("Y-m-d 12:00:00", time()));
+        $this->loadWebAppConfigFile('calendar-index','calendarPages');
+        $today = mktime(12,0,0);
         $year = date('Y', $today);
       
         $this->assign('today',           $today);
         $this->assign('searchOptions',   $this->searchOptions);
-        
-        $this->assign('todaysEventsUrl', $this->dayURL($today, 'events'));
-//        $this->assign('holidaysUrl',     $this->holidaysURL($year));
-        $this->assign('categoriesUrl',   $this->categoriesURL());
-        $this->assign('academicUrl',     $this->academicURL($year));
-
         break;
       
       case 'categories':
