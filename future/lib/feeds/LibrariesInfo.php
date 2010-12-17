@@ -741,18 +741,32 @@ class Libraries{
                     $callNumber = $callNumber . ":" . $callNumberArray[$q];
                 
                 $stat = explode(":", $item->stat);
-                $reqUrlArray = explode(":", $item->req->url);
-                $reqUrl = $reqUrlArray[0];
-                for($y=1; $y<count($reqUrlArray); $y++)
-                    $reqUrl = $reqUrl . ":" . $reqUrlArray[$y];
 
+                $reqUrl = "";
+                $scanAndDeliverUrl = "";
 
-                $reqString = explode(":", $item->req);
-                $reqString = $reqString[0];
-             
+                foreach($item->req as $req) {
+                    $reqOrScanString = "";
+                    $reqOrScanString = explode(":", $req);
+                    $reqOrScanString = strtolower($reqOrScanString[0]);
 
-                for($i=1; $i < count($req); $i++)
-                    $reqUrl = $reqUrl . $req[$i];
+                    if (strlen(stristr($reqOrScanString, 'scan')) >0){
+                       
+                        $scanUrlArray = explode(":", $req['href']);
+                        $scanAndDeliverUrl = $scanUrlArray[0];
+                        for($y=1; $y<count($scanUrlArray); $y++)
+                            $scanAndDeliverUrl = $scanAndDeliverUrl . ":" . $scanUrlArray[$y];
+
+                    }
+                    else {
+                        $reqUrlArray = explode(":", $req['href']);
+                        $reqUrl = $reqUrlArray[0];
+                        for($y=1; $y<count($reqUrlArray); $y++)
+                            $reqUrl = $reqUrl . ":" . $reqUrlArray[$y];
+
+                    }
+                }
+
 
                 if ($isAvailable[0] == "Y")
                     $itemArray['available'] = "YES";
@@ -761,9 +775,6 @@ class Libraries{
 
                 
                 $itemArray['callNumber'] = $callNumber;
-
-               // else
-                 //   $itemArray['callNumber'] = $parentCallNumber[0];
 
                 
                 $stA = explode(" | ", $stat[0]);
@@ -777,6 +788,7 @@ class Libraries{
                 $itemArray['statMain'] = strtolower($stA[0]);
                 $itemArray['statSecondary'] = $seachStringForCheckedOut;
                 $itemArray['requestUrl'] = $reqUrl;
+                $itemArray['scanAndDeliverUrl'] = $scanAndDeliverUrl;
 
 
                 $itemArray['checkedOutItem'] = "NO";
@@ -797,21 +809,18 @@ class Libraries{
                     $itemArray['unavailable'] = "NO";
 
                 if ((strlen($itemArray['requestUrl']) > 0)) {
-
-                    $pos = strpos(strtolower($reqString), 'scan');
-
-                    if ($pos !== false){
-                        $itemArray['canScanAndDeliver'] = "YES";
-                        $itemArray['canRequest'] = "NO";
-                    }
-                    else {
-                        $itemArray['canRequest'] = "YES";
-                        $itemArray['canScanAndDeliver'] = "NO";
-                    }
+                    $itemArray['canRequest']  = "YES";
                 }
                 else {
                      $itemArray['canRequest'] = "NO";
-                     $itemArray['canScanAndDeliver'] = "NO";
+                     
+                }
+
+                if (strlen($itemArray['scanAndDeliverUrl']) > 0)
+                    $itemArray['canScanAndDeliver'] = "YES";
+
+                else {
+                    $itemArray['canScanAndDeliver'] = "NO";
                 }
 
                 $itemsToReturn[] = $itemArray;
