@@ -230,6 +230,35 @@ a.formbutton div {
 	background-position: left;
 }
 
+input.formbutton {
+  -webkit-appearance: none;
+  display: inline-block;
+	color: #fff;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 26px;
+	text-decoration: none;
+	padding: 5px 5px 5px 14px;
+	margin-right: 0;
+  border: none;
+	height: 36px;
+	overflow: hidden;  
+	background-color: transparent;
+	background-image: url(/common/images/button-sd-l.png);
+	background-repeat: no-repeat;
+	background-position: center left;
+}
+.formbuttonclose {
+  display: inline-block;
+	background-color: transparent;
+	background-image: url(/common/images/button-sd-r.png);
+	background-repeat: no-repeat;
+	background-position: center right;
+	margin: 0;
+	height: 36px;
+	padding-right: 7px;
+}
+
 .radiobutton {
 	width: 24px;
 	height: 24px;

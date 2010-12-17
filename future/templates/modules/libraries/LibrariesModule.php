@@ -3,17 +3,16 @@
 require_once realpath(LIB_DIR.'/Module.php');
 require_once realpath(LIB_DIR.'/feeds/LibrariesInfo.php');
 
-define('LIBRARY_LIBRARIES_COOKIE', 'libraries');
-define('LIBRARY_ARCHIVES_COOKIE', 'archives');
-define('LIBRARY_LIBRARY_ITEMS_COOKIE', 'libraryItems');
+define('LIBRARY_LOCATIONS_COOKIE', 'libraryLocations');
+define('LIBRARY_ITEMS_COOKIE',     'libraryItems');
 
 
 class LibrariesModule extends Module {
   protected $id = 'libraries';
   private static $typeToCookie = array(
-    'item'    => LIBRARY_LIBRARY_ITEMS_COOKIE,
-    'library' => LIBRARY_LIBRARIES_COOKIE,
-    'archive' => LIBRARY_ARCHIVES_COOKIE,
+    'item'    => LIBRARY_ITEMS_COOKIE,
+    'library' => LIBRARY_LOCATIONS_COOKIE,
+    'archive' => LIBRARY_LOCATIONS_COOKIE,
   );
   private $bookmarks = array(
     'item'    => null,
@@ -215,16 +214,15 @@ class LibrariesModule extends Module {
       'name' => $name,
     ));
   }
+
+  private static function titleSort($a, $b) {
+    return strcmp($a['title'], $b['title']);
+  }
   
   protected function initializeForPage() {
     switch ($this->page) {
       case 'index':
         $indexConfig = $this->loadWebAppConfigFile('libraries-index', 'indexConfig');
-        
-        $hasItemBookmarks = count($this->getBookmarks('item')) > 0;
-        $hasLibraryBookmarks = 
-          (count($this->getBookmarks('library')) + count($this->getBookmarks('archive'))) > 0;
-        $hasBookmarks = $hasItemBookmarks || $hasLibraryBookmarks;
         
         $searchPlaceholder = '';
         $sections = array();
@@ -234,25 +232,28 @@ class LibrariesModule extends Module {
             continue;
           }
           
-          if ($sectionName == 'bookmarks' && !$hasBookmarks) {
-            continue;
-          }
-        
           $section = array();
           foreach ($config['titles'] as $i => $title) {
             if ($sectionName == 'bookmarks') {
-              if ($config['bookmarkType'][$i] == 'item' && !$hasItemBookmarks) {
-                continue;
-              } else if ($config['bookmarkType'][$i] == 'library' && !$hasLibraryBookmarks) {
-                continue;
+              $types = explode('|', $config['bookmarkType'][$i]);
+
+              $hasBookmarkOfTypes = false;
+              foreach ($types as $type) {
+                if (count($this->getBookmarks($type))) {
+                  $hasBookmarkOfTypes = true;
+                  break;
+                }
               }
+              if (!$hasBookmarkOfTypes) { continue; }
             }
             $section['items'][] = array(
               'title' => $title,
               'url'   => $config['urls'][$i],
             );
           }
-          $sections[] = $section;
+          if (count($section)) {
+            $sections[] = $section;
+          }
         }
         
         $this->assign('searchPlaceholder', $searchPlaceholder);
@@ -293,6 +294,7 @@ class LibrariesModule extends Module {
         }
         
         $item['bookmarked'] = in_array($id, $this->getBookmarks('item'));
+        $item['cookie'] = LIBRARY_ITEMS_COOKIE;
          
         $this->addOnLoad('var locationCoords = '.json_encode($locationCoords).
           '; setLocationDistances(locationCoords);');
@@ -315,11 +317,11 @@ class LibrariesModule extends Module {
         $name = '';
         
         $data = Libraries::getFullAvailability($itemID);
-        //error_log(print_r($data, true));
+        error_log(print_r($data, true));
         foreach ($data as $entry) {
           if ($entry['id'] != $id) { continue; }
           
-          $name = $entry['details']['name'];
+          $name = $entry['details']['primaryName'];
           $items = $this->formatItemAvailabilityInfo($entry);
 
           break; // assume libraries are not listed multiple times
@@ -353,27 +355,116 @@ class LibrariesModule extends Module {
         break;
       
       case 'search':
-        $results = array();
-        $searchTerms = trim($this->getArg('filter'));
+        $searchTerms = '';
+        $locationTerm = '';
+        $formatTerm = '';
         
-        if (!$this->args['filter']) {
-          $this->redirectTo('index');
-        }
+        $advancedSearch = $this->getArg('advanced', false);
+        
+        if ($advancedSearch) {
+          $keywords     = trim($this->getArg('keywords'));
+          $title        = trim($this->getArg('title'));
+          $author       = trim($this->getArg('author'));
+          $locationTerm = $this->getArg('location');
+          $formatTerm   = $this->getArg('format');
+          
+          if ($keywords) {
+            $searchTerms .= '"'.$keywords.'"';
+          }
+          if ($title) {
+            $searchTerms .= 'title:"'.$title.'"';
+          }
+          if ($author) {
+            $searchTerms .= 'author:"'.$author.'"';
+          }
+          if ($locationTerm == 'any' || $locationTerm == 'all') {
+            $locationTerm = '';
+          }
+          if ($formatTerm == 'any' || $formatTerm == 'all') {
+            $formatTerm = '';
+          } 
 
-        $data = Libraries::searchItems($searchTerms);
-        //error_log(print_r($data, true));
-        $results = array();
-        foreach ($data as $entry) {
-          $results[] = $this->getItemDetails($entry);
+          $searchConfig = $this->loadWebAppConfigFile('libraries-search', 'searchConfig');
+          
+          $this->setPageTitle('Advanced Search');
+          
+          $formats   = $searchConfig['formats'];
+          $locations = $searchConfig['locations'];
+          
+          $bookmarkedLibraryIDs = $this->getBookmarks('library');
+          $bookmarkedArchiveIDs  = $this->getBookmarks('archive');
+          
+          $bookmarkedLocations = array();
+          $otherLocations = array();
+          
+          $data = Libraries::getAllLibraries();
+          foreach ($data as $entry) {
+            if (in_array($entry['id'], $bookmarkedLibraryIDs)) {
+              if (!isset($bookmarkedLocations[$entry['id']])) {
+                $bookmarkedLocations[$entry['id']] = $entry['primaryName'];
+              }
+            } else {
+              if (!isset($otherLocations[$entry['id']])) {
+                $otherLocations[$entry['id']] = $entry['primaryName'];
+              }
+            }
+          }
+
+          $data = Libraries::getAllArchives();
+          foreach ($data as $entry) {
+            if (in_array($entry['id'], $bookmarkedArchiveIDs)) {
+              if (!isset($bookmarkedArchives[$entry['id']])) {
+                $bookmarkedArchives[$entry['id']] = "{$entry['primaryName']} (archive)";
+              }
+            } else {
+              if (!isset($otherLocations[$entry['id']])) {
+                $otherLocations[$entry['id']] = "{$entry['primaryName']} (archive)";
+              }
+            }
+          }
+          
+          sort($bookmarkedLocations);
+          sort($otherLocations);
+          $locations = array_merge($locations, $bookmarkedLocations, $otherLocations);
+          
+          $this->assign('keywords',  $keywords);
+          $this->assign('title',     $title);
+          $this->assign('author',    $author);
+          $this->assign('location',  $this->getArg('location'));
+          $this->assign('format',    $this->getArg('format'));
+          $this->assign('locations', $locations);
+          $this->assign('formats',   $formats);
+
+        } else {
+          $searchTerms = trim($this->getArg('filter'));
+          
+          if (!$searchTerms) {
+            $this->redirectTo('index');
+          }
+
+          $this->assign('searchTerms', $searchTerms);
         }
-      
-        $this->assign('searchTerms', $searchTerms);
-        $this->assign('resultCount', count($results));
-        $this->assign('results',     $results);
-        break;
         
+        $results = array();
+        if ($searchTerms) {
+          $results = array();
+          $data = Libraries::searchItems($searchTerms, $locationTerm, $formatTerm);
+          //error_log(print_r($data, true));
+        
+          foreach ($data as $entry) {
+            $results[] = $this->getItemDetails($entry);
+          }
+        }
+        
+        $this->assign('advancedSearch', $advancedSearch);
+        $this->assign('locationTerm',   $locationTerm);
+        $this->assign('formatTerm',     $formatTerm);
+        $this->assign('resultCount',    count($results));
+        $this->assign('results',        $results);
+        break;
+
       case 'bookmarks':
-        $types = explode(':', $this->getArg('type'));
+        $types = explode('|', $this->getArg('type'));
         
         $libraries = null;
         $archives = null;
@@ -386,24 +477,28 @@ class LibrariesModule extends Module {
               if (!isset($libraries)) {
                 $libraries = Libraries::getAllLibraries();
               }
-              if (!isset($archives)) {
-                $archives = Libraries::getAllArchives();
-              }
               
               foreach ($libraries as $entry) {
                 if ($entry['id'] == $id) {
                   $results[] = array(
-                    'title' => $entry['name'],
+                    'title' => $entry['primaryName'],
                     'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
                   );
+                  break;
                 }
               }
+            } else if ($type == 'archive') {
+              if (!isset($archives)) {
+                $archives = Libraries::getAllArchives();
+              }
+              
               foreach ($archives as $entry) {
                 if ($entry['id'] == $id) {
                   $results[] = array(
-                    'title' => $entry['name'],
+                    'title' => $entry['primaryName'],
                     'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
                   );
+                  break;
                 }
               }
 
@@ -414,6 +509,7 @@ class LibrariesModule extends Module {
             }
           }
         }
+        
         $this->assign('bookmarkType', $type);
         $this->assign('results', $results);
         break;
@@ -425,8 +521,8 @@ class LibrariesModule extends Module {
         $libraries = array();
         foreach ($data as $entry) {
           $libraries[] = array(
-            'title' => $entry['name'],
-            'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
+            'title' => $entry['primaryName'],
+            'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
           );
         }
         
@@ -440,8 +536,8 @@ class LibrariesModule extends Module {
         $archives = array();
         foreach ($data as $entry) {
           $archives[] = array(
-            'title' => $entry['name'],
-            'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
+            'title' => $entry['primaryName'],
+            'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
           );
         }
         
@@ -455,11 +551,11 @@ class LibrariesModule extends Module {
         
         if ($type == 'library') {
           $data = Libraries::getLibraryDetails($id, $name);
-          //error_log(print_r($data, true));
+          error_log(print_r($data, true));
           
         } else if ($type == 'archive') {
           $data = Libraries::getArchiveDetails($id, $name);
-          //error_log(print_r($data, true));
+          error_log(print_r($data, true));
         
         } else {
           $this->redirectTo('index');
@@ -540,11 +636,12 @@ class LibrariesModule extends Module {
         }
         
         $item = array(
-          'id'     => $id,
-          'name'   => $name,
-          'type'   => $type,
-          'bookmarked' => in_array($id, $this->getBookmarks($type)),
-          'cookie' => ($type == 'library') ? LIBRARY_LIBRARIES_COOKIE : LIBRARY_ARCHIVES_COOKIE,
+          'id'           => $id,
+          'name'         => $name,
+          'fullName'     => $data['primaryname'],
+          'type'         => $type,
+          'bookmarked'   => in_array($id, $this->getBookmarks($type)),
+          'cookie'       => LIBRARY_LOCATIONS_COOKIE,
           'infoSections' => $info,
         );
         
@@ -589,10 +686,11 @@ class LibrariesModule extends Module {
         }
         
         $item = array(
-          'name' => $name,
+          'fullName'   => $data['primaryname'],
+          'type'       => $type,
           'bookmarked' => in_array($id, $this->getBookmarks($type)),
-          'cookie' => ($type == 'library') ? LIBRARY_LIBRARIES_COOKIE : LIBRARY_ARCHIVES_COOKIE,
-          'hours' => $hours,
+          'cookie'     => LIBRARY_LOCATIONS_COOKIE,
+          'hours'      => $hours,
         );
         
         $this->assign('item', $item);

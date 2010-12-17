@@ -75,12 +75,16 @@ class Libraries{
         $count = 0;
          foreach ($xml_obj->institution as $institution) {
 
-             $timeOpen = $institution->hoursofoperation[0]->dailyhours->hours[0];
+             $timeOpen = 0;
+             
+             if (isset($institution->hoursofoperation->hoursofoperation)) {
+                 $timeOpen = $institution->hoursofoperation[0]->dailyhours->hours[0];
 
-             if (strlen($timeOpen) <= 0) {
-                 $timeOpen = $institution->hoursofoperation->hoursofoperation->dailyhours->hours[0];
+                 if (strlen($timeOpen) <= 0) {
+                     $timeOpen = $institution->hoursofoperation->hoursofoperation->dailyhours->hours[0];
+                 }
              }
-
+             
              if (strlen($timeOpen) <= 0) {
                  $timeOpen = "N/A";
              }
@@ -378,7 +382,7 @@ class Libraries{
 
        public static function isOpenNow($timeString) {
 
-           if ($timeString == 'closed')
+           if ($timeString == 'closed' || $timeString == 'N/A' )
                return "NO";
 
            else{
@@ -418,7 +422,7 @@ class Libraries{
                }
 
 
-               if ((!isStartAM) && (!isStartPM) && (($isEndAM) || ($isEndPM))){
+               if ((!$isStartAM) && (!$isStartPM) && (($isEndAM) || ($isEndPM))){
                    if ($isEndAM)
                        $isStartAM = true;
                    else
@@ -546,150 +550,150 @@ class Libraries{
 
         $searchResults = array();
 
-
-        foreach ($xml_obj->resultSet->item as $result) {
-
-            $item = $result;
-            $itemIndex = explode(":",$item['position']);
-            $itemIndex = $itemIndex[0];
-            $itemIdArray = explode(":",$item['id']);
-            $itemId = $itemIdArray[0];
-            for($n=1; $n < count($itemIdArray); $n++)
-                $itemId = $itemId . ":" . $itemIdArray[$n];
-
-            $editionArray = explode(":", $item->edition);
-            $edition = $editionArray[0];
-            for ($j = 1; $j < count($editionArray); $j++) {
-                $edition = $edition . ":" . $editionArray[$j];
-            }
-
-            $namespaces = $result->getNameSpaces(true);
-            $dc = $item->children($namespaces['dc']);
-
-
-            $creatorArray = explode(":", $dc->creator);
-            $creator = $creatorArray[0];
-            for ($i = 1; $i < count($creatorArray); $i++) {
-                $creator = $creator . ":" . $creatorArray[$i];
-            }
-
-            $titleArray = explode(":", $dc->title);
-            $title = $titleArray[0];
-            for ($j = 1; $j < count($titleArray); $j++) {
-                $title = $title . ":" . $titleArray[$j];
-            }
-
-            $dateArray = explode(":", $dc->date);
-            $date = $dateArray[0];
-            for ($k = 1; $k < count($dateArray); $k++) {
-                $date = $date . ":" . $dateArray[$k];
-            }
-
-
-            $format = array();
-
-            foreach ($dc->format as $formats) {
-                $type = "";
-                $val = "";
-                if ($formats->attributes()) {
-
-                    foreach ($formats->attributes() as $tp => $value) {
-                        $type = $tp;
-                        $val = explode(":", $value);
-                        $val = $val[0];
+        if (isset($xml_obj->resultSet->item)) {
+            foreach ($xml_obj->resultSet->item as $result) {
+    
+                $item = $result;
+                $itemIndex = explode(":",$item['position']);
+                $itemIndex = $itemIndex[0];
+                $itemIdArray = explode(":",$item['id']);
+                $itemId = $itemIdArray[0];
+                for($n=1; $n < count($itemIdArray); $n++)
+                    $itemId = $itemId . ":" . $itemIdArray[$n];
+    
+                $editionArray = explode(":", $item->edition);
+                $edition = $editionArray[0];
+                for ($j = 1; $j < count($editionArray); $j++) {
+                    $edition = $edition . ":" . $editionArray[$j];
+                }
+    
+                $namespaces = $result->getNameSpaces(true);
+                $dc = $item->children($namespaces['dc']);
+    
+    
+                $creatorArray = explode(":", $dc->creator);
+                $creator = $creatorArray[0];
+                for ($i = 1; $i < count($creatorArray); $i++) {
+                    $creator = $creator . ":" . $creatorArray[$i];
+                }
+    
+                $titleArray = explode(":", $dc->title);
+                $title = $titleArray[0];
+                for ($j = 1; $j < count($titleArray); $j++) {
+                    $title = $title . ":" . $titleArray[$j];
+                }
+    
+                $dateArray = explode(":", $dc->date);
+                $date = $dateArray[0];
+                for ($k = 1; $k < count($dateArray); $k++) {
+                    $date = $date . ":" . $dateArray[$k];
+                }
+    
+    
+                $format = array();
+    
+                foreach ($dc->format as $formats) {
+                    $type = "";
+                    $val = "";
+                    if ($formats->attributes()) {
+    
+                        foreach ($formats->attributes() as $tp => $value) {
+                            $type = $tp;
+                            $val = explode(":", $value);
+                            $val = $val[0];
+                        }
                     }
+    
+                    $formatArray = explode(":", $formats[0]);
+                    $fm = $formatArray[0];
+                    for ($k = 1; $k < count($formatArray); $k++) {
+                        $fm = $fm . ":" . $formatArray[$k];
+                    }
+    
+                    if (strlen($val) > 0) {
+                        $format['type'] = $val;
+                        $format['typeDetail'] = $fm;
+                    }
+                    else
+                        $format['formatDetail'] = $fm;
                 }
-
-                $formatArray = explode(":", $formats[0]);
-                $fm = $formatArray[0];
-                for ($k = 1; $k < count($formatArray); $k++) {
-                    $fm = $fm . ":" . $formatArray[$k];
+    
+                $isOnline = "NO";
+                $isFigure = "NO";
+                $onlineAvailabilityArray = array();
+                foreach($dc->identifier as $identifier){
+    
+                    $idenType = "";
+                    $idenValue = "";
+                    $idenLink = "";
+                    foreach ($identifier->attributes() as $idenTp => $idenVal){
+                            $idenType = $idenTp;
+                            $valA = explode(":", $idenVal);
+                            $idenValue = $valA[0];
+    
+                            $idenArray = explode(":", $identifier[0]);
+                            $idenLink = $idenArray[0];
+                            for ($k = 1; $k < count($idenArray); $k++) {
+                                $idenLink = $idenLink . ":" . $idenArray[$k];
+                            }
+    
+                            for($r=1; $r<count($valA); $r++){
+                                $idenValue = $idenValue . ":" .$valA[$r];
+                            }
+    
+                            if ($idenValue == "NET")
+                                $isOnline = "YES";
+    
+                            else if ($idenValue == "FIG")
+                                $isFigure = "YES";
+    
+                            
+                    }
+    
+                    $onlineavail = array();
+                    $onlineavail['type'] = $idenValue;
+                    $onlineavail['link'] = $idenLink;
+    
+                    $onlineAvailabilityArray[] = $onlineavail;
                 }
-
-                if (strlen($val) > 0) {
-                    $format['type'] = $val;
-                    $format['typeDetail'] = $fm;
-                }
-                else
-                    $format['formatDetail'] = $fm;
+    
+    
+                $resultArray = array();
+                $resultArray['index'] = $itemIndex;
+                $resultArray['totalResults'] = $totalResults;
+                $resultArray['itemId'] = $itemId;
+                $resultArray['creator'] = $creator;
+                $resultArray['title'] = $title;
+                $resultArray['date'] = $date;
+                $resultArray['edition'] = $edition;
+                $resultArray['format'] = $format;
+                $resultArray['isFigure'] = $isFigure;
+                $resultArray['isOnline'] = $isOnline;
+                $resultArray['otherAvailability'] = $onlineAvailabilityArray;
+    
+    
+                $searchResults[] = $resultArray;
+    
+               /* print($itemIndex);
+                print("<br>");
+                print($itemId);
+                print("<br>");
+                print($edition);
+                print("<br>");
+                print($creator);
+                print("<br>");
+                print($date);
+                print("<br>");
+                print($title);
+                print("<br>");
+                print_r($format);
+                print("<br>");
+                //print($type);
+                print("<br>");
+               // print($val);
+                print("<br>");*/
             }
-
-            $isOnline = "NO";
-            $isFigure = "NO";
-            $onlineAvailabilityArray = array();
-            foreach($dc->identifier as $identifier){
-
-                $idenType = "";
-                $idenValue = "";
-                $idenLink = "";
-                foreach ($identifier->attributes() as $idenTp => $idenVal){
-                        $idenType = $idenTp;
-                        $valA = explode(":", $idenVal);
-                        $idenValue = $valA[0];
-
-                        $idenArray = explode(":", $identifier[0]);
-                        $idenLink = $idenArray[0];
-                        for ($k = 1; $k < count($idenArray); $k++) {
-                            $idenLink = $idenLink . ":" . $idenArray[$k];
-                        }
-
-                        for($r=1; $r<count($valA); $r++){
-                            $idenValue = $idenValue . ":" .$valA[$r];
-                        }
-
-                        if ($idenValue == "NET")
-                            $isOnline = "YES";
-
-                        else if ($idenValue == "FIG")
-                            $isFigure = "YES";
-
-                        
-                }
-
-                $onlineavail = array();
-                $onlineavail['type'] = $idenValue;
-                $onlineavail['link'] = $idenLink;
-
-                $onlineAvailabilityArray[] = $onlineavail;
-            }
-
-
-            $resultArray = array();
-            $resultArray['index'] = $itemIndex;
-            $resultArray['totalResults'] = $totalResults;
-            $resultArray['itemId'] = $itemId;
-            $resultArray['creator'] = $creator;
-            $resultArray['title'] = $title;
-            $resultArray['date'] = $date;
-            $resultArray['edition'] = $edition;
-            $resultArray['format'] = $format;
-            $resultArray['isFigure'] = $isFigure;
-            $resultArray['isOnline'] = $isOnline;
-            $resultArray['otherAvailability'] = $onlineAvailabilityArray;
-
-
-            $searchResults[] = $resultArray;
-
-           /* print($itemIndex);
-            print("<br>");
-            print($itemId);
-            print("<br>");
-            print($edition);
-            print("<br>");
-            print($creator);
-            print("<br>");
-            print($date);
-            print("<br>");
-            print($title);
-            print("<br>");
-            print_r($format);
-            print("<br>");
-            //print($type);
-            print("<br>");
-           // print($val);
-            print("<br>");*/
         }
-
         return $searchResults;
     }
 

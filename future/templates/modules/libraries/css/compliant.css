@@ -25,8 +25,6 @@
 	background-position: 0 -38px;
 }
 .label {
-  overflow: hidden;
-  text-overflow: ellipsis;
   position: relative;
   top: 0px;
   left: 0px;
@@ -69,10 +67,6 @@
   padding: 4px 4px 8px 4px;
 }
 
-.ellipsis {
-  
-}
-
 .listItems .smallprint > div {
   padding-left: 20px;
   background-position: left center;
@@ -101,4 +95,42 @@
 }
 .listItems .video {
   background-image: url(/modules/libraries/images/video.png);
+}
+
+table.search {
+  border: none;
+  line-height: 22px;
+  
+}
+table.search th {
+  text-align: right;
+  font-weight: bold;
+  width: 5.5em;
+}
+table.search th, table td {
+  vertical-align: baseline;
+}
+table.search input, table.search select {
+  margin: 0;
+  width: 99.9%;
+  line-height: 22px;
+}
+
+fieldset.search {
+  position: relative;
+}
+fieldset.search label {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6em;
+  text-align: right;
+  font-weight: bold;
+}
+fieldset.search input,
+fieldset.search select {
+  display: block;
+  padding-left: 6em;
+  width: 100%;
 }
