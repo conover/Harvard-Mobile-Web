@@ -1202,6 +1202,7 @@ class Libraries{
 
         $item = $xml_obj;
 
+        $link = "";
         $linkArray = explode(":", $item->thumbnail);
         $link = $linkArray[0];
 
@@ -1209,8 +1210,25 @@ class Libraries{
                 $link = $link . ":" . $linkArray[$j];
             }
 
+        $catLink = "";
+        $catLinkArray = explode(":", $item->cataloglink);
+        $catLink = $catLinkArray[0];
+
+        for ($z = 1; $z < count($catLinkArray); $z++) {
+                $catLink = $catLink . ":" . $catLinkArray[$z];
+            }
+
+        $fullImageLink = "";
+        $fullImageArray = explode(":", $item->fullimage);
+        $fullImageLink = $fullImageArray[0];
+
+        for($b=1; $b < count($fullImageArray); $b++)
+            $fullImageLink = $fullImageLink . ":" . $fullImageArray[$b];
+
        $imageInfoToReturn['itemId'] = $itemId;
        $imageInfoToReturn['thumbnail'] = $link;
+       $imageInfoToReturn['cataloglink'] = $catLink;
+       $imageInfoToReturn['fullimagelink'] = $fullImageLink;
 
        return $imageInfoToReturn;
 
