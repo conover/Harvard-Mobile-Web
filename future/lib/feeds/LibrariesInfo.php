@@ -1193,6 +1193,30 @@ class Libraries{
             return $itemDetails;
     }
 
+    public static function getImageThumbnail($itemId){
+
+        $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_ITEM_RECORD_BASE').$itemId;
+        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+
+        $xml_obj = self::query("item-{$itemId}", $xmlURLPath);
+
+        $item = $xml_obj;
+
+        $linkArray = explode(":", $item->thumbnail);
+        $link = $linkArray[0];
+
+        for ($j = 1; $j < count($linkArray); $j++) {
+                $link = $link . ":" . $linkArray[$j];
+            }
+
+       $imageInfoToReturn['itemId'] = $itemId;
+       $imageInfoToReturn['thumbnail'] = $link;
+
+       return $imageInfoToReturn;
+
+       
+    }
+
 
 
     public static function isPM ($timeString) {

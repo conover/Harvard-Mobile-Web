@@ -58,6 +58,11 @@ switch ($_REQUEST['command']) {
         $data = Libraries::getItemRecord($itemid);
         break;
 
+    case 'imagethumbnail':
+        $imageId = urldecode($_REQUEST['itemid']);
+        $data = Libraries::getImageThumbnail($imageId);
+        break;
+
 }
 
     echo json_encode($data);
