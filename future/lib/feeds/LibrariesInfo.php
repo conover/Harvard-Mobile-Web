@@ -719,6 +719,11 @@ class Libraries{
             $statsList = array();
 
             $collectionItemOnly = array();
+
+            $collectionName = "";
+            $collectionNamesList = array();
+
+
             foreach($branch->collection as $collection) {
             $parentCallNumber = "";
             $parentCallNumberArray = explode(":",$collection->callnumber);
@@ -726,8 +731,20 @@ class Libraries{
 
                 for($z=1; $z < count($callNumberArray); $z++)
                     $parentCallNumber = $parentCallNumber . ":" . $parentCallNumberArray[$z];
+
+            $collectionNameArr = explode(":", $collection->collectionname[0]);
+            $collectionName = $collectionNameArr[0];
+            for($u=1; $u < count($collectionNameArr); $u++)
+            $collectionName = $collectionName . ":" . $collectionNameArr[$u];
+
+            if (!in_array($collectionName, $collectionNamesList))
+                $collectionNamesList[] = $collectionName;
+
             
             $itemCount = 0;
+
+            $prevStat = "";
+            $prevCall = "";
             foreach($collection->items->itemrecord as $item){
 
                 $isAvailable = "N";
@@ -743,6 +760,13 @@ class Libraries{
                 
                 for($q=1; $q < count($callNumberArray); $q++)
                     $callNumber = $callNumber . ":" . $callNumberArray[$q];
+
+                $desc = "";
+                $descArray = explode(":", $item->desc);
+                $desc = $descArray[0];
+
+                for($v=1; $v < count($descArray); $v++)
+                    $desc = $desc . ":" . $descArray[$v];
                 
                 $stat = explode(":", $item->stat);
 
@@ -779,6 +803,7 @@ class Libraries{
 
                 
                 $itemArray['callNumber'] = $callNumber;
+                $itemArray['description'] = $desc;
 
                 
                 $stA = explode(" | ", $stat[0]);
@@ -789,6 +814,8 @@ class Libraries{
 
                 $seachStringForCheckedOut = strtolower($seachStringForCheckedOut);
 
+                $itemArray['collectionName'] = $collectionName;
+                $itemArray['collectionCallNumber'] = $parentCallNumber;
                 $itemArray['statMain'] = strtolower($stA[0]);
                 $itemArray['statSecondary'] = $seachStringForCheckedOut;
                 $itemArray['requestUrl'] = $reqUrl;
@@ -829,13 +856,14 @@ class Libraries{
 
                 $itemsToReturn[] = $itemArray;
 
-                if (!in_array(strtolower($stA[0]), $statsList)){
+                if ((!in_array(strtolower($stA[0]), $statsList)) && (strlen($stA[0]))){
                     $statsList[] = strtolower($stA[0]);
                 }
                 $itemCount++;
             }
 
                 if ($itemCount == 0){
+                    $collectionName = "";
                     $collectionNameArray = explode(":",$collection->collectionname[0]);
                     $collectionName = $collectionNameArray[0];
 
@@ -874,30 +902,59 @@ class Libraries{
                     $collectionItem['noItemMessage'] = $noItemMessage;
 
 
-                    if (((strlen($collectionName) > 0) || (count($collectionAvailVals) > 0)) || (strlen($noItemMessage) > 0))
+                    if (strlen($collectionName) > 0)
                         $collectionItemOnly[] = $collectionItem;
 
                 }
 
             }
 
-            $statsToReturn = array();
+            $collectionsToReturn = array();
 
+            for($i=0; $i<count($collectionNamesList); $i++){
+
+                $collectionGrouping = array();
+                $collectionGrouping['collectionName'] = $collectionNamesList[$i];
+                
             for($j=0; $j < count($statsList); $j++){
             $statArr = array();
-            $statArr['availableItems'] = array();
-            $statArr['checkedOutItems'] = array();
-            $statArr['unavailableItems'] = array();
-            $statArr['collectionOnlyItems'] = array();
+
             $availCount = 0;
             $requestCount = 0;
             $unavailCount = 0;
             $checkedOutCount = 0;
             $scanAndDeliverCount = 0;
             $callNo = "";
-             $statArr['statMain'] = $statsList[$j];
+            $statArr['collectionName'] = $collectionName;
+            $statArr['statMain'] = $statsList[$j];
+
+            $statArr['availableItems'] = array();
+            $statArr['checkedOutItems'] = array();
+            $statArr['unavailableItems'] = array();
+            $statArr['collectionOnlyItems'] = array();
+
+                $oldCallNo = "";
+                $allCallNumbersSame = true;
+
+                $oldDesc = "";
+                $allDescSame = true;
+                
+                $firstItemInStat = false;
                 foreach($itemsToReturn as $itm){
-                    if ($itm['statMain'] == $statsList[$j]){
+
+                    if (($itm['statMain'] == $statsList[$j]) && ($itm['collectionName'] == $collectionNamesList[$i])){
+
+                        if ($firstItemInStat === false){
+                            $firstItemInStat = true;
+                            $oldCallNo = $itm['callNumber'];
+                            $oldDesc = $item['description'];
+                        }
+                        
+                        if ($itm['callNumber'] != $oldCallNo)
+                            $allCallNumbersSame = false;
+
+                        if ($itm['description'] != $oldDesc)
+                            $allDescSame = false;
 
                         if ($itm['available'] == 'YES')
                             $availCount++;
@@ -915,8 +972,8 @@ class Libraries{
                         if ($itm['checkedOutItem'] == 'YES')
                             $checkedOutCount++;
 
-                        if (strlen($parentCallNumber[0]) > 0)
-                             $callNo = $parentCallNumber;
+                        if (strlen($itm['collectionCallNumber']) > 0)
+                             $callNo = $itm['collectionCallNumber'];
 
                         else
                             $callNo = $itm['callNumber'];
@@ -944,14 +1001,44 @@ class Libraries{
                 $statArr['checkedOutCount'] = $checkedOutCount;
                 $statArr['collectionOnlyCount'] = 0;// $collectionOnlyCount;
                 $statArr['scanAndDeliverCount'] = $scanAndDeliverCount;
-                $statArr['callNumber'] = $callNo;
+                //$statArr['callNumber'] = $callNo;
 
-                $statsToReturn[] = $statArr;
+                //$statsToReturn[] = $statArr;
+                $collectionGrouping['collectionCallNumber'] = $callNo;
+
+                //print_r(($statsList));
+                //print_r($collectionNamesList);
+                if (($allCallNumbersSame === true) && ($allDescSame === true) && (count($statsList) > 1)){
+                    $collectionGrouping['displayType'] = "II"; // display type 2: only diff holding stats within same collection
+                    $collectionGrouping['itemsByStat'][] = $statArr;
+                }
+                else if ((($allCallNumbersSame === false) || ($allDescSame === false)) && (count($statsList) > 1)){
+                    $collectionGrouping['displayType'] = "IV"; // display type 4: everything diff
+                    $collectionGrouping['itemsByStat'][] = $statArr;
+                }
+                else if ((($allCallNumbersSame === false) || ($allDescSame === false)) && (count($statsList) <= 1)){
+                    $collectionGrouping['displayType'] = "III"; // display type 3: only diff call numbers or desc
+                    $collectionGrouping['itemsByStat'][] = $statArr;
+                }
+                else if (($allCallNumbersSame === true) && ($allDescSame === true) && (count($statsList) <= 1)){
+                    if ($collectionItemOnly[0]['collectionName'] != $collectionNamesList[$i]){
+                    $collectionGrouping['displayType'] = "I"; // display type 1: everything same
+                    $collectionGrouping['itemsByStat'][] = $statArr;
+                    }
+                }
+                
+            }
+
+            if (count($statsList) == 0){
+                $collectionGrouping['displayType'] = "0"; //display type 0 => no display
+                $collectionGrouping['itemsByStat'] = array();
             }
 
             if (count($collectionItemOnly) > 0) {
                 $collectionOnlyStat = array();
 
+                $collectionOnlyStat['collectionName'] = $collectionNamesList[$i];
+                $collectionOnlyStat['statMain'] = "";
                 $collectionOnlyStat['availableItems'] = array();
                 $collectionOnlyStat['checkedOutItems'] = array();
                 $collectionOnlyStat['unavailableItems'] = array();
@@ -965,17 +1052,24 @@ class Libraries{
                 $collectionOnlyStat['scanAndDeliverCount'] = 0;
                 $collectionOnlyStat['callNumber'] = "";
 
-                $statsToReturn[] = $collectionOnlyStat;
-                
+                //$statsToReturn[] = $collectionOnlyStat;
+                if ($collectionItemOnly[0]['collectionName'] == $collectionNamesList[$i]){
+                    $collectionGrouping['displayType'] = "V"; // display type 5 => collection-only display
+                    $collectionGrouping['itemsByStat'][] = $collectionOnlyStat;
+                }
             }
+                $collectionsToReturn[] = $collectionGrouping;
+            }
+
             
             $lib = array();
             $lib['name'] = $libName[0];
             $lib['id'] = $libId[0];
             $lib['type'] = $libType[0];
-            $lib['details'] = $repoDetails;
+            //$lib['details'] = $repoDetails;
             //$lib['items'] = $itemsToReturn;
-            $lib['itemsByStat'] = $statsToReturn;
+            //$lib['itemsByStat'] = $statsToReturn;
+            $lib['collection'] = $collectionsToReturn;
 
             if (count($repoDetails) > 0)
                 $librariesToReturn[] = $lib;
