@@ -53,12 +53,12 @@ function setLocationDistances(locations) {
     var earthRadius = 6371; // km
     var milesPerKM = 1.609344000000865;
     
-    for (var i = 0; i < locations.length; i++) {
-      var elem = document.getElementById('location_'+i);
+    for (var id in locations) {
+      var elem = document.getElementById('location_'+id);
       if (!elem) { break; }
       
-      var locLat = locations[i]['lat'];
-      var locLon = locations[i]['lon'];
+      var locLat = locations[id]['lat'];
+      var locLon = locations[id]['lon'];
       
       // law of haversines
       var dLat = toRadians(locLat-curLat);

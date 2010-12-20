@@ -247,6 +247,7 @@ input.formbutton {
 	background-image: url(/common/images/button-sd-l.png);
 	background-repeat: no-repeat;
 	background-position: center left;
+	-webkit-border-radius: 0px;
 }
 .formbuttonclose {
   display: inline-block;

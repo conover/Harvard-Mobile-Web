@@ -15,69 +15,82 @@
         Closed today
       {/if}
     </span><br/>
+    {$subTitleNewline = false}
   {/block}
 </div>
 
-{foreach $location['items'] as $item}
-  {capture name="itemHeader" assign="itemHeader"}
-    <h3>{$item['typeName']|capitalize}</h3>
-    {if $item['type'] == 'collection' && $item['types']['collection']['callNumber']}
-      <span class="smallprint">{$item['types']['collection']['callNumber']}</span>
-    {elseif $item['callNumber']}
-      <span class="smallprint">{$item['callNumber']}</span>
-    {/if}
-  {/capture}
-  
+{foreach $location['collections'] as $collection}
   <div class="nonfocal">
-    {$itemHeader}
+    <h3>{$collection['name']}</h3>
   </div>
-  
-  {$list = array()}
-  {foreach $item['types'] as $type => $info}
-    {if $type != 'collection'}
-      {$listItem = array()}
-      {capture name="title" assign="title"}
-        {if $type == 'available'}
-          {$class = 'available'}
-        {elseif $type == 'requestable'}
-          {$class = 'requestable'}
-        {else}
-          {$class = 'unavailable'}
-        {/if}
-        {block name="item"}
-          <span class="itemType {$class}">
-            {$info['count']}
-            {if $type == 'available'}
-              available
-            {elseif $type == 'collection'}
-              restricted
-            {elseif $info['status']}
-              {$info['status']}
-            {else}
-              {$type}
-            {/if}
-          </span>
-        {/block}
-      {/capture}
-      {$listItem['title'] = $title}
-      {capture name="subtitle" assign="subtitle"}
-        {if $info['callNumber']}
-          <span class="itemType">{$info['callNumber']}</span>
-        {/if}
-      {/capture}
-      {$listItem['subtitle'] = $subtitle}
-      {if $info['url']}
-        {$listItem['url'] = $info['url']}
+  {foreach $collection['items'] as $item}
+    {capture name="itemHeader" assign="itemHeader"}
+      {if $item['type'] != 'collection' || $collection['callNumber']}
+        <span class="smallprint">
+          {if $item['type'] != 'collection'}
+            {$item['type']}
+          {/if}
+          {if $item['type'] != 'collection' && $collection['callNumber']}<br/>{/if}
+          {if $collection['callNumber']}
+            {$collection['callNumber']}
+          {/if}
+        </span>
       {/if}
-      {$list[] = $listItem}
+    {/capture}
+    
+    <div class="nonfocal">
+      {$itemHeader}
+    </div>
+    
+    {$list = array()}
+    {foreach $item['types'] as $type => $info}
+      {if $type != 'collection'}
+        {$listItem = array()}
+        {capture name="title" assign="title"}
+          {if $type == 'available'}
+            {$class = 'available'}
+          {elseif $type == 'requestable'}
+            {$class = 'requestable'}
+          {else}
+            {$class = 'unavailable'}
+          {/if}
+          {block name="itemTitle"}
+            <span class="itemType {$class}">
+              {$info['count']}
+              {if $type == 'available'}
+                available
+              {elseif $type == 'collection'}
+                may be available
+              {elseif $info['status']}
+                {$info['status']}
+              {else}
+                {$type}
+              {/if}
+            </span>
+            {if $info['callNumber']}
+              <span class="itemType">{$info['callNumber']}</span>
+            {/if}
+          {/block}
+        {/capture}
+        {$listItem['title'] = $title}
+        {capture name="subtitle" assign="subtitle"}stuff
+          {block name="itemSubTitle"}
+          {/block}
+        {/capture}
+        {$listItem['subtitle'] = $subtitle}
+        {if $info['url']}
+          {$listItem['url'] = $info['url']}
+        {/if}
+        {$list[] = $listItem}
+      {/if}
+    {/foreach}
+    {if count($list)}
+      {include file="findInclude:common/navlist.tpl" navlistItems=$list subTitleNewline=$subTitleNewline}
     {/if}
+    
+      <br/>
+    
   {/foreach}
-  {if count($list)}
-    {include file="findInclude:common/navlist.tpl" navlistItems=$list}
-  {/if}
-  
-    <br/>
-  
 {/foreach}
 
 {include file="findInclude:common/footer.tpl"}

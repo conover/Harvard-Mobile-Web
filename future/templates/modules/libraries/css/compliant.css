@@ -45,7 +45,7 @@
 	-webkit-background-size: 20px;
   font-size: 14px;
   font-weight: normal;
-  line-height: 19px;
+  line-height: 22px;
 }
 
 .available {
@@ -99,8 +99,6 @@
 
 table.search {
   border: none;
-  line-height: 22px;
-  
 }
 table.search th {
   text-align: right;
@@ -110,27 +108,12 @@ table.search th {
 table.search th, table td {
   vertical-align: baseline;
 }
+table.search td.wrap {
+  padding-right: 14px; /* handle input padding */
+}
+
 table.search input, table.search select {
   margin: 0;
   width: 99.9%;
   line-height: 22px;
-}
-
-fieldset.search {
-  position: relative;
-}
-fieldset.search label {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 6em;
-  text-align: right;
-  font-weight: bold;
-}
-fieldset.search input,
-fieldset.search select {
-  display: block;
-  padding-left: 6em;
-  width: 100%;
 }

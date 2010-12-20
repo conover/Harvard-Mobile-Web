@@ -180,6 +180,9 @@ class TransitModule extends Module {
           $mapImageSize = 200;
         }
 
+        $this->addOnLoad('rotateScreen();');
+        $this->addOnOrientationChange('rotateScreen();');
+
         $this->assign('mapImageSrc',  $view->getMapImageForRoute($routeID, $mapImageSize, $mapImageSize));
         $this->assign('mapImageSize', $mapImageSize);
         $this->assign('lastRefresh',  time());

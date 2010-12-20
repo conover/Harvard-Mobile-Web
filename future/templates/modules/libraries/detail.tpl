@@ -11,7 +11,7 @@
     <br/>
     {if $item['creator']}{$item['creator']}<br/>{/if}
     {if $item['edition']}{$item['edition']}<br/>{/if}
-    {if $item['date']}{$item['date']}<br/>{/if}
+    {if $item['date'] || $item['publisher']}{$item['date']} {$item['publisher']}<br/>{/if}
     {$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
   {/block}
 {/capture}
@@ -23,23 +23,29 @@
   {capture name="title" assign="title"}
     {block name="locationHeader"}
       <strong>{$location['name']}</strong><br/>
-      <div id="location_{$location@index}"></div>
+      <div id="location_{$location['id']}"></div>
     {/block}
-    {foreach $location['items'] as $info}
-      
-      {if $info['available'] > 0}
-        {$class = 'available'}
-      {elseif $info['requestable'] > 0}
-        {$class = 'requestable'}
-      {else}
-        {$class = 'unavailable'}
-      {/if}
-      {block name="item"}
-        <div class="itemType {$class}">
-          {$info['available']} of {$info['total']}
-          {if $info['type'] != collection}available - {$info['type']}{else}restricted{/if}<br/>
-        </div>
-      {/block}
+    {foreach $location['collections'] as $collection}
+      {foreach $collection['items'] as $info}
+        
+        {if $info['available'] > 0}
+          {$class = 'available'}
+        {elseif $info['requestable'] > 0}
+          {$class = 'requestable'}
+        {else}
+          {$class = 'unavailable'}
+        {/if}
+        {block name="item"}
+          <div class="itemType {$class}">
+            {$info['available']} of {$info['total']}
+            {if $info['type'] != 'collection'}
+              available - {$info['type']}
+            {else}
+              may be available
+            {/if}<br/>
+          </div>
+        {/block}
+      {/foreach}
     {/foreach}
   {/capture}
   {$results[$i]['title'] = $title}
