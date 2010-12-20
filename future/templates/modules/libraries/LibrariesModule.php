@@ -99,6 +99,7 @@ class LibrariesModule extends Module {
       'id'         => $data['itemId'],
       'title'      => self::argVal($data, 'title', 'Unknown title'),
       'creator'    => self::argVal($data, 'creator', ''),
+      'publisher'  => self::argVal($data, 'publisher', ''),
       'date'       => self::argVal($data, 'date', ''),
       'format'     => $this->translateFormat(self::argVal($data['format'], 'formatDetail', 'Book')),
       'formatDesc' => self::argVal($data['format'], 'formatDetail', 'Book'),
@@ -108,73 +109,85 @@ class LibrariesModule extends Module {
   }
   
   private function formatItemAvailabilityInfo($entry) {
-    $items = array();
+    $results = array();
     
-    foreach ($entry['itemsByStat'] as $statItems) {
-      $item = array(
-        'type'        => self::argVal($statItems, 'statMain', 'collection'),
-        'typeName'    => self::argVal($statItems, 'statMain', 'collection'),
-        'callNumber'  => self::argVal($statItems, 'callNumber', null),
-        'available'   => 0,
-        'requestable' => 0,
-        'total'       => 0,
-        'types' => array(),
-      );
+    foreach ($entry['collection'] as $collection) {
+      $items = array();
       
-      $countMapping = array(
-        'available'   => 'availCount',
-        'requestable' => 'checkedOutCount',
-        'unavailable' => 'unavailCount',
-        'collection'  => 'collectionOnlyCount',
-      );
-      
-      $typeMapping = array(
-        'available'   => 'availableItems',
-        'requestable' => 'checkedOutItems',
-        'unavailable' => 'unavailableItems',
-        'collection'  => 'collectionOnlyItems',
-      );
-      
-      foreach ($typeMapping as $typeKey => $statKey) {
-        $count = count($statItems[$statKey]);
+      foreach ($collection['itemsByStat'] as $statItems) {
+        $item = array(
+          'type'           => self::argVal($statItems, 'statMain'),
+          'collectionName' => self::argVal($statItems, 'collectionName'),
+          'available'      => 0,
+          'requestable'    => 0,
+          'total'          => 0,
+          'types'          => array(),
+        );
         
-        if ($count > 0) {
-          $item['total'] += $count;
-          if ($typeKey == 'available') {
-            $item['available'] += $count;
-          }
-          if ($typeKey == 'requestable') {
-            $item['requestable'] += $count;
-          }
-          
-          $itemType = array(
-            'count' => $count,
-            'status' => $typeKey,
-          );
-          foreach ($statItems[$statKey] as $statItem) {
-            if (self::argVal($statItem, 'requestUrl')) {
-              $itemType['url'] = $statItem['requestUrl'];
-            }
-            if (self::argVal($statItem, 'statSecondary')) {
-              $itemType['status'] = $statItem['statSecondary'];
-            }
-            if (self::argVal($statItem, 'callNumber')) {
-              $itemType['callNumber'] = $statItem['callNumber'];
-            }
-            if (self::argVal($statItem, 'collectionCallNumber')) {
-              $itemType['callNumber'] = $statItem['collectionCallNumber'];
-            }
-            if ($item['type'] == 'collection' && self::argVal($statItem, 'collectionName')) {
-              $item['typeName'] = $statItem['collectionName'];
-            }
-          }
-          $item['types'][$typeKey] = $itemType;
+        if (!$item['type']) {
+          $item['type'] = 'collection';
         }
+        
+        $countMapping = array(
+          'available'   => 'availCount',
+          'requestable' => 'checkedOutCount',
+          'unavailable' => 'unavailCount',
+          'collection'  => 'collectionOnlyCount',
+        );
+        
+        $typeMapping = array(
+          'available'   => 'availableItems',
+          'requestable' => 'checkedOutItems',
+          'unavailable' => 'unavailableItems',
+          'collection'  => 'collectionOnlyItems',
+        );
+        
+        foreach ($typeMapping as $typeKey => $statKey) {
+          $count = count($statItems[$statKey]);
+          
+          if ($count > 0) {
+            $item['total'] += $count;
+            if ($typeKey == 'available') {
+              $item['available'] += $count;
+            }
+            if ($typeKey == 'requestable') {
+              $item['requestable'] += $count;
+            }
+            
+            $itemType = array(
+              'count' => $count,
+              'status' => $typeKey,
+            );
+            foreach ($statItems[$statKey] as $statItem) {
+              if (self::argVal($statItem, 'requestUrl')) {
+                $itemType['url'] = $statItem['requestUrl'];
+              }
+              if (self::argVal($statItem, 'statSecondary')) {
+                $itemType['status'] = $statItem['statSecondary'];
+              }
+              if (self::argVal($statItem, 'callNumber')) {
+                $itemType['callNumber'] = $statItem['callNumber'];
+              }
+              if (self::argVal($statItem, 'collectionCallNumber')) {
+                $itemType['callNumber'] = $statItem['collectionCallNumber'];
+              }
+            }
+            $item['types'][$typeKey] = $itemType;
+          }
+        }
+        $items[] = $item;
       }
-      $items[] = $item;
+      
+      if (count($items)) {
+        $results[] = array(
+          'name'       => $collection['collectionName'],
+          'callNumber' => $collection['collectionCallNumber'],
+          'items'      => $items,
+        );
+      }
     }
-
-    return $items;
+    
+    return $results;
   }
 
   private function detailURL($id, $toggleBookmark=false) {
@@ -274,33 +287,43 @@ class LibrariesModule extends Module {
         $item = $this->getItemDetails($data);
 
         $data = Libraries::getFullAvailability($id);
-        //error_log(print_r($data, true));
-        
+        error_log(print_r($data, true));
         $locations = array();
         $locationCoords = array();
         foreach ($data as $entry) {          
           $locations[] = array(
-            'type'  => $entry['type'],
-            'name'  => $entry['name'],
-            'lat'   => $entry['details']['latitude'],
-            'lon'   => $entry['details']['longitude'],
-            'items' => $this->formatItemAvailabilityInfo($entry),
-            'url'   => $this->availabilityURL($id, $entry['type'], $entry['id']),
+            'id'          => $entry['id'],
+            'type'        => $entry['type'],
+            'name'        => $entry['name'],
+            'collections' => $this->formatItemAvailabilityInfo($entry),
+            'url'         => $this->availabilityURL($id, $entry['type'], $entry['id']),
           );
-          $locationCoords[] = array(
-            'lat' => floatVal($entry['details']['latitude']),
-            'lon' => floatVal($entry['details']['longitude']),
-          );
+          
+          $ldata = null;
+          if ($entry['type'] == 'library') {
+            $ldata = Libraries::getLibraryDetails($entry['id'], $entry['name']);
+            
+          } else if ($entry['type'] == 'archive') {
+            $ldata = Libraries::getArchiveDetails($entry['id'], $entry['name']);
+          
+          }
+          
+          if ($ldata) {
+            $locationCoords[$entry['id']] = array(
+              'lat' => floatVal($ldata['latitude']),
+              'lon' => floatVal($ldata['longitude']),
+            );
+          }
         }
         
         $item['bookmarked'] = in_array($id, $this->getBookmarks('item'));
         $item['cookie'] = LIBRARY_ITEMS_COOKIE;
-         
-        $this->addOnLoad('var locationCoords = '.json_encode($locationCoords).
-          '; setLocationDistances(locationCoords);');
+        
+        $this->addInlineJavascript('var locationCoords = '.json_encode($locationCoords).';');
+        $this->addOnLoad('setLocationDistances(locationCoords);');
         //error_log(print_r($item, true));
-        $this->assign('locations', $locations);
-        $this->assign('item',      $item);
+        $this->assign('locations',   $locations);error_log(print_r($locations, true));
+        $this->assign('item',        $item);
         $this->assign('bookmarkURL', $this->detailURL($id, true));
         break;
       
@@ -317,12 +340,12 @@ class LibrariesModule extends Module {
         $name = '';
         
         $data = Libraries::getFullAvailability($itemID);
-        error_log(print_r($data, true));
+        
         foreach ($data as $entry) {
           if ($entry['id'] != $id) { continue; }
-          
-          $name = $entry['details']['primaryName'];
-          $items = $this->formatItemAvailabilityInfo($entry);
+          error_log(print_r($entry, true));
+          $name = $entry['name'];
+          $collections = $this->formatItemAvailabilityInfo($entry);
 
           break; // assume libraries are not listed multiple times
         }
@@ -344,11 +367,12 @@ class LibrariesModule extends Module {
         }
         
         $location = array(
-          'type'  => $data['type'],
-          'name'  => $data['name'],
-          'hours' => self::argVal($data, 'hrsOpenToday', ''),
-          'items' => $items,
+          'type'        => $data['type'],
+          'name'        => $data['name'],
+          'hours'       => self::argVal($data, 'hrsOpenToday', ''),
+          'collections' => $collections,
         );
+          error_log(print_r($location, true));
       
         $this->assign('infoURL', $this->locationAndHoursURL($type, $id, $name));
         $this->assign('location', $location);
@@ -387,53 +411,17 @@ class LibrariesModule extends Module {
           $searchConfig = $this->loadWebAppConfigFile('libraries-search', 'searchConfig');
           
           $this->setPageTitle('Advanced Search');
-          
-          $formats   = $searchConfig['formats'];
-          $locations = $searchConfig['locations'];
-          
-          $bookmarkedLibraryIDs = $this->getBookmarks('library');
-          $bookmarkedArchiveIDs  = $this->getBookmarks('archive');
-          
-          $bookmarkedLocations = array();
-          $otherLocations = array();
-          
-          $data = Libraries::getAllLibraries();
-          foreach ($data as $entry) {
-            if (in_array($entry['id'], $bookmarkedLibraryIDs)) {
-              if (!isset($bookmarkedLocations[$entry['id']])) {
-                $bookmarkedLocations[$entry['id']] = $entry['primaryName'];
-              }
-            } else {
-              if (!isset($otherLocations[$entry['id']])) {
-                $otherLocations[$entry['id']] = $entry['primaryName'];
-              }
-            }
-          }
 
-          $data = Libraries::getAllArchives();
-          foreach ($data as $entry) {
-            if (in_array($entry['id'], $bookmarkedArchiveIDs)) {
-              if (!isset($bookmarkedArchives[$entry['id']])) {
-                $bookmarkedArchives[$entry['id']] = "{$entry['primaryName']} (archive)";
-              }
-            } else {
-              if (!isset($otherLocations[$entry['id']])) {
-                $otherLocations[$entry['id']] = "{$entry['primaryName']} (archive)";
-              }
-            }
-          }
+          $locations = $searchConfig['locations'] + Libraries::getLibrarySearchCodes();
+          $formats   = $searchConfig['formats']   + Libraries::getLibraryFormatCodes();
           
-          sort($bookmarkedLocations);
-          sort($otherLocations);
-          $locations = array_merge($locations, $bookmarkedLocations, $otherLocations);
-          
-          $this->assign('keywords',  $keywords);
-          $this->assign('title',     $title);
-          $this->assign('author',    $author);
-          $this->assign('location',  $this->getArg('location'));
-          $this->assign('format',    $this->getArg('format'));
-          $this->assign('locations', $locations);
-          $this->assign('formats',   $formats);
+          $this->assign('keywords',      $keywords);
+          $this->assign('title',         $title);
+          $this->assign('author',        $author);
+          $this->assign('location',      $this->getArg('location'));
+          $this->assign('format',        $this->getArg('format'));
+          $this->assign('locations',     $locations);
+          $this->assign('formats',       $formats);
 
         } else {
           $searchTerms = trim($this->getArg('filter'));
@@ -696,7 +684,7 @@ class LibrariesModule extends Module {
         $this->assign('item', $item);
         break;
       
-      case 'advanced_search':
+      case 'results':
         break;
 
       case 'links':

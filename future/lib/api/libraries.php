@@ -8,7 +8,7 @@
  *****************************************************************/
 
 require_once realpath(LIB_DIR.'/feeds/LibrariesInfo.php');
-
+error_log("COMMAND {$_REQUEST['command']}");
 switch ($_REQUEST['command']) {
     case 'libraries':
         $data = Libraries::getAllLibraries();
@@ -58,7 +58,11 @@ switch ($_REQUEST['command']) {
         $data = Libraries::getItemRecord($itemid);
         break;
 
+    case 'imagethumbnail':
+        $imageId = urldecode($_REQUEST['itemid']);
+        $data = Libraries::getImageThumbnail($imageId);
+        break;
+
 }
 
-    echo json_encode($data);
-?>
+echo json_encode($data);
