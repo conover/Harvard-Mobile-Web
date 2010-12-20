@@ -124,26 +124,40 @@ body.landscape #timestamp {
 }
 
 body.landscape #schedule {
-	border-bottom: 1px solid #f0f0f0;
-	margin: 0 0 16px 0;
+	margin: 0 5px 5px 0;
 }
 
 body.landscape #tabs {
 	display: none;
 }
+body.landscape #tabbodies {
+  overflow: hidden;
+  position: relative;
+}
 
 body.landscape .tabbody {
 	display: block !important;
-	float: left;
+	float: right;
 	font-size: 14px;
+	padding-top: 16px;
 }
 
-body.landscape #scheduletab {
+body.landscape #stopsTab {
 	width: 47%;
 }
 
-body.landscape #maptab {
+body.landscape #stopsTab .smallprint:first-child {
+  display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	white-space: nowrap;
+}
+
+
+body.landscape #mapTab {
 	width: 53%;
+	padding-top: 26px;
 }
 
 body.landscape #map {
@@ -152,7 +166,7 @@ body.landscape #map {
 	text-align: right;
 }
 
-body.landscape #mapimage {
+body.landscape #map img {
 	width: 225px;
 	height: 225px;
 	margin-left: 0;
