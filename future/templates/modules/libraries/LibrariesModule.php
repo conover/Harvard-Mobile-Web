@@ -273,7 +273,7 @@ class LibrariesModule extends Module {
               'url'   => $config['urls'][$i],
             );
           }
-          if (count($section)) {
+          if (count($section['items'])) {
             $sections[] = $section;
           }
         }
