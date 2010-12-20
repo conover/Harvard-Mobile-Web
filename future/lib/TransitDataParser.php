@@ -1258,11 +1258,6 @@ class TransitTime {
       $minutes -= $addHours*60;
     }
     
-    if ($hours > 23) {
-      $days = floor($hours/24);
-      $hours -= $days*24;
-    }
-
     return $hours*HOUR_MULTIPLIER + $minutes*MINUTE_MULTIPLIER + $seconds;
   }
   
@@ -1272,11 +1267,6 @@ class TransitTime {
     $hours = intval($hours);
     $minutes = intval($minutes);
     $seconds = intval($seconds);
-    
-    if ($hours > 23) {
-      $days = floor($hours/24);
-      $hours -= $days*24;
-    }
     
     return self::createFromComponents($hours, $minutes, $seconds);
   }
@@ -1296,11 +1286,12 @@ class TransitTime {
     list($hours, $minutes, $seconds) = explode(':', $date->format('G:i:s'));
     $dateTT = self::createFromComponents($hours, $minutes, $seconds);
   
-    if (self::compare($tt, $dateTT) < 0) {
-      $date->modify('+1 day'); // earlier than date -- will be for the next day
+    list($hours, $minutes, $seconds) = self::getComponents($tt);
+
+    if ($hours > 23) {
+      $date->modify('+1 day'); // will be for the next day
     }
     
-    list($hours, $minutes, $seconds) = self::getComponents($tt);
     $date->setTime($hours, $minutes, $seconds);
     
     return $date->format('U');
