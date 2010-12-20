@@ -11,25 +11,25 @@
       Closed today
     {/if}
     (<a id="infoLink" href="{$infoURL}">get info</a>)
-  </span><br/>
-  {$subTitleNewline = true}
+  </span><br/><br/>
 {/block}
 
-{block name="itemTitle"}
+{block name="item"}
   <img src="/modules/{$moduleID}/images/{$class}.gif" alt="" />
   {$info['count']}
   {if $type == 'available'}
     available
   {elseif $type == 'collection'}
-    may be available
+    restricted
   {elseif $info['status']}
     {$info['status']}
   {else}
     {$type}
   {/if}
-{/block}
-{block name="itemSubTitle"}
-  {$info['callNumber']}
+  <br/>
+  {if $info['callNumber']}
+    <span class="smallprint">{$info['callNumber']}</span>
+  {/if}
 {/block}
 
 {block name="itemHeader"}

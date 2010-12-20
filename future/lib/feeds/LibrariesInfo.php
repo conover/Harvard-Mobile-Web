@@ -28,7 +28,6 @@ class Libraries{
       
     } else {
       $contents = file_get_contents($url);
-      error_log("LIBRARIES DEBUG: " . $url);
       if ($contents == "") {
         error_log("Failed to read contents from $url, reading expired cache");
         $xml = simplexml_load_string($cache->read($cacheName));
@@ -46,42 +45,11 @@ class Libraries{
     }
     return $xml;
   }
-  
-  public static function getLibrarySearchCodes() {
-      $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_OPTS');
-        
-      $xml_obj = self::query('librariesOpts', $xmlURLPath);
-      
-      $codes = array();
-      for ($i = 0; isset($xml_obj->refinebylibrary->label[$i]); $i++) {
-        $code = strval($xml_obj->refinebylibrary->value[$i]);
-        if ($code) {
-          $codes[$code] = strval($xml_obj->refinebylibrary->label[$i]);
-        }
-      }
-      
-      return $codes;
-  }
-
-  public static function getLibraryFormatCodes() {
-      $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_OPTS');
-        
-      $xml_obj = self::query('librariesOpts', $xmlURLPath);
-      
-      $codes = array();
-      for ($i = 0; isset($xml_obj->refinebyformat->label[$i]); $i++) {
-        $code = strval($xml_obj->refinebyformat->value[$i]);
-        if ($code) {
-          $codes[$code] = strval($xml_obj->refinebyformat->label[$i]);
-        }
-      }
-      
-      return $codes;
-  }
 
     public static function getAllLibraries() {
 
       $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
+      error_log("LIBRARIES DEBUG: " . $xmlURLPath);
         
       $xml_obj = self::query('librariesInfo', $xmlURLPath);
         
@@ -92,6 +60,7 @@ class Libraries{
     public static function getAllArchives() {
 
       $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
+      error_log("LIBRARIES DEBUG: " . $xmlURLPath);
         
       $xml_obj = self::query('librariesInfo', $xmlURLPath);
       
@@ -161,6 +130,7 @@ class Libraries{
        public static function extractSpecificRepoDetails($idTag, $typeString) {
 
          $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
+         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
         
          $xml_obj = self::query('librariesInfo', $xmlURLPath);
         
@@ -208,6 +178,7 @@ class Libraries{
        public static function getOpenNow() {
 
         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
+        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
         
         $xml_obj = self::query('librariesInfo', $xmlURLPath);
 
@@ -248,6 +219,7 @@ class Libraries{
        public static function getLibraryDetails($libId, $libName){
 
          $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIB_DETAIL_BASE').$libId;
+         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
         
          $xml_obj = self::query("lib-{$libId}{$libName}", $xmlURLPath);
 
@@ -259,6 +231,7 @@ class Libraries{
        public static function getArchiveDetails($archiveId, $archiveName){
 
        $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_ARCHIVE_DETAIL_BASE').$archiveId;
+       error_log("LIBRARIES DEBUG: " . $xmlURLPath);
         
        $xml_obj = self::query("lib-{$archiveId}{$archiveName}", $xmlURLPath);
 
@@ -565,6 +538,9 @@ class Libraries{
           'q' => $queryTerms, 'lib' => $libTerms, 'fmt' => $fmtTerms,
         ));
 
+        //print($xmlURLPath);
+        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
+
         $fullquery = $queryTerms . "lib-" . $libTerms . "fmt-" .$fmtTerms;
         $xml_obj = self::query("search-{$fullquery}", $xmlURLPath);
         //print_r($xml_obj);
@@ -725,6 +701,7 @@ class Libraries{
 
     public static function getFullAvailability($itemId) {
          $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_AVAILABILITY_BASE').$itemId;
+         error_log("LIBRARIES DEBUG: " . $xmlURLPath);
         
          $xml_obj = self::query("fullAvailability-{$itemId}", $xmlURLPath);
 
@@ -1107,6 +1084,7 @@ class Libraries{
 
 
         $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_ITEM_RECORD_BASE').$itemId;
+        error_log("LIBRARIES DEBUG: " . $xmlURLPath);
 
         $xml_obj = self::query("item-{$itemId}", $xmlURLPath);
 
@@ -1141,7 +1119,7 @@ class Libraries{
 
             $pubArray = explode(":", $dc->publisher);
             $publisher = $pubArray[0];
-            for ($k = 1; $k < count($pubArray); $k++) {
+            for ($k = 1; $k < count($dateArray); $k++) {
                 $publisher = $publisher . ":" . $pubArray[$k];
             }
 

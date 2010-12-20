@@ -1,4 +1,4 @@
-{include file="findInclude:common/header.tpl" scalable=false}
+{include file="findInclude:common/header.tpl"}
 
 {$tabBodies = array()}
 
