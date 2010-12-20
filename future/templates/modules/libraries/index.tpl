@@ -1,6 +1,6 @@
 {include file="findInclude:common/header.tpl"}
 
-{include file="findInclude:common/search.tpl" placeholder=$searchPlaceholder}
+{include file="findInclude:common/search.tpl" inputName='keywords' placeholder=$searchPlaceholder}
 
 
 {foreach $sections as $section}

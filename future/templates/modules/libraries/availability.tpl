@@ -4,7 +4,7 @@
   {block name="header"}
     <h2>
       <a id="infoLink" href="{$infoURL}">
-        <img class="infoLink" src="/common/images/action-search.png" alt="get info" />
+        <img class="infoLink" src="/common/images/info_button@2x.png" alt="get info" width="44" height="38" />
       </a>
       {$location['name']}
     </h2>
@@ -15,31 +15,21 @@
         Closed today
       {/if}
     </span><br/>
-    {$subTitleNewline = false}
   {/block}
 </div>
 
 {foreach $location['collections'] as $collection}
   <div class="nonfocal">
     <h3>{$collection['name']}</h3>
-  </div>
   {foreach $collection['items'] as $item}
-    {capture name="itemHeader" assign="itemHeader"}
+    {if !$item@first}<div class="focal">{/if}
       {if $item['type'] != 'collection' || $collection['callNumber']}
         <span class="smallprint">
-          {if $item['type'] != 'collection'}
-            {$item['type']}
-          {/if}
+          {if $item['type'] != 'collection'}{$item['type']}{/if}
           {if $item['type'] != 'collection' && $collection['callNumber']}<br/>{/if}
-          {if $collection['callNumber']}
-            {$collection['callNumber']}
-          {/if}
+          {if $collection['callNumber']}{$collection['callNumber']}{/if}
         </span>
       {/if}
-    {/capture}
-    
-    <div class="nonfocal">
-      {$itemHeader}
     </div>
     
     {$list = array()}
@@ -67,17 +57,9 @@
                 {$type}
               {/if}
             </span>
-            {if $info['callNumber']}
-              <span class="itemType">{$info['callNumber']}</span>
-            {/if}
           {/block}
         {/capture}
         {$listItem['title'] = $title}
-        {capture name="subtitle" assign="subtitle"}stuff
-          {block name="itemSubTitle"}
-          {/block}
-        {/capture}
-        {$listItem['subtitle'] = $subtitle}
         {if $info['url']}
           {$listItem['url'] = $info['url']}
         {/if}
@@ -85,11 +67,10 @@
       {/if}
     {/foreach}
     {if count($list)}
-      {include file="findInclude:common/navlist.tpl" navlistItems=$list subTitleNewline=$subTitleNewline}
+      <div class="items">
+        {include file="findInclude:common/navlist.tpl" navlistItems=$list subTitleNewline=false accessKey=false}
+      </div>
     {/if}
-    
-      <br/>
-    
   {/foreach}
 {/foreach}
 

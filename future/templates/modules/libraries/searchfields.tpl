@@ -1,6 +1,6 @@
 <a name="search" />
 <div class="nonfocal">
-  <form method="get" action="{$page}.php">
+  <form method="get" action="search.php">
     <table class="search" width="100%">
       <tr>
         <th align="right" width="6em"><label for="keywords">Keywords:</label></th>
@@ -32,9 +32,15 @@
       </tr>
     </table>
     <input type="hidden" name="advanced" value="1" />
-    {foreach $breadcrumbSamePageArgs as $arg => $value}
-      <input type="hidden" name="{$arg}" value="{$value}" />
-    {/foreach}
+    {if $page == 'search'}
+      {foreach $breadcrumbSamePageArgs as $arg => $value}
+        <input type="hidden" name="{$arg}" value="{$value}" />
+      {/foreach}
+    {else}
+      {foreach $breadcrumbArgs as $arg => $value}
+        <input type="hidden" name="{$arg}" value="{$value}" />
+      {/foreach}
+    {/if}
     
     <p class="formbuttons">
       <span class="formbuttonclose">

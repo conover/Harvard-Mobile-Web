@@ -114,10 +114,11 @@ class LibrariesModule extends Module {
     foreach ($entry['collection'] as $collection) {
       $items = array();
       
+      $collectionCallNumber = self::argVal($collection, 'collectionCallNumber');
+      
       foreach ($collection['itemsByStat'] as $statItems) {
         $item = array(
           'type'           => self::argVal($statItems, 'statMain'),
-          'collectionName' => self::argVal($statItems, 'collectionName'),
           'available'      => 0,
           'requestable'    => 0,
           'total'          => 0,
@@ -167,9 +168,15 @@ class LibrariesModule extends Module {
               }
               if (self::argVal($statItem, 'callNumber')) {
                 $itemType['callNumber'] = $statItem['callNumber'];
+                if (!$collectionCallNumber) {
+                  $collectionCallNumber = $statItem['callNumber'];
+                }
               }
               if (self::argVal($statItem, 'collectionCallNumber')) {
                 $itemType['callNumber'] = $statItem['collectionCallNumber'];
+                if (!$collectionCallNumber) {
+                  $collectionCallNumber = $statItem['collectionCallNumber'];
+                }
               }
             }
             $item['types'][$typeKey] = $itemType;
@@ -181,7 +188,7 @@ class LibrariesModule extends Module {
       if (count($items)) {
         $results[] = array(
           'name'       => $collection['collectionName'],
-          'callNumber' => $collection['collectionCallNumber'],
+          'callNumber' => $collectionCallNumber,
           'items'      => $items,
         );
       }
@@ -245,7 +252,9 @@ class LibrariesModule extends Module {
             continue;
           }
           
-          $section = array();
+          $section = array(
+            'items' => array(),
+          );
           foreach ($config['titles'] as $i => $title) {
             if ($sectionName == 'bookmarks') {
               $types = explode('|', $config['bookmarkType'][$i]);
@@ -272,6 +281,30 @@ class LibrariesModule extends Module {
         $this->assign('searchPlaceholder', $searchPlaceholder);
         $this->assign('sections',          $sections);
         break;
+
+      case 'links':
+        $indexConfig = $this->loadWebAppConfigFile('libraries-links', 'indexConfig');
+        
+        $sections = array();
+        foreach ($indexConfig as $sectionName => $config) {
+          $section = array(
+            'heading' => self::argVal($config, 'heading'),
+            'items'   => array(),
+          );
+          foreach ($config['titles'] as $i => $title) {
+            $section['items'][] = array(
+              'title'    => $title,
+              'subtitle' => $config['subtitles'][$i],
+              'url'      => $config['urls'][$i],
+            );
+          }
+          if (count($section)) {
+            $sections[] = $section;
+          }
+        }
+        
+        $this->assign('sections', $sections);
+        break;
       
       case 'detail':
         $id = $this->getArg('id');
@@ -287,7 +320,7 @@ class LibrariesModule extends Module {
         $item = $this->getItemDetails($data);
 
         $data = Libraries::getFullAvailability($id);
-        error_log(print_r($data, true));
+        //error_log(print_r($data, true));
         $locations = array();
         $locationCoords = array();
         foreach ($data as $entry) {          
@@ -322,7 +355,8 @@ class LibrariesModule extends Module {
         $this->addInlineJavascript('var locationCoords = '.json_encode($locationCoords).';');
         $this->addOnLoad('setLocationDistances(locationCoords);');
         //error_log(print_r($item, true));
-        $this->assign('locations',   $locations);error_log(print_r($locations, true));
+        
+        $this->assign('locations',   $locations);
         $this->assign('item',        $item);
         $this->assign('bookmarkURL', $this->detailURL($id, true));
         break;
@@ -343,7 +377,7 @@ class LibrariesModule extends Module {
         
         foreach ($data as $entry) {
           if ($entry['id'] != $id) { continue; }
-          error_log(print_r($entry, true));
+          //error_log(print_r($entry, true));
           $name = $entry['name'];
           $collections = $this->formatItemAvailabilityInfo($entry);
 
@@ -372,66 +406,49 @@ class LibrariesModule extends Module {
           'hours'       => self::argVal($data, 'hrsOpenToday', ''),
           'collections' => $collections,
         );
-          error_log(print_r($location, true));
-      
+        
         $this->assign('infoURL', $this->locationAndHoursURL($type, $id, $name));
         $this->assign('location', $location);
         break;
       
+      case 'advanced':
+        $searchConfig = $this->loadWebAppConfigFile('libraries-search', 'searchConfig');
+        
+        $locations = $searchConfig['locations'] + Libraries::getLibrarySearchCodes();
+        $formats   = $searchConfig['formats']   + Libraries::getLibraryFormatCodes();
+
+        $this->assign('locations', $locations);
+        $this->assign('formats',   $formats);
+        break;
+
       case 'search':
+        $searchConfig = $this->loadWebAppConfigFile('libraries-search', 'searchConfig');
+
+        $locations = $searchConfig['locations'] + Libraries::getLibrarySearchCodes();
+        $formats   = $searchConfig['formats']   + Libraries::getLibraryFormatCodes();
+        
+        $keywords     = trim($this->getArg('keywords'));
+        $title        = trim($this->getArg('title'));
+        $author       = trim($this->getArg('author'));
+        $locationTerm = $this->getArg('location');
+        $formatTerm   = $this->getArg('format');
+
         $searchTerms = '';
-        $locationTerm = '';
-        $formatTerm = '';
-        
-        $advancedSearch = $this->getArg('advanced', false);
-        
-        if ($advancedSearch) {
-          $keywords     = trim($this->getArg('keywords'));
-          $title        = trim($this->getArg('title'));
-          $author       = trim($this->getArg('author'));
-          $locationTerm = $this->getArg('location');
-          $formatTerm   = $this->getArg('format');
-          
-          if ($keywords) {
-            $searchTerms .= '"'.$keywords.'"';
-          }
-          if ($title) {
-            $searchTerms .= 'title:"'.$title.'"';
-          }
-          if ($author) {
-            $searchTerms .= 'author:"'.$author.'"';
-          }
-          if ($locationTerm == 'any' || $locationTerm == 'all') {
-            $locationTerm = '';
-          }
-          if ($formatTerm == 'any' || $formatTerm == 'all') {
-            $formatTerm = '';
-          } 
-
-          $searchConfig = $this->loadWebAppConfigFile('libraries-search', 'searchConfig');
-          
-          $this->setPageTitle('Advanced Search');
-
-          $locations = $searchConfig['locations'] + Libraries::getLibrarySearchCodes();
-          $formats   = $searchConfig['formats']   + Libraries::getLibraryFormatCodes();
-          
-          $this->assign('keywords',      $keywords);
-          $this->assign('title',         $title);
-          $this->assign('author',        $author);
-          $this->assign('location',      $this->getArg('location'));
-          $this->assign('format',        $this->getArg('format'));
-          $this->assign('locations',     $locations);
-          $this->assign('formats',       $formats);
-
-        } else {
-          $searchTerms = trim($this->getArg('filter'));
-          
-          if (!$searchTerms) {
-            $this->redirectTo('index');
-          }
-
-          $this->assign('searchTerms', $searchTerms);
+        if ($keywords) {
+          $searchTerms .= '"'.$keywords.'"';
         }
+        if ($title) {
+          $searchTerms .= 'title:"'.$title.'"';
+        }
+        if ($author) {
+          $searchTerms .= 'author:"'.$author.'"';
+        }
+        if ($locationTerm == 'any' || $locationTerm == 'all') {
+          $locationTerm = '';
+        }
+        if ($formatTerm == 'any' || $formatTerm == 'all') {
+          $formatTerm = '';
+        } 
         
         $results = array();
         if ($searchTerms) {
@@ -444,11 +461,15 @@ class LibrariesModule extends Module {
           }
         }
         
-        $this->assign('advancedSearch', $advancedSearch);
-        $this->assign('locationTerm',   $locationTerm);
-        $this->assign('formatTerm',     $formatTerm);
-        $this->assign('resultCount',    count($results));
-        $this->assign('results',        $results);
+        $this->assign('keywords',    $keywords);
+        $this->assign('title',       $title);
+        $this->assign('author',      $author);
+        $this->assign('location',    $this->getArg('location'));
+        $this->assign('format',      $this->getArg('format'));
+        $this->assign('locations',   $locations);
+        $this->assign('formats',     $formats);
+        $this->assign('resultCount', count($results));
+        $this->assign('results',     $results);
         break;
 
       case 'bookmarks':
@@ -539,11 +560,11 @@ class LibrariesModule extends Module {
         
         if ($type == 'library') {
           $data = Libraries::getLibraryDetails($id, $name);
-          error_log(print_r($data, true));
+          //error_log(print_r($data, true));
           
         } else if ($type == 'archive') {
           $data = Libraries::getArchiveDetails($id, $name);
-          error_log(print_r($data, true));
+          //error_log(print_r($data, true));
         
         } else {
           $this->redirectTo('index');
@@ -682,12 +703,6 @@ class LibrariesModule extends Module {
         );
         
         $this->assign('item', $item);
-        break;
-      
-      case 'results':
-        break;
-
-      case 'links':
         break;
     }
   }

@@ -12,7 +12,6 @@
     {/if}
     (<a id="infoLink" href="{$infoURL}">get info</a>)
   </span><br/>
-  {$subTitleNewline = true}
 {/block}
 
 {block name="itemTitle"}
@@ -27,16 +26,4 @@
   {else}
     {$type}
   {/if}
-{/block}
-{block name="itemSubTitle"}
-  {$info['callNumber']}
-{/block}
-
-{block name="itemHeader"}
-  <div class="nonfocal">
-    {$itemHeader}
-{/block}
-
-{block name="itemFooter"}
-  </div><br/>
 {/block}
