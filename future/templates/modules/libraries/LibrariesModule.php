@@ -42,6 +42,10 @@ class LibrariesModule extends Module {
       error_log(__FUNCTION__."(): Warning unknown cookie type '$type'");
     }
   }
+
+  private function isBookmarked($type, $id) {
+    return in_array($id, $this->getBookmarks($type));
+  }
   
   private function checkToggleBookmark($type, $id) {
     if ($this->getArg('toggleBookmark')) {
@@ -62,6 +66,26 @@ class LibrariesModule extends Module {
     }
   }
   
+  private function initLibraryDetails($type, $id, $name) {
+    $data = array();
+    
+    if ($type == 'library') {
+      $data = Libraries::getLibraryDetails($id, $name);
+      //error_log(print_r($data, true));
+      
+    } else if ($type == 'archive') {
+      $data = Libraries::getArchiveDetails($id, $name);
+      //error_log(print_r($data, true));
+    
+    } else {
+      $this->redirectTo('index');
+    }
+    
+    $this->checkToggleBookmark($type, $id);
+    
+    return $data;
+  }
+
   private function translateFormat($formatDetail) {
     $format = strtolower($formatDetail);
     
@@ -227,6 +251,14 @@ class LibrariesModule extends Module {
     return $this->buildBreadcrumbURL('locationAndHours', $args, !$toggleBookmark);
   }
   
+  private function mapURL($type, $id, $name) {
+    return $this->buildBreadcrumbURL('map', array(
+      'type' => $type,
+      'id'   => $id,
+      'name' => $name,
+    ));
+  }
+  
   private function fullHoursURL($type, $id, $name) {
     return $this->buildBreadcrumbURL('fullHours', array(
       'type' => $type,
@@ -354,9 +386,11 @@ class LibrariesModule extends Module {
         $data['itemId'] = $id;
         
         $item = $this->getItemDetails($data);
-
+        //error_log(print_r($item, true));
+        
         $data = Libraries::getFullAvailability($id);
         //error_log(print_r($data, true));
+        
         $locations = array();
         $locationCoords = array();
         foreach ($data as $entry) {          
@@ -600,19 +634,7 @@ class LibrariesModule extends Module {
         $id   = $this->getArg('id');
         $name = $this->getArg('name');
         
-        if ($type == 'library') {
-          $data = Libraries::getLibraryDetails($id, $name);
-          //error_log(print_r($data, true));
-          
-        } else if ($type == 'archive') {
-          $data = Libraries::getArchiveDetails($id, $name);
-          //error_log(print_r($data, true));
-        
-        } else {
-          $this->redirectTo('index');
-        }
-
-        $this->checkToggleBookmark($type, $id);
+        $data = $this->initLibraryDetails($type, $id, $name);
 
         $info['hours'] = array();
         if (count($data['weeklyHours'])) {
@@ -648,9 +670,7 @@ class LibrariesModule extends Module {
           $info['directions'][] = array(
             'label' => 'Location',
             'title' => $data['address'],
-            'url'   => '/map/search.php?'.http_build_query(array(
-              'filter' => $data['address'],
-            )),
+            'url'   => $this->mapURL($type, $id, $name),
             'class' => 'map',
           );
         }
@@ -673,11 +693,18 @@ class LibrariesModule extends Module {
         
         $info['contact'] = array();
         if ($data['website']) {
-          $info['contact'][] = array(
-            'label' => 'Website',
-            'title' => $data['website'],
-            'url' => $data['website'],
-          );
+          if (strpos($data['website'], 'http') === 0) {
+            $info['contact'][] = array(
+              'label' => 'Website',
+              'title' => $data['website'],
+              'url' => $data['website'],
+            );
+          } else {
+            $info['contact'][] = array(
+              'label' => 'Website',
+              'title' => $data['website'],
+            );
+          }
         }
         if ($data['email']) {
           $info['contact'][] = array(
@@ -704,7 +731,7 @@ class LibrariesModule extends Module {
           'name'         => $name,
           'fullName'     => $data['primaryname'],
           'type'         => $type,
-          'bookmarked'   => in_array($id, $this->getBookmarks($type)),
+          'bookmarked'   => $this->isBookmarked($type, $id),
           'cookie'       => LIBRARY_LOCATIONS_COOKIE,
           'infoSections' => $info,
         );
@@ -712,25 +739,13 @@ class LibrariesModule extends Module {
         $this->assign('item', $item);
         $this->assign('bookmarkURL',  $this->locationAndHoursURL($type, $id, $name, true));
         break;
-      
+
       case 'fullHours':
         $type = $this->getArg('type');
         $id   = $this->getArg('id');
         $name = $this->getArg('name');
         
-        if ($type == 'library') {
-          $data = Libraries::getLibraryDetails($id, $name);
-          //error_log(print_r($data, true));
-          
-        } else if ($type == 'archive') {
-          $data = Libraries::getArchiveDetails($id, $name);
-          //error_log(print_r($data, true));
-        
-        } else {
-          $this->redirectTo('index');
-        }
-        
-        $this->checkToggleBookmark($type, $id);
+        $data = $this->initLibraryDetails($type, $id, $name);
 
         $hours = array();
         if (count($data['weeklyHours'])) {
@@ -750,12 +765,55 @@ class LibrariesModule extends Module {
         }
         
         $item = array(
-          'name'         => $name,
-          'fullName'     => $data['primaryname'],
+          'name'       => $name,
+          'fullName'   => $data['primaryname'],
           'type'       => $type,
-          'bookmarked' => in_array($id, $this->getBookmarks($type)),
+          'bookmarked' => $this->isBookmarked($type, $id),
           'cookie'     => LIBRARY_LOCATIONS_COOKIE,
           'hours'      => $hours,
+        );
+        
+        $this->assign('item', $item);
+        break;
+
+      case 'map':
+        $type = $this->getArg('type');
+        $id   = $this->getArg('id');
+        $name = $this->getArg('name');
+        
+        $data = $this->initLibraryDetails($type, $id, $name);
+        
+        switch ($this->pagetype) {
+          case 'compliant':
+            $imageWidth = 290; $imageHeight = 300;
+            break;
+          
+          case 'basic':
+            if ($GLOBALS['deviceClassifier']->getPlatform() == 'bbplus') {
+              $imageWidth = 410; $imageHeight = 360;
+            } else {
+              $imageWidth = 200; $imageHeight = 200;
+            }
+            break;
+        }
+        
+        $this->assign('imageWidth',  $imageWidth);
+        $this->assign('imageHeight', $imageHeight);
+        
+        $imgSrc = $GLOBALS['siteConfig']->getVar('GOOGLE_STATIC_MAPS_URL').http_build_query(array(
+          'sensor'  => 'false',
+          'size'    => "{$imageWidth}x{$imageHeight}",
+          'markers' => "color:0xb12727|{$data['latitude']},{$data['longitude']}",
+        ));
+
+        
+        $item = array(
+          'name'       => $name,
+          'fullName'   => $data['primaryname'],
+          'type'       => $type,
+          'bookmarked' => $this->isBookmarked($type, $id),
+          'cookie'     => LIBRARY_LOCATIONS_COOKIE,
+          'imgSrc'     => $imgSrc,
         );
         
         $this->assign('item', $item);

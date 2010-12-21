@@ -321,12 +321,16 @@ class Libraries{
 
                  $address = explode(":",$institution->location->address[0]);
                  $address = HTML2TEXT($address[0]);
-                    
-                 $ur = explode(":", $institution->url);
-                  if (count($ur) > 1)
-                    $url = $ur[0].':'.$ur[1];
-                  else
-                      $url = $ur[0];
+                
+                 $url = strval($institution->url);
+                 if (strpos($url, 'http') !== 0) {
+                   // sometimes the field contains HTML
+                   if (preg_match(';href="([^"]+)";', $url, $matches)) {
+                     $url = $matches[1]; // grab the first url
+                   } else {
+                     $url = ''; // neither html nor a url
+                   }
+                 }
 
                   $email = '';
                   if (isset($institution->emailaddresses)) {

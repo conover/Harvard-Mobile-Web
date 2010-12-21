@@ -52,7 +52,7 @@ h4 {
 	color: #554c41;
 }
 
-dt, .label, .legend, .legend.nonfocal, .legend h2, .legend h3, .smallprint, .fineprint, .dek {
+dt, .label, .longlabel, .legend, .legend.nonfocal, .legend h2, .legend h3, .smallprint, .fineprint, .dek {
 	/* Accent text color for several types of secondary text that appears on white backgrounds, e.g., label in label/value pairs, e.g., People Directory detail screen and for labels in certain calendar listing screens */
 	/* Often the same as the secondary text color defined in the next rule */
 	color: #554c41;

@@ -471,18 +471,23 @@ abstract class Module {
         for ($i = 0; $i < count($breadcrumbs); $i++) {
           $b = $breadcrumbs[$i];
           
-          $breadcrumbs[$i]['url'] = "{$b['page']}.php";
-          if (strlen($b['args'])) {
-            $breadcrumbs[$i]['url'] .= "?{$b['args']}";
+          $breadcrumbs[$i]['title'] = $b['t'];
+          $breadcrumbs[$i]['longTitle'] = $b['lt'];
+          
+          $breadcrumbs[$i]['url'] = "{$b['p']}.php";
+          if (strlen($b['a'])) {
+            $breadcrumbs[$i]['url'] .= "?{$b['a']}";
           }
           
           $linkCrumbs = array_slice($breadcrumbs, 0, $i);
           if (count($linkCrumbs)) { 
+            $this->cleanBreadcrumbs(&$linkCrumbs);
+            
             $crumbParam = http_build_query(array(
               MODULE_BREADCRUMB_PARAM => urlencode(serialize($linkCrumbs))
             ));
             if (strlen($crumbParam)) {
-              $breadcrumbs[$i]['url'] .= (strlen($b['args']) ? '&' : '?').$crumbParam;
+              $breadcrumbs[$i]['url'] .= (strlen($b['a']) ? '&' : '?').$crumbParam;
             }
           }
         }
@@ -494,22 +499,28 @@ abstract class Module {
     //error_log(__FUNCTION__."(): loaded breadcrumbs ".print_r($this->breadcrumbs, true));
   }
   
+  private function cleanBreadcrumbs(&$breadcrumbs) {
+    foreach ($breadcrumbs as $index => $breadcrumb) {
+      unset($breadcrumbs[$index]['url']);
+      unset($breadcrumbs[$index]['title']);
+      unset($breadcrumbs[$index]['longTitle']);
+    }
+  }
+  
   private function getBreadcrumbString($addBreadcrumb=true) {
     $breadcrumbs = $this->breadcrumbs;
     
-    foreach ($breadcrumbs as $index => $breadcrumb) {
-      unset($breadcrumbs[$index]['url']);
-    }
+    $this->cleanBreadcrumbs(&$breadcrumbs);
     
     if ($addBreadcrumb && $this->page != 'index') {
       $args = $this->args;
       unset($args[MODULE_BREADCRUMB_PARAM]);
       
       $breadcrumbs[] = array(
-        'title'     => $this->breadcrumbTitle,
-        'longTitle' => $this->breadcrumbLongTitle,
-        'page'      => $this->page,
-        'args'      => http_build_query($args),
+        't'  => $this->breadcrumbTitle,
+        'lt' => $this->breadcrumbLongTitle,
+        'p'  => $this->page,
+        'a'  => http_build_query($args),
       );
     }
     //error_log(__FUNCTION__."(): saving breadcrumbs ".print_r($breadcrumbs, true));
