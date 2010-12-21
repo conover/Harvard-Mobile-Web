@@ -15,9 +15,13 @@
     {block name="item"}
       {capture name="title" assign="title"}
         {if $entry['label']}
-          <span class="label">{$entry['label']}<br/></span>
+          <span class="longlabel">{$entry['label']}<br/></span>
+          <span class="value">
         {/if}
-        <span class="value">{$entry['title']}</span>
+            {$entry['title']}
+        {if $entry['label']}
+          </span>
+        {/if}
       {/capture}
       {$section[$entry@index]['title'] = $title}
       {$section[$entry@index]['label'] = null}

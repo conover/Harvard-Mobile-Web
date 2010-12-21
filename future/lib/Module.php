@@ -466,7 +466,7 @@ abstract class Module {
   //
   private function loadBreadcrumbs() {
     if (isset($this->args[MODULE_BREADCRUMB_PARAM])) {
-      $breadcrumbs = unserialize($this->args[MODULE_BREADCRUMB_PARAM]);
+      $breadcrumbs = unserialize(urldecode($this->args[MODULE_BREADCRUMB_PARAM]));
       if (is_array($breadcrumbs)) {
         for ($i = 0; $i < count($breadcrumbs); $i++) {
           $b = $breadcrumbs[$i];
@@ -479,7 +479,7 @@ abstract class Module {
           $linkCrumbs = array_slice($breadcrumbs, 0, $i);
           if (count($linkCrumbs)) { 
             $crumbParam = http_build_query(array(
-              MODULE_BREADCRUMB_PARAM => serialize($linkCrumbs)
+              MODULE_BREADCRUMB_PARAM => urlencode(serialize($linkCrumbs))
             ));
             if (strlen($crumbParam)) {
               $breadcrumbs[$i]['url'] .= (strlen($b['args']) ? '&' : '?').$crumbParam;
@@ -513,7 +513,7 @@ abstract class Module {
       );
     }
     //error_log(__FUNCTION__."(): saving breadcrumbs ".print_r($breadcrumbs, true));
-    return serialize($breadcrumbs);
+    return urlencode(serialize($breadcrumbs));
   }
   
   private function getBreadcrumbArgs($addBreadcrumb=true) {

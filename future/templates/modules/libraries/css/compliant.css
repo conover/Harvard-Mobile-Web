@@ -24,17 +24,6 @@
 #bookmark.bookmarked {
 	background-position: 0 -38px;
 }
-.label {
-  position: relative;
-  top: 0px;
-  left: 0px;
-  white-space: nowrap;
-  width: 90px;
-  text-align: left;
-}
-.value {
-  margin-left: 0px;
-}
 
 .itemType {
   display: block;

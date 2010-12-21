@@ -529,10 +529,12 @@ class LibrariesModule extends Module {
         
         $libraries = array();
         foreach ($data as $entry) {
-          $libraries[] = array(
-            'title' => $entry['primaryName'],
-            'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
-          );
+          if (!isset($libraries[$entry['id']])) {
+            $libraries[$entry['id']] = array(
+              'title' => $entry['primaryName'],
+              'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
+            );
+          }
         }
         
         $this->assign('libraries', $libraries);
@@ -544,10 +546,12 @@ class LibrariesModule extends Module {
         
         $archives = array();
         foreach ($data as $entry) {
-          $archives[] = array(
-            'title' => $entry['primaryName'],
-            'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
-          );
+          if (!isset($archives[$entry['id']])) {
+            $archives[$entry['id']] = array(
+              'title' => $entry['primaryName'],
+              'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
+            );
+          }
         }
         
         $this->assign('archives', $archives);
@@ -590,6 +594,12 @@ class LibrariesModule extends Module {
             'title' => "Full week's schedule",
             'url'   => $this->fullHoursURL($type, $id, $name),            
           );
+          
+        } else if (strlen($data['hoursOfOperationString'])) {
+          $info['hours'][] = array(
+            'label' => 'Hours',
+            'title' => $data['hoursOfOperationString'],
+          );
         }
         if (!count($info['hours'])) {
           unset($info['hours']);
@@ -607,10 +617,17 @@ class LibrariesModule extends Module {
           );
         }
         if ($data['directions']) {
-          $info['directions'][] = array(
-              'label' => 'Directions',
-              'title' => $data['directions'],
+          $directions = trim($data['directions']);
+          
+          $entry = array(
+            'label' => 'Directions',
+            'title' => $directions,
           );
+          if (strpos($directions, 'http') === 0) {
+            $entry['url'] = $directions;
+          }
+          
+          $info['directions'][] = $entry;
         }
         if (!count($info['directions'])) {
           unset($info['directions']);
@@ -695,7 +712,7 @@ class LibrariesModule extends Module {
         }
         
         $item = array(
-          'fullName'   => $data['primaryname'],
+          'name'       => $data['primaryname'],
           'type'       => $type,
           'bookmarked' => in_array($id, $this->getBookmarks($type)),
           'cookie'     => LIBRARY_LOCATIONS_COOKIE,

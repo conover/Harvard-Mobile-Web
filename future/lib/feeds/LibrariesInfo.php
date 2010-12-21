@@ -328,9 +328,11 @@ class Libraries{
                   else
                       $url = $ur[0];
 
-
-                  $email = explode(":", $institution->emailaddresses[0]->email->emailaddress[0]);
-                  $email = $email[0];
+                  $email = '';
+                  if (isset($institution->emailaddresses)) {
+                    $email = explode(":", $institution->emailaddresses[0]->email->emailaddress[0]);
+                    $email = $email[0];
+                  }
 
                   $phoneNumberArray = array();
 
@@ -358,11 +360,13 @@ class Libraries{
 
 
                   $weeklyHours = array();
+                  $hoursOfOperationStrings = array();
 
                   $hrsOpenToday = "closed";
                   $today = date('l');
                   $weeklyHoursCount = 0;
-                    foreach ($institution->hoursofoperation as $hours) {
+                  foreach ($institution->hoursofoperation as $hours) {
+                      if (isset($hours->dailyhours)) {
                         $openHours = array();
 
                         $hours = $hours->dailyhours[0];
@@ -388,22 +392,17 @@ class Libraries{
                             $hrsOpenToday = $dayHours;
 
                         $weeklyHoursCount++;
+                        
+                      } else {
+                        // a text description of the hours
+                        $hoursOfOperationStrings[] = trim(strval($hours));
+                      }
                   }
 
-                  $hoursOfOperationString = "";
+                  $hoursOfOperationString = implode('; ', $hoursOfOperationStrings);
 
-                  if ($weeklyHoursCount < 7) {
+                  if (!count($hoursOfOperationStrings) && $weeklyHoursCount < 7) {
                       $hoursOfOperationString = "hours unavailable";
-
-                      if ($weeklyHoursCount == 1){
-                        $hoursOfOperationString = "";
-                        $hoursOfOperationStringArr = explode(":", $institution->hoursofoperation);
-                        $hoursOfOperationString = $hoursOfOperationStringArr[0];
-
-                        for ($q=1; $q < count($hoursOfOperationStringArr); $q++)
-                            $hoursOfOperationString = $hoursOfOperationString . ":" . $hoursOfOperationStringArr[$q];
-                      }
-
                   }
                   
                   $details['name'] = $nameToReturn;
@@ -771,7 +770,7 @@ class Libraries{
             $parentCallNumberArray = explode(":",$collection->callnumber);
             $parentCallNumber = $parentCallNumberArray[0];
 
-                for($z=1; $z < count($callNumberArray); $z++)
+                for($z=1; $z < count($parentCallNumberArray); $z++)
                     $parentCallNumber = $parentCallNumber . ":" . $parentCallNumberArray[$z];
 
             $collectionNameArr = explode(":", $collection->collectionname[0]);
