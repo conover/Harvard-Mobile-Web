@@ -1,12 +1,17 @@
 {include file="findInclude:common/header.tpl"}
 
+{capture name="libraryName" assign="libraryName"}
+  <h2>{$item['name']}
+    {if $item['fullName'] && $item['fullName'] != $item['name']}
+      <br/>({$item['fullName']})</p>
+    {/if}
+  </h2>
+{/capture}
+
 <div class="nonfocal libraryName">
   {block name="header"}
     <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
-    <h2>{$item['name']}</h2>
-    {if $item['fullName'] && $item['fullName'] != $item['name']}
-      <span class="smallprint">({$item['fullName']})</span>
-    {/if}
+    {$libraryName}
   {/block}
 </div>
 

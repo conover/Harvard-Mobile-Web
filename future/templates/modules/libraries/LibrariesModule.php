@@ -36,7 +36,7 @@ class LibrariesModule extends Module {
   
   private function setBookmarks($type, $bookmarks) {
     if (isset(self::$typeToCookie[$type])) {
-      setcookie(self::$typeToCookie[$type], implode(',', $bookmarks), 0, COOKIE_PATH);
+      setcookie(self::$typeToCookie[$type], implode(',', array_unique($bookmarks)), 0, COOKIE_PATH);
       $this->bookmarks[$type] = $bookmarks;
     } else {
       error_log(__FUNCTION__."(): Warning unknown cookie type '$type'");
@@ -491,7 +491,7 @@ class LibrariesModule extends Module {
                 if ($entry['id'] == $id) {
                   $results[] = array(
                     'title' => $entry['primaryName'],
-                    'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
+                    'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
                   );
                   break;
                 }
@@ -505,7 +505,7 @@ class LibrariesModule extends Module {
                 if ($entry['id'] == $id) {
                   $results[] = array(
                     'title' => $entry['primaryName'],
-                    'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
+                    'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
                   );
                   break;
                 }

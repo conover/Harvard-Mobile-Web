@@ -1,10 +1,7 @@
 {extends file="findExtends:modules/{$moduleID}/locationAndHours.tpl"}
 
 {block name="header"}
-    <h2>{$item['name']}</h2>
-    {if $item['fullName'] && $item['fullName'] != $item['name']}
-      <p class="smallprint">({$item['fullName']})</p>
-    {/if}
+    {$libraryName}
   </div>
   <div class="focal">
     <img src="/common/images/bookmark-{if $item['bookmarked']}on{else}off{/if}.gif" alt="" />
