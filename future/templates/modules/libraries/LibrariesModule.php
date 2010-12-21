@@ -197,14 +197,14 @@ class LibrariesModule extends Module {
     return $results;
   }
 
-  private function detailURL($id, $toggleBookmark=false) {
+  private function detailURL($id, $toggleBookmark=false, $addBreadcrumb=true) {
     $args = array(
       'id' => $id,
     );
     if ($toggleBookmark) {
       $args['toggleBookmark'] = 1;
     }
-    return $this->buildBreadcrumbURL('detail', $args, !$toggleBookmark);
+    return $this->buildBreadcrumbURL('detail', $args, !$toggleBookmark && $addBreadcrumb);
   }
   
   private function availabilityURL($itemID, $type, $id) {
@@ -237,6 +237,40 @@ class LibrariesModule extends Module {
 
   private static function titleSort($a, $b) {
     return strcmp($a['title'], $b['title']);
+  }
+  
+  protected function urlForSearch($searchTerms) {
+    return $this->buildBreadcrumbURL("/{$this->id}/search", array(
+      'keywords' => $searchTerms,
+    ), false);
+  }
+
+  public function federatedSearch($searchTerms, $maxCount, &$results) {
+    $count = 0;
+    $results = array();
+  
+    $data = array_values(Libraries::searchItems($searchTerms, '', ''));
+    $count = count($data);
+
+    if ($count) {
+      $limit = min($maxCount, $count);
+      
+      for ($i = 0; $i < $limit; $i++) {
+        $subtitle = trim(self::argVal($data[$i], 'date', ''));
+        $creator = self::argVal($data[$i], 'creator', '');
+        if ($creator) {
+          if ($subtitle && $creator) { $subtitle .= ' | '; }
+          $subtitle .= $creator;
+        }
+      
+        $results[] = array(
+          'title'    => self::argVal($data[$i], 'title', 'Unknown title'),
+          'subtitle' => $subtitle ? $subtitle : null,
+          'url'      => $this->detailURL($data[$i]['itemId'], false, false),
+        );
+      }
+    }
+    return $count;
   }
   
   protected function initializeForPage() {
