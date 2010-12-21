@@ -536,6 +536,7 @@ class LibrariesModule extends Module {
             );
           }
         }
+        uasort($libraries, array(get_class($this), 'titleSort'));
         
         $this->assign('libraries', $libraries);
         break;
@@ -553,7 +554,8 @@ class LibrariesModule extends Module {
             );
           }
         }
-        
+        uasort($archives, array(get_class($this), 'titleSort'));
+
         $this->assign('archives', $archives);
         break;
         
