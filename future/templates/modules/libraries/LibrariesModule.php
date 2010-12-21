@@ -529,14 +529,14 @@ class LibrariesModule extends Module {
         
         $libraries = array();
         foreach ($data as $entry) {
-          if (!isset($libraries[$entry['id']])) {
-            $libraries[$entry['id']] = array(
-              'title' => $entry['primaryName'],
-              'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
+          if (!isset($libraries[$entry['name']])) {
+            $libraries[$entry['name']] = array(
+              'title' => $entry['name'],
+              'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
             );
           }
         }
-        uasort($libraries, array(get_class($this), 'titleSort'));
+        ksort($libraries);
         
         $this->assign('libraries', $libraries);
         break;
@@ -547,14 +547,14 @@ class LibrariesModule extends Module {
         
         $archives = array();
         foreach ($data as $entry) {
-          if (!isset($archives[$entry['id']])) {
-            $archives[$entry['id']] = array(
-              'title' => $entry['primaryName'],
-              'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
+          if (!isset($archives[$entry['name']])) {
+            $archives[$entry['name']] = array(
+              'title' => $entry['name'],
+              'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
             );
           }
         }
-        uasort($archives, array(get_class($this), 'titleSort'));
+        ksort($archives);
 
         $this->assign('archives', $archives);
         break;
@@ -714,7 +714,8 @@ class LibrariesModule extends Module {
         }
         
         $item = array(
-          'name'       => $data['primaryname'],
+          'name'         => $name,
+          'fullName'     => $data['primaryname'],
           'type'       => $type,
           'bookmarked' => in_array($id, $this->getBookmarks($type)),
           'cookie'     => LIBRARY_LOCATIONS_COOKIE,

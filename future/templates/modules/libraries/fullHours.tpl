@@ -1,9 +1,12 @@
 {include file="findInclude:common/header.tpl"}
 
-<div class="nonfocal">
+<div class="nonfocal libraryName">
   {block name="header"}
     <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
     <h2>{$item['name']}</h2>
+    {if $item['fullName'] && $item['fullName'] != $item['name']}
+      <span class="smallprint">({$item['fullName']})</span>
+    {/if}
   {/block}
 </div>
 
