@@ -266,7 +266,9 @@ class LibrariesModule extends Module {
         $results[] = array(
           'title'    => self::argVal($data[$i], 'title', 'Unknown title'),
           'subtitle' => $subtitle ? $subtitle : null,
-          'url'      => $this->detailURL($data[$i]['itemId'], false, false),
+          'url'      => $this->buildBreadcrumbURL("/{$this->id}/detail", array(
+            'id' => $data[$i]['itemId'],
+          ), false),
         );
       }
     }
