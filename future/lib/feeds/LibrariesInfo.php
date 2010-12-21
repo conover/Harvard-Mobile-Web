@@ -361,6 +361,7 @@ class Libraries{
 
                   $hrsOpenToday = "closed";
                   $today = date('l');
+                  $weeklyHoursCount = 0;
                     foreach ($institution->hoursofoperation as $hours) {
                         $openHours = array();
 
@@ -385,9 +386,26 @@ class Libraries{
 
                         if ($day == $today)
                             $hrsOpenToday = $dayHours;
+
+                        $weeklyHoursCount++;
                   }
 
+                  $hoursOfOperationString = "";
 
+                  if ($weeklyHoursCount < 7) {
+                      $hoursOfOperationString = "hours unavailable";
+
+                      if ($weeklyHoursCount == 1){
+                        $hoursOfOperationString = "";
+                        $hoursOfOperationStringArr = explode(":", $institution->hoursofoperation);
+                        $hoursOfOperationString = $hoursOfOperationStringArr[0];
+
+                        for ($q=1; $q < count($hoursOfOperationStringArr); $q++)
+                            $hoursOfOperationString = $hoursOfOperationString . ":" . $hoursOfOperationStringArr[$q];
+                      }
+
+                  }
+                  
                   $details['name'] = $nameToReturn;
                   $details['primaryname'] = $primaryName;
                   $details['id'] = $id;
@@ -402,6 +420,7 @@ class Libraries{
                   $details['phone'] = $phoneNumberArray;
                   $details['weeklyHours'] = $weeklyHours;
                   $details['hrsOpenToday'] = $hrsOpenToday;
+                  $details['hoursOfOperationString'] = $hoursOfOperationString;
 
             return $details;
            
