@@ -1062,9 +1062,9 @@ class Libraries{
                     $collectionGrouping['itemsByStat'][] = $statArr;
                 }
                 else if (($allCallNumbersSame === true) && ($allDescSame === true) && (count($statsList) <= 1)){
-                    if ($collectionItemOnly[0]['collectionName'] != $collectionNamesList[$i]){
-                    $collectionGrouping['displayType'] = "I"; // display type 1: everything same
-                    $collectionGrouping['itemsByStat'][] = $statArr;
+                    if (!count($collectionItemOnly) || $collectionItemOnly[0]['collectionName'] != $collectionNamesList[$i]){
+                      $collectionGrouping['displayType'] = "I"; // display type 1: everything same
+                      $collectionGrouping['itemsByStat'][] = $statArr;
                     }
                 }
                 
