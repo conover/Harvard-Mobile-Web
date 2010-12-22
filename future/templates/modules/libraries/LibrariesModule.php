@@ -119,6 +119,8 @@ class LibrariesModule extends Module {
   }
   
   private function getItemDetails($data) {
+    $imageInfo = Libraries::getImageThumbnail($data['itemId']);
+  
     return array(
       'id'         => $data['itemId'],
       'title'      => self::argVal($data, 'title', 'Unknown title'),
@@ -129,6 +131,9 @@ class LibrariesModule extends Module {
       'formatDesc' => self::argVal($data['format'], 'formatDetail', 'Book'),
       'type'       => self::argVal($data['format'], 'typeDetail', ''),
       'url'        => $this->detailURL($data['itemId']),
+      'online'     => $imageInfo['cataloglink'],
+      'thumbnail'  => $imageInfo['thumbnail'],
+      'fullImage'  => $imageInfo['fullimagelink'],
     );
   }
   
@@ -386,7 +391,7 @@ class LibrariesModule extends Module {
         $data['itemId'] = $id;
         
         $item = $this->getItemDetails($data);
-        //error_log(print_r($item, true));
+        //error_log(print_r($data, true));
         
         $data = Libraries::getFullAvailability($id);
         //error_log(print_r($data, true));
