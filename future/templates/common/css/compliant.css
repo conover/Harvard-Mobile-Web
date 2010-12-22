@@ -769,6 +769,21 @@ ul.focal li:first-child {
 	background-position: 8px right;
 }
 
+.longlabel {
+	display: block;
+	font-size: 13px;
+	line-height: 15px;
+	font-weight: bold;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: auto;
+}
+.longlabel + .value {
+  margin-left: 0px;
+}
+
 .more {
 	/* Inline links for "Show more..." */
 	color: #933;

@@ -321,16 +321,22 @@ class Libraries{
 
                  $address = explode(":",$institution->location->address[0]);
                  $address = HTML2TEXT($address[0]);
-                    
-                 $ur = explode(":", $institution->url);
-                  if (count($ur) > 1)
-                    $url = $ur[0].':'.$ur[1];
-                  else
-                      $url = $ur[0];
+                
+                 $url = strval($institution->url);
+                 if (strpos($url, 'http') !== 0) {
+                   // sometimes the field contains HTML
+                   if (preg_match(';href="([^"]+)";', $url, $matches)) {
+                     $url = $matches[1]; // grab the first url
+                   } else {
+                     $url = ''; // neither html nor a url
+                   }
+                 }
 
-
-                  $email = explode(":", $institution->emailaddresses[0]->email->emailaddress[0]);
-                  $email = $email[0];
+                  $email = '';
+                  if (isset($institution->emailaddresses)) {
+                    $email = explode(":", $institution->emailaddresses[0]->email->emailaddress[0]);
+                    $email = $email[0];
+                  }
 
                   $phoneNumberArray = array();
 
@@ -358,11 +364,13 @@ class Libraries{
 
 
                   $weeklyHours = array();
+                  $hoursOfOperationStrings = array();
 
                   $hrsOpenToday = "closed";
                   $today = date('l');
                   $weeklyHoursCount = 0;
-                    foreach ($institution->hoursofoperation as $hours) {
+                  foreach ($institution->hoursofoperation as $hours) {
+                      if (isset($hours->dailyhours)) {
                         $openHours = array();
 
                         $hours = $hours->dailyhours[0];
@@ -388,22 +396,17 @@ class Libraries{
                             $hrsOpenToday = $dayHours;
 
                         $weeklyHoursCount++;
+                        
+                      } else {
+                        // a text description of the hours
+                        $hoursOfOperationStrings[] = trim(strval($hours));
+                      }
                   }
 
-                  $hoursOfOperationString = "";
+                  $hoursOfOperationString = implode('; ', $hoursOfOperationStrings);
 
-                  if ($weeklyHoursCount < 7) {
+                  if (!count($hoursOfOperationStrings) && $weeklyHoursCount < 7) {
                       $hoursOfOperationString = "hours unavailable";
-
-                      if ($weeklyHoursCount == 1){
-                        $hoursOfOperationString = "";
-                        $hoursOfOperationStringArr = explode(":", $institution->hoursofoperation);
-                        $hoursOfOperationString = $hoursOfOperationStringArr[0];
-
-                        for ($q=1; $q < count($hoursOfOperationStringArr); $q++)
-                            $hoursOfOperationString = $hoursOfOperationString . ":" . $hoursOfOperationStringArr[$q];
-                      }
-
                   }
                   
                   $details['name'] = $nameToReturn;
@@ -1063,9 +1066,9 @@ class Libraries{
                     $collectionGrouping['itemsByStat'][] = $statArr;
                 }
                 else if (($allCallNumbersSame === true) && ($allDescSame === true) && (count($statsList) <= 1)){
-                    if ($collectionItemOnly[0]['collectionName'] != $collectionNamesList[$i]){
-                    $collectionGrouping['displayType'] = "I"; // display type 1: everything same
-                    $collectionGrouping['itemsByStat'][] = $statArr;
+                    if (!count($collectionItemOnly) || $collectionItemOnly[0]['collectionName'] != $collectionNamesList[$i]){
+                      $collectionGrouping['displayType'] = "I"; // display type 1: everything same
+                      $collectionGrouping['itemsByStat'][] = $statArr;
                     }
                 }
                 

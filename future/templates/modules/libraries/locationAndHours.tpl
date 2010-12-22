@@ -1,11 +1,6 @@
 {include file="findInclude:common/header.tpl"}
 
-<div class="nonfocal">
-  {block name="header"}
-    <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
-    <h2>{$item['name']}</h2>
-  {/block}
-</div>
+{include file="findInclude:modules/{$moduleID}/libraryName.tpl"}
 
 {foreach $item['infoSections'] as $key => $section}
   {$sectionIsLast = $section@last}
@@ -15,9 +10,13 @@
     {block name="item"}
       {capture name="title" assign="title"}
         {if $entry['label']}
-          <span class="label">{$entry['label']}<br/></span>
+          <span class="longlabel">{$entry['label']}<br/></span>
+          <span class="value">
         {/if}
-        <span class="value">{$entry['title']}</span>
+            {$entry['title']}
+        {if $entry['label']}
+          </span>
+        {/if}
       {/capture}
       {$section[$entry@index]['title'] = $title}
       {$section[$entry@index]['label'] = null}

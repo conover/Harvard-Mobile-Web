@@ -1,11 +1,6 @@
 {include file="findInclude:common/header.tpl"}
 
-<div class="nonfocal">
-  {block name="header"}
-    <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
-    <h2>{$item['name']}</h2>
-  {/block}
-</div>
+{include file="findInclude:modules/{$moduleID}/libraryName.tpl"}
 
 {foreach $item['hours'] as $entry}
   {block name="item"}

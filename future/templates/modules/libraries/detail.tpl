@@ -13,6 +13,13 @@
     {if $item['edition']}{$item['edition']}<br/>{/if}
     {if $item['date'] || $item['publisher']}{$item['date']} {$item['publisher']}<br/>{/if}
     {$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
+    {if $item['thumbnail']}
+      <div class="thumbnail">
+        {if $item['fullImage']}<a href="{$item['fullImage']}">{/if}
+          <img src="{$item['thumbnail']}" alt="{$item['title']} thumbnail image" />
+        {if $item['fullImage']}<br/><span class="smallprint">(click for full image)</span></a>{/if}
+      </div>
+    {/if}
   {/block}
 {/capture}
 {$results[$i]['title'] = $header}

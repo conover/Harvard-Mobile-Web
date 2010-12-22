@@ -36,11 +36,15 @@ class LibrariesModule extends Module {
   
   private function setBookmarks($type, $bookmarks) {
     if (isset(self::$typeToCookie[$type])) {
-      setcookie(self::$typeToCookie[$type], implode(',', $bookmarks), 0, COOKIE_PATH);
+      setcookie(self::$typeToCookie[$type], implode(',', array_unique($bookmarks)), 0, COOKIE_PATH);
       $this->bookmarks[$type] = $bookmarks;
     } else {
       error_log(__FUNCTION__."(): Warning unknown cookie type '$type'");
     }
+  }
+
+  private function isBookmarked($type, $id) {
+    return in_array($id, $this->getBookmarks($type));
   }
   
   private function checkToggleBookmark($type, $id) {
@@ -62,6 +66,26 @@ class LibrariesModule extends Module {
     }
   }
   
+  private function initLibraryDetails($type, $id, $name) {
+    $data = array();
+    
+    if ($type == 'library') {
+      $data = Libraries::getLibraryDetails($id, $name);
+      //error_log(print_r($data, true));
+      
+    } else if ($type == 'archive') {
+      $data = Libraries::getArchiveDetails($id, $name);
+      //error_log(print_r($data, true));
+    
+    } else {
+      $this->redirectTo('index');
+    }
+    
+    $this->checkToggleBookmark($type, $id);
+    
+    return $data;
+  }
+
   private function translateFormat($formatDetail) {
     $format = strtolower($formatDetail);
     
@@ -95,6 +119,8 @@ class LibrariesModule extends Module {
   }
   
   private function getItemDetails($data) {
+    $imageInfo = Libraries::getImageThumbnail($data['itemId']);
+  
     return array(
       'id'         => $data['itemId'],
       'title'      => self::argVal($data, 'title', 'Unknown title'),
@@ -105,6 +131,9 @@ class LibrariesModule extends Module {
       'formatDesc' => self::argVal($data['format'], 'formatDetail', 'Book'),
       'type'       => self::argVal($data['format'], 'typeDetail', ''),
       'url'        => $this->detailURL($data['itemId']),
+      'online'     => $imageInfo['cataloglink'],
+      'thumbnail'  => $imageInfo['thumbnail'],
+      'fullImage'  => $imageInfo['fullimagelink'],
     );
   }
   
@@ -197,14 +226,14 @@ class LibrariesModule extends Module {
     return $results;
   }
 
-  private function detailURL($id, $toggleBookmark=false) {
+  private function detailURL($id, $toggleBookmark=false, $addBreadcrumb=true) {
     $args = array(
       'id' => $id,
     );
     if ($toggleBookmark) {
       $args['toggleBookmark'] = 1;
     }
-    return $this->buildBreadcrumbURL('detail', $args, !$toggleBookmark);
+    return $this->buildBreadcrumbURL('detail', $args, !$toggleBookmark && $addBreadcrumb);
   }
   
   private function availabilityURL($itemID, $type, $id) {
@@ -227,6 +256,14 @@ class LibrariesModule extends Module {
     return $this->buildBreadcrumbURL('locationAndHours', $args, !$toggleBookmark);
   }
   
+  private function mapURL($type, $id, $name) {
+    return $this->buildBreadcrumbURL('map', array(
+      'type' => $type,
+      'id'   => $id,
+      'name' => $name,
+    ));
+  }
+  
   private function fullHoursURL($type, $id, $name) {
     return $this->buildBreadcrumbURL('fullHours', array(
       'type' => $type,
@@ -237,6 +274,42 @@ class LibrariesModule extends Module {
 
   private static function titleSort($a, $b) {
     return strcmp($a['title'], $b['title']);
+  }
+  
+  protected function urlForSearch($searchTerms) {
+    return $this->buildBreadcrumbURL("/{$this->id}/search", array(
+      'keywords' => $searchTerms,
+    ), false);
+  }
+
+  public function federatedSearch($searchTerms, $maxCount, &$results) {
+    $count = 0;
+    $results = array();
+  
+    $data = array_values(Libraries::searchItems($searchTerms, '', ''));
+    $count = count($data);
+
+    if ($count) {
+      $limit = min($maxCount, $count);
+      
+      for ($i = 0; $i < $limit; $i++) {
+        $subtitle = trim(self::argVal($data[$i], 'date', ''));
+        $creator = self::argVal($data[$i], 'creator', '');
+        if ($creator) {
+          if ($subtitle && $creator) { $subtitle .= ' | '; }
+          $subtitle .= $creator;
+        }
+      
+        $results[] = array(
+          'title'    => self::argVal($data[$i], 'title', 'Unknown title'),
+          'subtitle' => $subtitle ? $subtitle : null,
+          'url'      => $this->buildBreadcrumbURL("/{$this->id}/detail", array(
+            'id' => $data[$i]['itemId'],
+          ), false),
+        );
+      }
+    }
+    return $count;
   }
   
   protected function initializeForPage() {
@@ -318,9 +391,11 @@ class LibrariesModule extends Module {
         $data['itemId'] = $id;
         
         $item = $this->getItemDetails($data);
-
+        //error_log(print_r($data, true));
+        
         $data = Libraries::getFullAvailability($id);
         //error_log(print_r($data, true));
+        
         $locations = array();
         $locationCoords = array();
         foreach ($data as $entry) {          
@@ -491,7 +566,7 @@ class LibrariesModule extends Module {
                 if ($entry['id'] == $id) {
                   $results[] = array(
                     'title' => $entry['primaryName'],
-                    'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
+                    'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
                   );
                   break;
                 }
@@ -505,7 +580,7 @@ class LibrariesModule extends Module {
                 if ($entry['id'] == $id) {
                   $results[] = array(
                     'title' => $entry['primaryName'],
-                    'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
+                    'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
                   );
                   break;
                 }
@@ -529,11 +604,14 @@ class LibrariesModule extends Module {
         
         $libraries = array();
         foreach ($data as $entry) {
-          $libraries[] = array(
-            'title' => $entry['primaryName'],
-            'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
-          );
+          if (!isset($libraries[$entry['name']])) {
+            $libraries[$entry['name']] = array(
+              'title' => $entry['name'],
+              'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
+            );
+          }
         }
+        ksort($libraries);
         
         $this->assign('libraries', $libraries);
         break;
@@ -544,12 +622,15 @@ class LibrariesModule extends Module {
         
         $archives = array();
         foreach ($data as $entry) {
-          $archives[] = array(
-            'title' => $entry['primaryName'],
-            'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
-          );
+          if (!isset($archives[$entry['name']])) {
+            $archives[$entry['name']] = array(
+              'title' => $entry['name'],
+              'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
+            );
+          }
         }
-        
+        ksort($archives);
+
         $this->assign('archives', $archives);
         break;
         
@@ -558,19 +639,7 @@ class LibrariesModule extends Module {
         $id   = $this->getArg('id');
         $name = $this->getArg('name');
         
-        if ($type == 'library') {
-          $data = Libraries::getLibraryDetails($id, $name);
-          //error_log(print_r($data, true));
-          
-        } else if ($type == 'archive') {
-          $data = Libraries::getArchiveDetails($id, $name);
-          //error_log(print_r($data, true));
-        
-        } else {
-          $this->redirectTo('index');
-        }
-
-        $this->checkToggleBookmark($type, $id);
+        $data = $this->initLibraryDetails($type, $id, $name);
 
         $info['hours'] = array();
         if (count($data['weeklyHours'])) {
@@ -590,6 +659,12 @@ class LibrariesModule extends Module {
             'title' => "Full week's schedule",
             'url'   => $this->fullHoursURL($type, $id, $name),            
           );
+          
+        } else if (strlen($data['hoursOfOperationString'])) {
+          $info['hours'][] = array(
+            'label' => 'Hours',
+            'title' => $data['hoursOfOperationString'],
+          );
         }
         if (!count($info['hours'])) {
           unset($info['hours']);
@@ -600,17 +675,22 @@ class LibrariesModule extends Module {
           $info['directions'][] = array(
             'label' => 'Location',
             'title' => $data['address'],
-            'url'   => '/map/search.php?'.http_build_query(array(
-              'filter' => $data['address'],
-            )),
+            'url'   => $this->mapURL($type, $id, $name),
             'class' => 'map',
           );
         }
         if ($data['directions']) {
-          $info['directions'][] = array(
-              'label' => 'Directions',
-              'title' => $data['directions'],
+          $directions = trim($data['directions']);
+          
+          $entry = array(
+            'label' => 'Directions',
+            'title' => $directions,
           );
+          if (strpos($directions, 'http') === 0) {
+            $entry['url'] = $directions;
+          }
+          
+          $info['directions'][] = $entry;
         }
         if (!count($info['directions'])) {
           unset($info['directions']);
@@ -618,11 +698,18 @@ class LibrariesModule extends Module {
         
         $info['contact'] = array();
         if ($data['website']) {
-          $info['contact'][] = array(
-            'label' => 'Website',
-            'title' => $data['website'],
-            'url' => $data['website'],
-          );
+          if (strpos($data['website'], 'http') === 0) {
+            $info['contact'][] = array(
+              'label' => 'Website',
+              'title' => $data['website'],
+              'url' => $data['website'],
+            );
+          } else {
+            $info['contact'][] = array(
+              'label' => 'Website',
+              'title' => $data['website'],
+            );
+          }
         }
         if ($data['email']) {
           $info['contact'][] = array(
@@ -649,7 +736,7 @@ class LibrariesModule extends Module {
           'name'         => $name,
           'fullName'     => $data['primaryname'],
           'type'         => $type,
-          'bookmarked'   => in_array($id, $this->getBookmarks($type)),
+          'bookmarked'   => $this->isBookmarked($type, $id),
           'cookie'       => LIBRARY_LOCATIONS_COOKIE,
           'infoSections' => $info,
         );
@@ -657,25 +744,13 @@ class LibrariesModule extends Module {
         $this->assign('item', $item);
         $this->assign('bookmarkURL',  $this->locationAndHoursURL($type, $id, $name, true));
         break;
-      
+
       case 'fullHours':
         $type = $this->getArg('type');
         $id   = $this->getArg('id');
         $name = $this->getArg('name');
         
-        if ($type == 'library') {
-          $data = Libraries::getLibraryDetails($id, $name);
-          //error_log(print_r($data, true));
-          
-        } else if ($type == 'archive') {
-          $data = Libraries::getArchiveDetails($id, $name);
-          //error_log(print_r($data, true));
-        
-        } else {
-          $this->redirectTo('index');
-        }
-        
-        $this->checkToggleBookmark($type, $id);
+        $data = $this->initLibraryDetails($type, $id, $name);
 
         $hours = array();
         if (count($data['weeklyHours'])) {
@@ -695,11 +770,55 @@ class LibrariesModule extends Module {
         }
         
         $item = array(
+          'name'       => $name,
           'fullName'   => $data['primaryname'],
           'type'       => $type,
-          'bookmarked' => in_array($id, $this->getBookmarks($type)),
+          'bookmarked' => $this->isBookmarked($type, $id),
           'cookie'     => LIBRARY_LOCATIONS_COOKIE,
           'hours'      => $hours,
+        );
+        
+        $this->assign('item', $item);
+        break;
+
+      case 'map':
+        $type = $this->getArg('type');
+        $id   = $this->getArg('id');
+        $name = $this->getArg('name');
+        
+        $data = $this->initLibraryDetails($type, $id, $name);
+        
+        switch ($this->pagetype) {
+          case 'compliant':
+            $imageWidth = 290; $imageHeight = 300;
+            break;
+          
+          case 'basic':
+            if ($GLOBALS['deviceClassifier']->getPlatform() == 'bbplus') {
+              $imageWidth = 410; $imageHeight = 360;
+            } else {
+              $imageWidth = 200; $imageHeight = 200;
+            }
+            break;
+        }
+        
+        $this->assign('imageWidth',  $imageWidth);
+        $this->assign('imageHeight', $imageHeight);
+        
+        $imgSrc = $GLOBALS['siteConfig']->getVar('GOOGLE_STATIC_MAPS_URL').http_build_query(array(
+          'sensor'  => 'false',
+          'size'    => "{$imageWidth}x{$imageHeight}",
+          'markers' => "color:0xb12727|{$data['latitude']},{$data['longitude']}",
+        ));
+
+        
+        $item = array(
+          'name'       => $name,
+          'fullName'   => $data['primaryname'],
+          'type'       => $type,
+          'bookmarked' => $this->isBookmarked($type, $id),
+          'cookie'     => LIBRARY_LOCATIONS_COOKIE,
+          'imgSrc'     => $imgSrc,
         );
         
         $this->assign('item', $item);
