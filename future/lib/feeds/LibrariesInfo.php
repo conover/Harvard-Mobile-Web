@@ -215,10 +215,49 @@ class Libraries{
 
          foreach ($xml_obj->institution as $institution) {
 
-             $timeOpen = $institution->hoursofoperation[0]->dailyhours->hours[0];
+             $timeOpen = '';
 
-             if (strlen($timeOpen) <= 0) {
+             if (strlen($timeOpen) <= 0 && isset($institution->hoursofoperation[0])) {
+                 $timeOpen = $institution->hoursofoperation[0]->dailyhours->hours[0];
+             }
+
+             if (strlen($timeOpen) <= 0 && isset($institution->hoursofoperation->hoursofoperation)) {
                  $timeOpen = $institution->hoursofoperation->hoursofoperation->dailyhours->hours[0];
+             }
+
+             if (strlen($timeOpen) <= 0 && isset($institution->hoursofoperation)) {
+                 // open hours are a string -- just some simple parsing, won't catch all crazy strings
+                 $re = ';([A-Za-z]+).?\s*-\s*([A-Za-z]+).?\s+,?([0-9]+(am|pm)?\s*-\s*[0-9]+(am|pm)?);';
+                 if (preg_match($re, $institution->hoursofoperation, $matches)) {
+                    $daysOfWeek = array(
+                      'Monday'    => 1,
+                      'Mon'       => 1,
+                      'Tuesday'   => 2,
+                      'Tue'       => 2,
+                      'Tues'      => 2,
+                      'Wednesday' => 3,
+                      'Weds'      => 3,
+                      'Thursday'  => 4,
+                      'Thu'       => 4,
+                      'Thurs'     => 4,
+                      'Friday'    => 5,
+                      'Fri'       => 5,
+                      'Saturday'  => 6,
+                      'Sat'       => 6,
+                      'Sunday'    => 7,
+                      'Sun'       => 7,
+                    );
+                    if (isset($matches[1], $matches[2])) {
+                        $first = strval($matches[1]);
+                        $last = strval($matches[2]);
+                        if (isset($daysOfWeek[$first], $daysOfWeek[$last])) {
+                            $current = intval(strftime('%u'));
+                            if ($daysOfWeek[$first] <= $current && $current <= $daysOfWeek[$last]) {
+                                $timeOpen = $matches[3];
+                            } 
+                        }
+                    }
+                 }
              }
 
              if (strlen($timeOpen) <= 0) {

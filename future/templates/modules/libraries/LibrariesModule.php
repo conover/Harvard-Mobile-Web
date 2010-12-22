@@ -599,12 +599,16 @@ class LibrariesModule extends Module {
         break;
         
       case 'libraries':
-        $data = Libraries::getAllLibraries();
+        $openOnly = $this->getArg('openOnly', false) ? true : false;
+        $openNowToggleURL = $this->buildBreadcrumbURL($this->page, 
+          $openOnly ? array() : array('openOnly' => 'true'), false);// toggle
+        
+        $data = Libraries::getOpenNow();
         //error_log(print_r($data, true));
         
         $libraries = array();
         foreach ($data as $entry) {
-          if (!isset($libraries[$entry['name']])) {
+          if (!isset($libraries[$entry['name']]) && (!$openOnly || $entry['isOpenNow'] == 'YES')) {
             $libraries[$entry['name']] = array(
               'title' => $entry['name'],
               'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
@@ -613,7 +617,9 @@ class LibrariesModule extends Module {
         }
         ksort($libraries);
         
-        $this->assign('libraries', $libraries);
+        $this->assign('openOnly',         $openOnly);
+        $this->assign('openNowToggleURL', $openNowToggleURL);
+        $this->assign('libraries',        $libraries);
         break;
         
       case 'archives':
