@@ -17,7 +17,7 @@
 	background-repeat: no-repeat;
 	background-position: 0 0;
 	float: right;
-	margin: -7px -7px 0 0;
+	margin: -3px -8px 0 0;
 	padding: 0 0 5px 5px;
 }
 
@@ -30,13 +30,23 @@
   padding-left: 24px;
   background-position: left center;
   background-repeat: no-repeat;
-	background-size: 20px;
-	-webkit-background-size: 20px;
-  font-size: 14px;
+  background-size: 20px;
+  -webkit-background-size: 20px;
+  font-size: 15px;
   font-weight: normal;
-  line-height: 22px;
+  line-height: 18px;
+*/
 }
 
+.items ul.nav {
+	margin: -8px 10px 15px 10px;
+}
+
+.available, .requestable, .unavailable {
+  margin-top: 1px;
+  margin-left: -1px;
+  line-height: 20px;
+}
 .available {
   background-image: url(/modules/libraries/images/available@2x.png);
 }
@@ -53,16 +63,16 @@
 
 .infoLink {
   float: right;
-  margin-top: -8px;
+  margin: -5px -5px;
 }
 
 .listItems .smallprint > div {
   padding-left: 20px;
   background-position: left center;
   background-repeat: no-repeat;
-	background-size: 16px;
-	-webkit-background-size: 16px;
-  line-height: 18px;
+  background-size: 16px;
+  -webkit-background-size: 16px;
+  line-height: 17px;
 }
 .listItems .book {
   background-image: url(/modules/libraries/images/book.png);

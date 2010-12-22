@@ -8,6 +8,7 @@
   {block name="header"}
     <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
     <h2>{$item['title']}</h2>
+	<p class="smallprint">
     {if $item['creator']}<br/>{$item['creator']}{/if}
     {if $item['edition']}<br/>{$item['edition']}{/if}
     {if $item['date'] || $item['publisher']}<br/>{$item['date']} {$item['publisher']}{/if}
@@ -15,6 +16,7 @@
       <br/>{$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
     {/if}
     {if $item['workType']}<br/>Work Type: {$item['workType']}{/if}
+	</p>
     {if $item['thumbnail']}
       {if $item['id']}<br/>HOLLIS #: {$item['id']}{/if}
       <div class="thumbnail">
