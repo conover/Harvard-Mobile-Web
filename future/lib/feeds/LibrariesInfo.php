@@ -771,7 +771,7 @@ class Libraries{
             $parentCallNumberArray = explode(":",$collection->callnumber);
             $parentCallNumber = $parentCallNumberArray[0];
 
-                for($z=1; $z < count($callNumberArray); $z++)
+                for($z=1; $z < count($parentCallNumberArray); $z++)
                     $parentCallNumber = $parentCallNumber . ":" . $parentCallNumberArray[$z];
 
             $collectionNameArr = explode(":", $collection->collectionname[0]);
