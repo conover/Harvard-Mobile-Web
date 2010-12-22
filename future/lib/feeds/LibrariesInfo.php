@@ -1269,7 +1269,18 @@ class Libraries{
         for($b=1; $b < count($fullImageArray); $b++)
             $fullImageLink = $fullImageLink . ":" . $fullImageArray[$b];
 
+        $numberOfImages = explode(":", $item->numberofimages);
+        $numberOfImages = $numberOfImages[0];
+
+        $workType = "";
+        $workTypeArray = explode(":", $item->workType);
+        $workType = $workTypeArray[0];
+        for($r=1; $r < count($workTypeArray); $r++)
+            $workType = $workType . ":" . $workTypeArray[$r];
+
        $imageInfoToReturn['itemId'] = $itemId;
+       $imageInfoToReturn['numberofimages'] = $numberOfImages;
+       $imageInfoToReturn['worktype'] = $workType;
        $imageInfoToReturn['thumbnail'] = $link;
        $imageInfoToReturn['cataloglink'] = $catLink;
        $imageInfoToReturn['fullimagelink'] = $fullImageLink;
