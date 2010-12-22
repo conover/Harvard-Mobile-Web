@@ -8,13 +8,17 @@
   {block name="header"}
     <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
     <h2>{$item['title']}</h2>
-    <br/>
-    {if $item['creator']}{$item['creator']}<br/>{/if}
-    {if $item['edition']}{$item['edition']}<br/>{/if}
-    {if $item['date'] || $item['publisher']}{$item['date']} {$item['publisher']}<br/>{/if}
-    {$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
+    {if $item['creator']}<br/>{$item['creator']}{/if}
+    {if $item['edition']}<br/>{$item['edition']}{/if}
+    {if $item['date'] || $item['publisher']}<br/>{$item['date']} {$item['publisher']}{/if}
+    {if $item['format']|lower != 'image'}
+      <br/>{$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
+    {/if}
+    {if $item['workType']}<br/>Work Type: {$item['workType']}{/if}
     {if $item['thumbnail']}
+      {if $item['id']}<br/>HOLLIS #: {$item['id']}{/if}
       <div class="thumbnail">
+        <div class="smallprint">1 of {$item['imageCount']} images</div>
         {if $item['fullImage']}<a href="{$item['fullImage']}">{/if}
           <img src="{$item['thumbnail']}" alt="{$item['title']} thumbnail image" />
         {if $item['fullImage']}<br/><span class="smallprint">(click for full image)</span></a>{/if}

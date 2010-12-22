@@ -120,7 +120,7 @@ class LibrariesModule extends Module {
   
   private function getItemDetails($data) {
     $imageInfo = Libraries::getImageThumbnail($data['itemId']);
-  
+
     return array(
       'id'         => $data['itemId'],
       'title'      => self::argVal($data, 'title', 'Unknown title'),
@@ -134,6 +134,8 @@ class LibrariesModule extends Module {
       'online'     => $imageInfo['cataloglink'],
       'thumbnail'  => $imageInfo['thumbnail'],
       'fullImage'  => $imageInfo['fullimagelink'],
+      'workType'   => $imageInfo['worktype'],
+      'imageCount' => $imageInfo['numberofimages'],
     );
   }
   
