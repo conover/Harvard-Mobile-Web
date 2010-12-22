@@ -11,23 +11,30 @@
     {if $item['creator']}<br/>{$item['creator']}{/if}
     {if $item['edition']}<br/>{$item['edition']}{/if}
     {if $item['date'] || $item['publisher']}<br/>{$item['date']} {$item['publisher']}{/if}
-    {if $item['format']|lower != 'image'}
-      <br/>{$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
+    {if $item['formatDesc'] && $item['format']|lower != 'image'}
+      <br/>{$item['formatDesc']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
     {/if}
     {if $item['workType']}<br/>Work Type: {$item['workType']}{/if}
     {if $item['thumbnail']}
       {if $item['id']}<br/>HOLLIS #: {$item['id']}{/if}
       <div class="thumbnail">
         <div class="smallprint">1 of {$item['imageCount']} images</div>
-        {if $item['fullImage']}<a href="{$item['fullImage']}">{/if}
+        {if $item['fullImageUrl']}<a href="{$item['fullImageUrl']}">{/if}
           <img src="{$item['thumbnail']}" alt="{$item['title']} thumbnail image" />
-        {if $item['fullImage']}<br/><span class="smallprint">(click for full image)</span></a>{/if}
+        {if $item['fullImageUrl']}<br/><span class="smallprint">(click for full image)</span></a>{/if}
       </div>
     {/if}
   {/block}
 {/capture}
 {$results[$i]['title'] = $header}
 {$i = $i + 1}
+
+{if $item['isOnline']}
+  {$results[$i] = array()}
+  {$results[$i]['title'] = '<strong>Available Online</strong>'}
+  {$results[$i]['url'] = $item['onlineUrl']}
+  {$i = $i + 1}
+{/if}
 
 {foreach $locations as $location}
   {$results[$i] = array()}

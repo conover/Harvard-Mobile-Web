@@ -76,11 +76,14 @@
 .listItems .map {
   background-image: url(/modules/libraries/images/map.png);
 }
-.listItems .score {
-  background-image: url(/modules/libraries/images/score.png);
+.listItems .musicscore {
+  background-image: url(/modules/libraries/images/musicscore.png);
 }
-.listItems .audio {
-  background-image: url(/modules/libraries/images/audio.png);
+.listItems .soundrecording {
+  background-image: url(/modules/libraries/images/soundrecording.png);
+}
+.listItems .computerfile {
+  background-image: url(/modules/libraries/images/computerfile.png);
 }
 .listItems .video {
   background-image: url(/modules/libraries/images/video.png);
