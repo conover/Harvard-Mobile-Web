@@ -72,7 +72,7 @@
       <div id="navbar"{if $hasHelp} class="helpon"{/if}>
         <div class="breadcrumbs{if $isModuleHome} homepage{/if}">
           <a name="top" href="/home/" class="homelink">
-            <img src="/common/images/homelink.png" width="57" height="45" alt="{$SITE_NAME} Home" />
+            <img src="/common/images/homelink.png" width="57" height="45" alt="Home" />
           </a>
           
           {if !$isModuleHome}
