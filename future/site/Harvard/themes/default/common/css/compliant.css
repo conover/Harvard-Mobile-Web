@@ -63,32 +63,6 @@ dt, .label, .longlabel, .legend, .legend.nonfocal, .legend h2, .legend h3, .smal
 	color: #554c41;
 }
 
-/*
-#springboard a {
-	/* Text color for icon labels in springboard-type screens (grids of icon launchers) */
-	/*
-	color: #404346;
-	font-size: 12px;
-	line-height: 13px;
-}
-*/
-/*
-#springboard div {
-	/* Grid element size in springboard-type screens */
-	/*
-	position: relative;
-	width: 79px;
-	height: 88px;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	float: left;
-	text-align: center;		
-	vertical-align: top;
-}
-
-*/
-
 
 
 /* Major content blocks */
@@ -164,10 +138,6 @@ dt, .label, .longlabel, .legend, .legend.nonfocal, .legend h2, .legend h3, .smal
 
 
 /* Springboards */
-
-.springboard {
-	padding: 6px;
-}
 
 .springboard div {
 	/* Overall size of one cell in the springboard */
