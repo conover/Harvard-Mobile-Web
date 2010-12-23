@@ -119,16 +119,32 @@ class LibrariesModule extends Module {
     }
   }
   
+  private function formatDetail($data, $key='', $default='') {
+    if (is_array($data)) {
+      $detail = self::argVal($data, $key, $default);
+    } else {
+      $detail = $data;
+    }
+    
+    // no phone numbers in item details:
+    $detail = str_replace('-', '-&shy;', $detail);
+    
+    // no email addresses
+    $detail = str_replace('@', '@&shy;', $detail);
+    
+    return $detail;
+  }
+  
   private function getItemDetails($data) {
     $details = array(
       'id'         => $data['itemId'],
-      'title'      => self::argVal($data, 'title', 'Unknown title'),
-      'creator'    => self::argVal($data, 'creator', ''),
-      'publisher'  => self::argVal($data, 'publisher', ''),
-      'date'       => self::argVal($data, 'date', ''),
+      'title'      => $this->formatDetail($data, 'title', 'Unknown title'),
+      'creator'    => $this->formatDetail($data, 'creator'),
+      'publisher'  => $this->formatDetail($data, 'publisher'),
+      'date'       => $this->formatDetail($data, 'date'),
       'format'     => $this->translateFormat(self::argVal($data['format'], 'formatDetail', 'Book')),
-      'formatDesc' => self::argVal($data['format'], 'formatDetail', ''),
-      'type'       => self::argVal($data['format'], 'typeDetail', ''),
+      'formatDesc' => $this->formatDetail($data['format'], 'formatDetail'),
+      'type'       => $this->formatDetail($data['format'], 'typeDetail'),
       'url'        => $this->detailURL($data['itemId']),
       'bookmarked' => $this->isBookmarked('item', $data['itemId']),
       'cookie'     => LIBRARY_ITEMS_COOKIE,
@@ -210,21 +226,21 @@ class LibrariesModule extends Module {
             );
             foreach ($statItems[$statKey] as $statItem) {
               if (self::argVal($statItem, 'requestUrl')) {
-                $itemType['url'] = $statItem['requestUrl'];
+                $itemType['url'] = $this->formatDetail($statItem, 'requestUrl');
               }
               if (self::argVal($statItem, 'statSecondary')) {
-                $itemType['status'] = $statItem['statSecondary'];
+                $itemType['status'] = $this->formatDetail($statItem, 'statSecondary');
               }
               if (self::argVal($statItem, 'callNumber')) {
-                $itemType['callNumber'] = $statItem['callNumber'];
+                $itemType['callNumber'] = $this->formatDetail($statItem, 'callNumber');
                 if (!$collectionCallNumber) {
-                  $collectionCallNumber = $statItem['callNumber'];
+                  $collectionCallNumber = $this->formatDetail($statItem, 'callNumber');
                 }
               }
               if (self::argVal($statItem, 'collectionCallNumber')) {
-                $itemType['callNumber'] = $statItem['collectionCallNumber'];
+                $itemType['callNumber'] = $this->formatDetail($statItem, 'collectionCallNumber');
                 if (!$collectionCallNumber) {
-                  $collectionCallNumber = $statItem['collectionCallNumber'];
+                  $collectionCallNumber = $this->formatDetail($statItem, 'collectionCallNumber');
                 }
               }
             }
@@ -236,7 +252,7 @@ class LibrariesModule extends Module {
       
       if (count($items)) {
         $results[] = array(
-          'name'       => $collection['collectionName'],
+          'name'       => $this->formatDetail($collection, 'collectionName'),
           'callNumber' => $collectionCallNumber,
           'items'      => $items,
         );
@@ -426,7 +442,7 @@ class LibrariesModule extends Module {
           $locations[] = array(
             'id'          => $entry['id'],
             'type'        => $entry['type'],
-            'name'        => $entry['name'],
+            'name'        => $this->formatDetail($entry, 'name'),
             'collections' => $collections,
             'url'         => $this->availabilityURL($id, $entry['type'], $entry['id']),
           );
@@ -498,8 +514,8 @@ class LibrariesModule extends Module {
         
         $location = array(
           'type'        => $data['type'],
-          'name'        => $data['name'],
-          'hours'       => self::argVal($data, 'hrsOpenToday', ''),
+          'name'        => $this->formatDetail($data, 'name'),
+          'hours'       => $this->formatDetail($data, 'hrsOpenToday'),
           'collections' => $collections,
         );
         
@@ -586,7 +602,7 @@ class LibrariesModule extends Module {
               foreach ($libraries as $entry) {
                 if ($entry['id'] == $id) {
                   $results[] = array(
-                    'title' => $entry['primaryName'],
+                    'title' => $this->formatDetail($entry, 'primaryName'),
                     'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['primaryName']),
                   );
                   break;
@@ -600,7 +616,7 @@ class LibrariesModule extends Module {
               foreach ($archives as $entry) {
                 if ($entry['id'] == $id) {
                   $results[] = array(
-                    'title' => $entry['primaryName'],
+                    'title' => $this->formatDetail($entry, 'primaryName'),
                     'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['primaryName']),
                   );
                   break;
@@ -631,7 +647,7 @@ class LibrariesModule extends Module {
         foreach ($data as $entry) {
           if (!isset($libraries[$entry['name']]) && (!$openOnly || $entry['isOpenNow'] == 'YES')) {
             $libraries[$entry['name']] = array(
-              'title' => $entry['name'],
+              'title' => $this->formatDetail($entry, 'name'),
               'url' => $this->locationAndHoursURL('library', $entry['id'], $entry['name']),
             );
           }
@@ -651,7 +667,7 @@ class LibrariesModule extends Module {
         foreach ($data as $entry) {
           if (!isset($archives[$entry['name']])) {
             $archives[$entry['name']] = array(
-              'title' => $entry['name'],
+              'title' => $this->formatDetail($entry, 'name'),
               'url' => $this->locationAndHoursURL('archive', $entry['id'], $entry['name']),
             );
           }
@@ -677,7 +693,7 @@ class LibrariesModule extends Module {
             if (intval($entry['date']) >= $today && count($info['hours']) < 3) {
               $info['hours'][] = array(
                 'label' => $entry['day'],
-                'title' => $entry['hours'],
+                'title' => $this->formatDetail($entry, 'hours'),
               );
             }
           }
@@ -701,7 +717,7 @@ class LibrariesModule extends Module {
         if ($data['address']) {
           $info['directions'][] = array(
             'label' => 'Location',
-            'title' => $data['address'],
+            'title' => $this->formatDetail($data, 'address'),
             'url'   => $this->mapURL($type, $id, $name),
             'class' => 'map',
           );
@@ -711,10 +727,11 @@ class LibrariesModule extends Module {
           
           $entry = array(
             'label' => 'Directions',
-            'title' => $directions,
+            'title' => $this->formatDetail($directions),
           );
           if (strpos($directions, 'http') === 0) {
             $entry['url'] = $directions;
+            $entry['class'] = 'external';
           }
           
           $info['directions'][] = $entry;
@@ -729,27 +746,28 @@ class LibrariesModule extends Module {
             $info['contact'][] = array(
               'label' => 'Website',
               'title' => $data['website'],
-              'url' => $data['website'],
+              'url'   => $data['website'],
+              'class' => 'external',
             );
           } else {
             $info['contact'][] = array(
               'label' => 'Website',
-              'title' => $data['website'],
+              'title' => $this->formatDetail($data, 'website'),
             );
           }
         }
         if ($data['email']) {
           $info['contact'][] = array(
             'label' => 'Email',
-            'title' => str_replace('@', '@&shy;', $data['email']),
+            'title' => $this->formatDetail($data, 'email'),
             'url'   => "mailto:{$data['email']}",
             'class' => 'email',
           );
         }
         foreach ($data['phone'] as $phone) {
           $info['contact'][] = array(
-            'label' => $phone['description'] ? $phone['description'] : 'Phone',
-            'title' => str_replace('-', '-&shy;', $phone['number']),
+            'label' => $phone['description'] ? $this->formatDetail($phone, 'description') : 'Phone',
+            'title' => $this->formatDetail($phone, 'number'),
             'url'   => 'tel:'.strtr($phone['number'], '-', ''),
             'class' => 'phone',
           );
@@ -760,8 +778,8 @@ class LibrariesModule extends Module {
         
         $item = array(
           'id'           => $id,
-          'name'         => $name,
-          'fullName'     => $data['primaryname'],
+          'name'         => $this->formatDetail($name),
+          'fullName'     => $this->formatDetail($data, 'primaryname'),
           'type'         => $type,
           'bookmarked'   => $this->isBookmarked($type, $id),
           'cookie'       => LIBRARY_LOCATIONS_COOKIE,
@@ -783,8 +801,8 @@ class LibrariesModule extends Module {
         if (count($data['weeklyHours'])) {
           foreach ($data['weeklyHours'] as $entry) {
             $hours[] = array(
-              'label' => $entry['day'],
-              'title' => $entry['hours'],
+              'label' => $this->formatDetail($entry, 'day'),
+              'title' => $this->formatDetail($entry, 'hours'),
             );
           }
         }
@@ -797,8 +815,8 @@ class LibrariesModule extends Module {
         }
         
         $item = array(
-          'name'       => $name,
-          'fullName'   => $data['primaryname'],
+          'name'       => $this->formatDetail($name),
+          'fullName'   => $this->formatDetail($data, 'primaryname'),
           'type'       => $type,
           'bookmarked' => $this->isBookmarked($type, $id),
           'cookie'     => LIBRARY_LOCATIONS_COOKIE,
@@ -840,8 +858,8 @@ class LibrariesModule extends Module {
 
         
         $item = array(
-          'name'       => $name,
-          'fullName'   => $data['primaryname'],
+          'name'       => $this->formatDetail($name),
+          'fullName'   => $this->formatDetail($data, 'primaryname'),
           'type'       => $type,
           'bookmarked' => $this->isBookmarked($type, $id),
           'cookie'     => LIBRARY_LOCATIONS_COOKIE,
