@@ -92,6 +92,7 @@ strong {
 #footer {
 	clear: both;
 	min-height: 22px;
+	padding-top: 10px;
 	margin: 20px 12px 14px 12px;
 	font-weight: normal;
 }
@@ -154,7 +155,11 @@ select {
 	height: 30px;
 	padding: 4px 6px;
 	-webkit-appearance:textfield;
-	-webkit-border-radius: 5px;
+}
+
+*:first-child+html .forminput {
+	/* The return of IE CSS hacks makes me cry */
+	width: 90%;	
 }
 
 .inputcombo {
@@ -167,8 +172,6 @@ select {
 	padding: 4px 4px 8px 7px;
 	line-height: 24px;
 	border: 1px 0 1px 1px solid #666;
-	-webkit-border-bottom-left-radius: 11px;	
-	-webkit-border-top-left-radius: 11px;	
 	-webkit-border-bottom-right-radius: 0;	
 	-webkit-border-top-right-radius: 0;	
 }
@@ -189,8 +192,6 @@ select {
 
 .emphasized  .forminput {
 	border: 3px solid #666;
-	-webkit-border-bottom-left-radius: 13px;	
-	-webkit-border-top-left-radius: 13px;	
 	padding: 6px 4px 8px 7px;
 	height: 18px;
 }
@@ -303,7 +304,7 @@ input.formbutton {
 	background-position: top right;
 	text-decoration: none;
 	overflow: hidden;
-	text-overflow: ellipsis
+	text-overflow: ellipsis;
 }
 
 a.homelink {
