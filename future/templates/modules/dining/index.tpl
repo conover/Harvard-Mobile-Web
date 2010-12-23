@@ -75,7 +75,7 @@
       {foreach $statusImages as $statusImage}
         <ul class="iconlegend col">
           <li>
-            <img src="/modules/{$moduleID}/images/{$statusImage['src']}@2x.png" width="20" height="20" alt="{$statusImage['alt']}"/>
+            <img src="/modules/{$moduleID}/images/{$statusImage['src']}.png" width="20" height="20" alt="{$statusImage['alt']}"/>
             {$statusImage['title']}
           </li>
         </ul>    
@@ -105,7 +105,7 @@
 {block name="tabView"}
   <a name="scrolldown"> </a>
   <div class="nonfocal">
-    {include file="findInclude:common/tabs.tpl" tabBodies=$tabBodies}
+    {include file="findInclude:common/tabs.tpl" tabBodies=$tabBodies smallTabs=true}
   </div>
 {/block}
 

@@ -48,7 +48,7 @@
         </div>
         <img id="loadingimage" src="/common/images/loading2.gif" width="40" height="40" alt="Loading" />
       </div> <!-- id="mapscrollers" -->
-      <img id="mapimage" width="{$imageWidth}" height="{$imageHeight}" alt="" onload="hide('loadingimage')"/> 
+      <img src="/common/images/blank.png" id="mapimage" width="{$imageWidth}" height="{$imageHeight}" alt="" onload="hide('loadingimage')"/> 
       <div id="mapzoom">
         <a href="#" onclick="zoomin(); return false;" id="zoomin">
           <img src="/common/images/blank.png" width="40" height="34" alt="Zoom In" />
@@ -56,7 +56,7 @@
         <a href="#" onclick="zoomout(); return false;" id="zoomout">
           <img src="/common/images/blank.png" width="40" height="34" alt="Zoom Out" />
         </a>
-        <a href="#" onclick="recenter(); return false;" id="recenter" class="disabled">
+        <a href="#" onclick="recenter(); return false;" id="recenter">
           <img src="/common/images/blank.png" width="40" height="34" alt="Recenter" />
         </a>
         <a href="" id="fullscreen">
