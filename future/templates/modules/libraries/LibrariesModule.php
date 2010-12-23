@@ -87,56 +87,74 @@ class LibrariesModule extends Module {
   }
 
   private function translateFormat($formatDetail) {
-    $format = strtolower($formatDetail);
-    
-    switch ($format) {
+    switch (strtolower($formatDetail)) {
       case 'book':
         return 'book';
+      
+      case 'computer file':
+        return 'computerfile';
         
       case 'recording':
-        return 'audio';
+        return 'soundrecording';
         
       case 'image':
         return 'image';
         
       case 'map':
         return 'map';
-        
+      
       case 'archives / manuscripts':
       case 'journal / serial':
         return 'journal';
         
       case 'sheet music':
-        return 'score';
+        return 'musicscore';
 
       case 'movie':
         return 'video';
         
       default:
+        error_log("Warning unknown library item format '$format'"); 
         return 'book';
     }
-    return $format;
   }
   
   private function getItemDetails($data) {
-    $imageInfo = Libraries::getImageThumbnail($data['itemId']);
-
-    return array(
+    $details = array(
       'id'         => $data['itemId'],
       'title'      => self::argVal($data, 'title', 'Unknown title'),
       'creator'    => self::argVal($data, 'creator', ''),
       'publisher'  => self::argVal($data, 'publisher', ''),
       'date'       => self::argVal($data, 'date', ''),
       'format'     => $this->translateFormat(self::argVal($data['format'], 'formatDetail', 'Book')),
-      'formatDesc' => self::argVal($data['format'], 'formatDetail', 'Book'),
+      'formatDesc' => self::argVal($data['format'], 'formatDetail', ''),
       'type'       => self::argVal($data['format'], 'typeDetail', ''),
       'url'        => $this->detailURL($data['itemId']),
-      'online'     => $imageInfo['cataloglink'],
-      'thumbnail'  => $imageInfo['thumbnail'],
-      'fullImage'  => $imageInfo['fullimagelink'],
-      'workType'   => $imageInfo['worktype'],
-      'imageCount' => $imageInfo['numberofimages'],
+      'bookmarked' => $this->isBookmarked('item', $data['itemId']),
+      'cookie'     => LIBRARY_ITEMS_COOKIE,
     );
+    
+    if (isset($data['identifier'])) {
+      foreach ($data['identifier'] as $identifier) {
+        if (isset($identifier['type']) && strtolower($identifier['type']) == 'net') {
+          $details['isOnline']  = true;
+          $details['onlineUrl'] = $identifier['typeDetail'];
+        }
+      }
+    }
+    
+    if (strtolower($details['format']) == 'image') {
+      $imageInfo = Libraries::getImageThumbnail($data['itemId']);
+
+      $details['isOnline']     = true;
+      $details['onlineUrl']    = $imageInfo['cataloglink'];
+      $details['thumbnail']    = $imageInfo['thumbnail'];
+      $details['fullImageUrl'] = $imageInfo['fullimagelink'];
+      $details['workType']     = $imageInfo['worktype'];
+      $details['imageCount']   = $imageInfo['numberofimages'];
+    }
+    
+    return $details;
   }
   
   private function formatItemAvailabilityInfo($entry) {
@@ -400,12 +418,15 @@ class LibrariesModule extends Module {
         
         $locations = array();
         $locationCoords = array();
-        foreach ($data as $entry) {          
+        foreach ($data as $entry) {
+          $collections = $this->formatItemAvailabilityInfo($entry);
+          if (!count($collections)) { continue; }
+          
           $locations[] = array(
             'id'          => $entry['id'],
             'type'        => $entry['type'],
             'name'        => $entry['name'],
-            'collections' => $this->formatItemAvailabilityInfo($entry),
+            'collections' => $collections,
             'url'         => $this->availabilityURL($id, $entry['type'], $entry['id']),
           );
           
@@ -425,9 +446,6 @@ class LibrariesModule extends Module {
             );
           }
         }
-        
-        $item['bookmarked'] = in_array($id, $this->getBookmarks('item'));
-        $item['cookie'] = LIBRARY_ITEMS_COOKIE;
         
         $this->addInlineJavascript('var locationCoords = '.json_encode($locationCoords).';');
         $this->addOnLoad('setLocationDistances(locationCoords);');

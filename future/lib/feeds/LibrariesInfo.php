@@ -1208,7 +1208,6 @@ class Libraries{
 
 
             $format = array();
-
             foreach ($dc->format as $formats) {
                 $type = "";
                 $val = "";
