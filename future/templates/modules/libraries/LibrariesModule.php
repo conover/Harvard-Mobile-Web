@@ -380,6 +380,7 @@ class LibrariesModule extends Module {
             $section['items'][] = array(
               'title' => $title,
               'url'   => $config['urls'][$i],
+              'class' => $config['classes'][$i],
             );
           }
           if (count($section['items'])) {
