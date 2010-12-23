@@ -684,7 +684,8 @@ class LibrariesModule extends Module {
         $name = $this->getArg('name');
         
         $data = $this->initLibraryDetails($type, $id, $name);
-
+        //error_log(print_r($data, true));
+        
         $info['hours'] = array();
         if (count($data['weeklyHours'])) {
           $now = new DateTime();
@@ -692,7 +693,7 @@ class LibrariesModule extends Module {
           
           foreach ($data['weeklyHours'] as $entry) {
             if (intval($entry['date']) >= $today && count($info['hours']) < 3) {
-              $info['hours'][] = array(
+              $info['hours'][$entry['date']] = array(
                 'label' => $entry['day'],
                 'title' => $this->formatDetail($entry, 'hours'),
               );
@@ -703,6 +704,7 @@ class LibrariesModule extends Module {
             'title' => "Full week's schedule",
             'url'   => $this->fullHoursURL($type, $id, $name),            
           );
+          $info['hours'] = array_values($info['hours']);
           
         } else if (strlen($data['hoursOfOperationString'])) {
           $info['hours'][] = array(
