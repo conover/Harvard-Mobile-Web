@@ -389,6 +389,7 @@ class LibrariesModule extends Module {
               'title'    => $title,
               'subtitle' => $config['subtitles'][$i],
               'url'      => $config['urls'][$i],
+              'class'    => $config['classes'][$i],
             );
           }
           if (count($section)) {
