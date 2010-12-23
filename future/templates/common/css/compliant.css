@@ -535,6 +535,13 @@ ul.focal li:first-child {
 	-webkit-border-bottom-left-radius: 8px;	
 }
 
+.tabbody .results {
+	margin: 8px 4px 0 4px;
+	border-width: 1px 0 0 0;
+	-webkit-border-bottom-right-radius: 8px;	
+	-webkit-border-bottom-left-radius: 8px;	
+}
+
 .tabbody .nested {
 	margin: 0px;
 	border: 1px solid #ccc;
@@ -685,7 +692,7 @@ ul.focal li:first-child {
 }
 
 .sidenav {
-	margin: 1.2em 8px;
+	margin: 12px 8px;
 	color: #a0a09f;
 }
 
@@ -1011,13 +1018,13 @@ h2.icon {
 	-webkit-border-top-right-radius: 7px;	
 	-webkit-border-top-left-radius: 7px;	
 	text-align: center;
-	padding: 4px 10px 5px 10px;
+	padding: 6px 10px 7px 10px;
 }
 
 #tabs li.active {
 	margin-top: -1px;
-	padding-top: 5px;
-	padding-bottom: 6px;
+	padding-top: 7px;
+	padding-bottom: 8px;
 }
 
 #tabs li a {
@@ -1034,7 +1041,7 @@ h2.icon {
 }
 
 #tabbodies {
-	margin: -21px -12px 0 -12px;
+	margin: -12px -12px 0 -12px;
 	clear: both;
 	border-top: 1px solid #bbb;
 	-webkit-border-bottom-right-radius: 8px;	
@@ -1052,7 +1059,8 @@ h2.icon {
 }
 
 .tabbody h3 {
-	margin-top: 22px;
+	margin-top: 16px;
+	padding-top: 4px;
 }
 
 .tabbody h3:first-child {

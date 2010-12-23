@@ -208,11 +208,11 @@ class TransitModule extends Module {
           }
         }
         
-        $mapImageWidth = 270;
+        $mapImageWidth = 298;
         if ($this->pagetype == 'basic') {
           $mapImageWidth = 200;
         }
-        $mapImageHeight = floor($mapImageWidth/2);
+        $mapImageHeight = floor($mapImageWidth/1.5);
         
         $this->assign('mapImageSrc',    $view->getMapImageForStop($stopID, $mapImageWidth, $mapImageHeight));
         $this->assign('mapImageWidth',  $mapImageWidth);
