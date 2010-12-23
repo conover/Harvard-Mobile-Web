@@ -324,8 +324,11 @@ a.module img {
 }
 
 .homepage .moduleicon {
-    display: inline-block;
     padding: 8px 6px 8px 4px;
+}
+
+*:first-child+html .homepage .moduleicon {
+	float: left;
 }
 
 .crumb1 {
@@ -335,6 +338,7 @@ a.module img {
 .crumb2a  {
 	max-width: 60px;
 }
+
 .crumb2b  {
 	max-width: 60px;
 }
@@ -343,21 +347,25 @@ a.module img {
 	max-width: 40px;
   	display: none !important; /* hidden for now because it doesn't fit */
 }
+
 .crumb3b {
 	max-width: 60px;
 }
+
 .crumb3c {
 	max-width: 60px;
 }
 
 .pagetitle {
+	display: inline-block;
 	font-weight: bold;
-	margin-left: -4px;	
+	margin-left: -6px;	
 	vertical-align: top;
 	line-height: 44px;
 }
 
 .homepage .pagetitle {
+	display: inline;
 	max-width: 210px;
 }
 
