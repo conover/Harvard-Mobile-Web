@@ -803,11 +803,12 @@ class LibrariesModule extends Module {
         $hours = array();
         if (count($data['weeklyHours'])) {
           foreach ($data['weeklyHours'] as $entry) {
-            $hours[] = array(
+            $hours[$entry['date']] = array(
               'label' => $this->formatDetail($entry, 'day'),
               'title' => $this->formatDetail($entry, 'hours'),
             );
           }
+          $hours = array_values($hours);
         }
         if (!count($hours)) {
           $this->redirectTo('locationAndHours', array(
