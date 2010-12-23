@@ -338,14 +338,18 @@ class Libraries{
                  $type = $type[0];
                  $id = explode(":", $institution->id[0]);
                  $id = $id[0];
-
-                 $directionArray = explode(":",$institution->location->directions[0]);
-                 $direction = $directionArray[0];
-                 for ($j=1; $j < count($directionArray); $j++){
-                    $direction .= ":" .$directionArray[$j];
-                 }  
-                 $direction = HTML2TEXT($direction);
                   
+                 $direction = strval($institution->location->directions[0]);
+                 $test = trim(preg_replace(';<a\s+href="[^"]*"[^>]*>[^<]*</a>;', '', $direction));
+                 if (strlen($test)) {
+                    $direction = $test;
+                 } else if (preg_match(';<a\s+href="([^"]+)"[^>]*>[^<]*</a>;', $direction, $matches)) {
+                    if (isset($matches[1]) && strlen($matches[1])) {
+                      $direction = $matches[1];
+                    }
+                 }
+                 $direction = HTML2TEXT($direction);
+                 
                  $addressArray = explode(":",$institution->location->address[0]);
                  $address = $addressArray[0];
                  for ($j=1; $j < count($addressArray); $j++){
