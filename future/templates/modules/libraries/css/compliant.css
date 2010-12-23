@@ -31,11 +31,20 @@
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 20px;
+  -o-background-size: 20px;
+  -moz-background-size: 20px;
+  -khtml-background-size: 20px;
   -webkit-background-size: 20px;
+/* Need IE/WP7 CSS hack here to get high-res background images */
   font-size: 15px;
   font-weight: normal;
   line-height: 18px;
-*/
+}
+
+.distance {
+  font-size: 15px;
+  font-weight: normal;
+  line-height: 18px;
 }
 
 .items ul.nav {
@@ -48,13 +57,13 @@
   line-height: 20px;
 }
 .available {
-  background-image: url(/modules/libraries/images/available@2x.png);
+  background-image: url(/modules/libraries/images/available.png);
 }
 .requestable {
-  background-image: url(/modules/libraries/images/requestable@2x.png);
+  background-image: url(/modules/libraries/images/requestable.png);
 }
 .unavailable {
-  background-image: url(/modules/libraries/images/unavailable@2x.png);
+  background-image: url(/modules/libraries/images/unavailable.png);
 }
 
 .nav .wrapper {

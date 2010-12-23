@@ -75,7 +75,7 @@
       {foreach $statusImages as $statusImage}
         <ul class="iconlegend col">
           <li>
-            <img src="/modules/{$moduleID}/images/{$statusImage['src']}.png" width="20" height="20" alt="{$statusImage['alt']}"/>
+            <img src="/modules/{$moduleID}/images/{$statusImage['src']}@2x.png" width="20" height="20" alt="{$statusImage['alt']}"/>
             {$statusImage['title']}
           </li>
         </ul>    

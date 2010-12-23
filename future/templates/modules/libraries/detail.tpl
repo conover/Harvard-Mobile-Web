@@ -43,7 +43,7 @@
   {capture name="title" assign="title"}
     {block name="locationHeader"}
       <strong>{$location['name']}</strong><br/>
-      <div id="location_{$location['id']}"></div>
+      <div class="distance" id="location_{$location['id']}"></div>
     {/block}
     {foreach $location['collections'] as $collection}
       {foreach $collection['items'] as $info}

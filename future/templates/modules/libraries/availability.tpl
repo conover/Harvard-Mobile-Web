@@ -8,7 +8,7 @@
       </a>
       {$location['name']}
     </h2>
-    <span class="smallprint">
+    <span class="distance">
       {if $location['hours'] && $location['hours'] != 'closed'}
         Open today {$location['hours']}
       {else}
