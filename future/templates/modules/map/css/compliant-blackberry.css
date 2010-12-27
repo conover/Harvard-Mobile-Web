@@ -4,9 +4,5 @@
 
 .tabbody #mapscrollers {
 	top: 0;	
-	left: 50%;
 	margin-left: -152px;
-	width: 294px;
-	height: 192px;
-	bottom: 44px;
 }
