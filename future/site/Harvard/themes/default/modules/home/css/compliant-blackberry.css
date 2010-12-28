@@ -15,8 +15,8 @@
 
 .springboard div.utility a img {
 	/* Size of actual item icon in the springboard's fixed utility-type items */
-	width: 64px;
-	height: 64px;
+	width: 32px;
+	height: 32px;
 }
 
 #download {

@@ -2,7 +2,6 @@
     {include file="findInclude:common/header.tpl"}
 {/block}
 
-
 <div class="news">
   <h1 class="slugline">{$title}</h1>
   
@@ -29,6 +28,5 @@
   
   {include file="findInclude:common/pager.tpl"}
 </div>
-
 
 {include file="findInclude:common/footer.tpl"}

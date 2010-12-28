@@ -56,15 +56,10 @@
 .homelink {
     float: left;
 }
-.pagetitlecontainer {
-    position: relative;
-    display: inline-block;
-}
-.pagetitle {
-    position: absolute;
+/*.pagetitle {
     margin-top:-2.7em;
     margin-left: 0.2em;
-}
+}*/
 
 
 
