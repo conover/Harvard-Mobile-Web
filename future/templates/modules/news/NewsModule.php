@@ -142,12 +142,12 @@ class NewsModule extends Module {
         }
         
         if (!$content = $story->getProperty('content')) {
-            if ($url = $story->getProperty('link')) {
-                header("Location: $url");
-                exit();
-            } else {
-                throw new Exception("No content or link found for story $storyID");
-            }
+          if ($url = $story->getProperty('link')) {
+              header("Location: $url");
+              exit();
+          } else {
+              throw new Exception("No content or link found for story $storyID");
+          }
         }
         
         $placeholder = ''; 
@@ -209,9 +209,9 @@ class NewsModule extends Module {
             }
           }
 
-               $extraArgs = array(
-                'section'=>$this->feedIndex
-            );
+          $extraArgs = array(
+            'section'=>$this->feedIndex
+          );
 
           $this->assign('extraArgs',     $extraArgs);
           $this->assign('searchTerms', $searchTerms);
@@ -265,7 +265,7 @@ class NewsModule extends Module {
         }
         
         $hiddenArgs = array(
-            'section'=>$this->feedIndex
+          'section'=>$this->feedIndex
         );
         
         $this->assign('hiddenArgs',     $hiddenArgs);

@@ -60,10 +60,6 @@ if (preg_match(';^.*favicon.ico$;', $path, $matches)) {
       }        
     }
   }
-  
-  // image not found
-  header("HTTP/1.0 404 Not Found");
-  exit;
 
 } else if (preg_match(';^.*media/(.*)$;', $path, $matches)) {
   //
@@ -162,8 +158,8 @@ if (preg_match(';^.*favicon.ico$;', $path, $matches)) {
 }
 
 //
-// Unsupported Request
+// Unsupported Request or File Not Found
 //
 
-header('Status: 404 Not Found');
-die;
+header("{$_SERVER['SERVER_PROTOCOL']} 404 Not Found");
+exit;
