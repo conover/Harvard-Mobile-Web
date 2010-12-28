@@ -236,6 +236,24 @@ abstract class Module {
     
     return "$page.php".(strlen($argString) ? "?$argString" : "");
   }
+  
+  protected function buildMailtoLink($to, $subject, $body) {
+    $to = trim($to);
+    
+    // Some old blackberries don't like empty email links
+    if ($to == '' && 
+        $this->pagetype == 'basic' && 
+        $this->platform == 'blackberry') {
+      $to = '@';
+    }
+
+    $url = "mailto:{$to}?".http_build_query(array("subject" => $subject, 
+                                                  "body" => $body));
+    // mailto url's do not respect '+' (as space) so we convert to %20
+    $url = str_replace('+', '%20', $url); 
+    
+    return $url;
+  }
 
   protected function redirectToModule($id, $args=array()) {
     $url = URL_BASE."{$id}/?". http_build_query($args);
