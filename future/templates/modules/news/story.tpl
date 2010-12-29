@@ -6,9 +6,9 @@
   <h1 class="slugline">{$title}</h1>
 
   <div id="storysubhead">
-      {include file="findInclude:common/share.tpl" urlToBeShared={$storyURL}
-      shareRemark={$title} shareEmailUrl={$shareEmailURL}}
-      
+    {include file="findInclude:common/share.tpl" urlToBeShared={$storyURL}
+    shareRemark={$shareRemark} shareEmailUrl={$shareEmailURL}}
+            
     {if $pager['pageNumber'] == 0}
         <p class="byline">
           {block name="byline"}
@@ -20,7 +20,7 @@
             <span class="postdate">{$date}</span>
           {/block}
         </p>    
-    {/if}
+    {/if}        
   </div><!--storysubhead-->
   
     
