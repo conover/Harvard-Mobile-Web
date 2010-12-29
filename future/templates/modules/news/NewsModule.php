@@ -150,12 +150,12 @@ class NewsModule extends Module {
             }
         }
         
-        $shareUrl = "mailto:@?".http_build_query(array(
+        $shareEmailURL = "mailto:@?".http_build_query(array(
           "subject" => $story->getTitle(),
           "body"    => $story->getDescription()."\n\n".$story->getLink()
         ));
         // mailto url's do nor respect '+' (as space) so we convert to %20
-        $shareUrl = str_replace('+', '%20', $shareUrl);
+        $shareEmailURL = str_replace('+', '%20', $shareEmailURL);
 
         $pubDate = strtotime($story->getProperty("pubDate"));
         $date = date("M d, Y", $pubDate);
@@ -163,7 +163,8 @@ class NewsModule extends Module {
         $this->enablePager($content, $this->feed->getEncoding(), $storyPage);
         
         $this->assign('date',     $date);
-        $this->assign('shareUrl', $shareUrl);
+        $this->assign('storyURL', $story->getLink());
+        $this->assign('shareEmailURL', $shareEmailURL);
         $this->assign('title',    $story->getTitle());
         $this->assign('author',   $story->getProperty('harvard:author'));
         $this->assign('image',    $this->getImageForStory($story));
