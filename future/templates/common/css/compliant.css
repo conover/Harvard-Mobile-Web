@@ -1245,3 +1245,66 @@ h2.icon {
   width: auto;
   text-align: center;
 }
+
+#share {
+	float: right;
+	margin: -12px 0 0 8px;
+}
+#sharesheet {
+	visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+}
+#shareback {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 200%;
+	background-color: #333;
+	opacity: 0.5;
+	-webkit-opacity: 0.5;
+	-moz-opacity: 0.5;
+	filter: alpha(opacity=67); /* IE */
+}
+#sharedialog {
+	position: absolute;
+	top: 80px;
+	left: 50%;
+	width: 260px;
+	margin-left: -140px;
+	-webkit-border-radius: 10px;
+	padding: 10px;
+	background: #ddd; /* Non-CSS3 browsers */
+	background: -webkit-gradient(linear, left top, left bottom, from(#f9f9f9), to(#d0d0d0)); /* Webkit browsers */
+	background: -moz-linear-gradient(top,  #f9f9f9,  #d0d0d0); /* Firefox 3.6+ */
+	-moz-box-shadow: 0px 3px 7px #333;
+	-webkit-box-shadow: 0px 3px 7px #333;
+	box-shadow: 0px 3px 7px #333;
+}
+#sharedialog h1 {
+	color: #333;
+	font: 16pt/1.33em sans-serif;
+	margin-bottom: 6px
+}
+#sharedialog ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+#sharedialog a {
+	display: block;
+	text-decoration: none;
+	padding: 6px 0;
+	line-height: 32px;
+	color: #000;
+}
+#sharedialog a img {
+	float: left;
+	margin-right: 6px;
+	border: none;
+}

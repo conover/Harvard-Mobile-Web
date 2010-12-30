@@ -1,22 +1,31 @@
-<div class="share">
-Share article:
-    
-    <ul>
-        <li>
-            {block name="shareImage"}
-              <a href="{$shareEmailUrl}"><img src="/common/images/share.png"/></a>Email
-            {/block}
-        </li>
-        {block name="shareOnFacebook"}
-            <li>
-                <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-                <fb:like href="{$urlToBeShared}" layout="button_count" show_faces="false" width="100" action="recommend"></fb:like>
-            </li>
-        {/block}
-        {block name="shareOnTwitter"}
-            <li>
-                <a href="http://twitter.com/share?url={$urlToBeShared}&amp;text={$shareRemark}&amp;Via=Harvard">Tweet this</a>         
-            </li>
-        {/block}
-    </ul>
+<div id="share">
+	<a onclick="showShare()"><img src="/device/compliant/common/images/share.png"/></a>
+	<div id="sharesheet">
+		<div id="shareback"> </div>
+		<div id="sharedialog">
+			<h1>Share this story</h1>
+			<ul>
+				<li><a href="mailto:?"><img src="/device/compliant/common/images/button-email.png" alt="" width="32" height="32" />Email</a></li>
+				<li>
+				    <!--
+				    <a href="https://graph.facebook.com/oauth/authorize?
+                        client_id=API_KEY&
+                        redirect_uri=http://{$smarty.server.SERVER_NAME}{$smarty.server.REQUEST_URI}&
+                        display=touch">
+				        <img src="/device/compliant/common/images/button-facebook.png" 
+				        alt="" width="32" height="32" />Facebook
+				    </a>
+				    -->
+				    <img src="/device/compliant/common/images/button-facebook.png" 
+			        alt="" width="32" height="32" />Facebook
+				</li>
+				<li>
+				    <a href="http://m.twitter.com/share?url={$urlToBeShared}&amp;text={$shareRemark}&amp;Via=Harvard">
+				        <img src="/device/compliant/common/images/button-twitter.png" alt="" width="32" height="32" />Twitter
+				    </a>
+                </li>
+			</ul>
+			<a onclick="hideShare()">Cancel</a>
+		</div>
+	</div>
 </div>
