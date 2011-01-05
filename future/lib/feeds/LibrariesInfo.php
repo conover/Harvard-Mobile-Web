@@ -1,10 +1,9 @@
 <?php
 
-//require_once 'lib_constants.inc';
 require_once realpath(LIB_DIR.'/feeds/html2text.php');
 require_once realpath(LIB_DIR.'/DiskCache.php');
 
-class Libraries{
+class Libraries {
   private static $cache = null;
 
   private static function getLibraryCache() {
@@ -48,55 +47,55 @@ class Libraries{
   }
   
   public static function getLibrarySearchCodes() {
-      $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_OPTS');
-        
-      $xml_obj = self::query('librariesOpts', $xmlURLPath);
+    $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_OPTS');
       
-      $codes = array();
-      for ($i = 0; isset($xml_obj->refinebylibrary->label[$i]); $i++) {
-        $code = strval($xml_obj->refinebylibrary->value[$i]);
-        if ($code) {
-          $codes[$code] = strval($xml_obj->refinebylibrary->label[$i]);
-        }
+    $xml_obj = self::query('librariesOpts', $xmlURLPath);
+    
+    $codes = array();
+    for ($i = 0; isset($xml_obj->refinebylibrary->label[$i]); $i++) {
+      $code = strval($xml_obj->refinebylibrary->value[$i]);
+      if ($code) {
+        $codes[$code] = strval($xml_obj->refinebylibrary->label[$i]);
       }
-      
-      return $codes;
+    }
+    
+    return $codes;
   }
 
   public static function getFormatSearchCodes() {
-      $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_OPTS');
-        
-      $xml_obj = self::query('librariesOpts', $xmlURLPath);
+    $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_OPTS');
       
-      $codes = array();
-      for ($i = 0; isset($xml_obj->refinebyformat->label[$i]); $i++) {
-        $code = strval($xml_obj->refinebyformat->value[$i]);
-        if ($code) {
-          $codes[$code] = strval($xml_obj->refinebyformat->label[$i]);
-        }
+    $xml_obj = self::query('librariesOpts', $xmlURLPath);
+    
+    $codes = array();
+    for ($i = 0; isset($xml_obj->refinebyformat->label[$i]); $i++) {
+      $code = strval($xml_obj->refinebyformat->value[$i]);
+      if ($code) {
+        $codes[$code] = strval($xml_obj->refinebyformat->label[$i]);
       }
-      
-      return $codes;
+    }
+    
+    return $codes;
   }
 
-    public static function getAllLibraries() {
+  public static function getAllLibraries() {
 
-      $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
-        
-      $xml_obj = self::query('librariesInfo', $xmlURLPath);
-        
-      return self::getAllLibrariesOrArchives('library', $xml_obj);
-    }
-
-
-    public static function getAllArchives() {
-
-      $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
-        
-      $xml_obj = self::query('librariesInfo', $xmlURLPath);
+    $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
       
-      return self::getAllLibrariesOrArchives('archive', $xml_obj);
-    }
+    $xml_obj = self::query('librariesInfo', $xmlURLPath);
+      
+    return self::getAllLibrariesOrArchives('library', $xml_obj);
+  }
+
+
+  public static function getAllArchives() {
+
+    $xmlURLPath = $GLOBALS['siteConfig']->getVar('URL_LIBRARIES_INFO');
+      
+    $xml_obj = self::query('librariesInfo', $xmlURLPath);
+    
+    return self::getAllLibrariesOrArchives('archive', $xml_obj);
+  }
 
 
     public static function getAllLibrariesOrArchives($librariesOrArchives, $xml_obj) {
@@ -1005,21 +1004,21 @@ class Libraries{
                 $collectionGrouping['collectionName'] = $collectionNamesList[$i];
                 
             for($j=0; $j < count($statsList); $j++){
-            $statArr = array();
-
-            $availCount = 0;
-            $requestCount = 0;
-            $unavailCount = 0;
-            $checkedOutCount = 0;
-            $scanAndDeliverCount = 0;
-            $callNo = "";
-            $statArr['collectionName'] = $collectionName;
-            $statArr['statMain'] = $statsList[$j];
-
-            $statArr['availableItems'] = array();
-            $statArr['checkedOutItems'] = array();
-            $statArr['unavailableItems'] = array();
-            $statArr['collectionOnlyItems'] = array();
+                $statArr = array();
+      
+                $availCount = 0;
+                $requestCount = 0;
+                $unavailCount = 0;
+                $checkedOutCount = 0;
+                $scanAndDeliverCount = 0;
+                $callNo = "";
+                $statArr['collectionName'] = $collectionName;
+                $statArr['statMain'] = $statsList[$j];
+      
+                $statArr['availableItems'] = array();
+                $statArr['checkedOutItems'] = array();
+                $statArr['unavailableItems'] = array();
+                $statArr['collectionOnlyItems'] = array();
 
                 $oldCallNo = "";
                 $allCallNumbersSame = true;

@@ -16,14 +16,11 @@
 
 {block name="itemTitle"}
   <img src="/modules/{$moduleID}/images/{$class}.gif" alt="" />
-  {$info['count']}
-  {if $type == 'available'}
-    available
-  {elseif $type == 'collection'}
-    may be available
-  {elseif $info['status']}
-    {$info['status']}
-  {else}
-    {$type}
-  {/if}
+  {$item['count']}
+  {if $item['status'] == 'collection'}may be available{else}{$item['status']}{/if}
+  {if $item['secondary']}({$item['secondary']}){/if}<br/>
+  <span class="smallprint">
+    {if $item['callNumber']}{$item['callNumber']}{if $item['description']}, {/if}{/if}
+    {if $item['description']}{$item['description']}{/if}
+  </span>
 {/block}

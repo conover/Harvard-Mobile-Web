@@ -1,18 +1,18 @@
-<a name="search" />
+<a name="search"></a>
 <div class="nonfocal">
   <form method="get" action="search.php">
     <table class="search" width="100%">
       <tr>
         <th align="right" width="6em"><label for="keywords">Keywords:</label></th>
-        <td class="wrap"><div><input type="text" id="keywords" name="keywords" value="{$keywords}" /></div></td>
+        <td class="wrap"><div><input type="text" id="keywords" name="keywords" value="{$keywords|escape}" /></div></td>
       </tr>
       <tr>
         <th align="right" width="6em"><label for="title">Title:</label></th>
-        <td class="wrap"><div><input type="text" id="title" name="title" value="{$title}" /></div></td>
+        <td class="wrap"><div><input type="text" id="title" name="title" value="{$title|escape}" /></div></td>
       </tr>
       <tr>
         <th align="right" width="6em"><label for="author">Author:</label></th>
-        <td class="wrap"><div><input type="text" id="author" name="author" value="{$author}" /></div></td>
+        <td class="wrap"><div><input type="text" id="author" name="author" value="{$author|escape}" /></div></td>
       </tr>
       <tr>
         <th align="right" width="6em"><label for="format">Format:</label></th>
@@ -30,6 +30,20 @@
           {/foreach}
          </select></td>
       </tr>
+      <tr>
+        <th align="right" width="6em"><label for="pubDate">Pub Date:</label></th>
+        <td><select id="pubDate" name="pubDate">
+          {foreach $pubDates as $key => $value}
+            <option value="{$key}"{if strval($key) == $pubDate} selected="selected"{/if}>{$value}</option>
+          {/foreach}
+         </select></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td>
+          <input type="checkbox" id="language" name="language" value="english"{if $englishOnly} checked="checked"{/if} />
+          <label for="language">English language only</label>
+        </td>
     </table>
     <input type="hidden" name="advanced" value="1" />
     {if $page == 'search'}

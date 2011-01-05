@@ -7,15 +7,15 @@
  *
  *****************************************************************/
 
-require_once realpath(LIB_DIR.'/feeds/LibrariesInfo.php');
+require_once realpath(LIB_DIR.'/feeds/Libraries.php');
 error_log("COMMAND {$_REQUEST['command']}");
 switch ($_REQUEST['command']) {
     case 'libraries':
-        $data = Libraries::getAllLibraries();
+        $data = Libraries::getLibraries();
         break;
 
     case 'archives':
-        $data = Libraries::getAllArchives();
+        $data = Libraries::getArchives();
         break;
 
     case 'opennow':

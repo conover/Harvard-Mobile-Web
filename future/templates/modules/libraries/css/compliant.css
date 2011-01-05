@@ -111,22 +111,26 @@
 table.search {
   border: none;
 }
+table.search th, table.search td {
+  vertical-align: middle;
+  padding: 0px 0px 9px 0px;
+  font-size: 16px;
+}
 table.search th {
   text-align: right;
   font-weight: bold;
-  width: 5.5em;
+  width: 5em;
+  padding-right: 2px;
 }
-table.search th, table td {
-  vertical-align: baseline;
-}
-table.search td.wrap {
-  padding-right: 14px; /* handle input padding */
+table.search td.wrap div {
+  margin-right: 5px;  /* handle input padding */
 }
 
-table.search input, table.search select {
+table.search input[type=text], table.search select {
   margin: 0;
   width: 99.9%;
   line-height: 22px;
+  font-size: 16px;
 }
 
 .label {

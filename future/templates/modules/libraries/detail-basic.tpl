@@ -21,9 +21,7 @@
 {/block}
 
 {block name="item"}
-  <img src="/modules/{$moduleID}/images/{$class}.gif" alt="" />
-  {$info['available']} of {$info['total']}
-  {if $info['type'] != collection}available - {$info['type']}{else}restricted{/if}<br/>
+  <img src="/modules/{$moduleID}/images/{$class}.gif" alt="" /> {$itemText}<br/>
 {/block}
 
 {block name="fulllist"}

@@ -443,8 +443,8 @@ class Libraries {
     return self::getInstitutionDetails('archive', $id, $preferredName);
   }
 
-  public static function searchItems($queryTerms, $locationTerms='', $formatTerms='') {
-    $xml = self::query("search-{$queryTerms}-loc:{$locationTerms}-fmt:{$formatTerms}", 
+  public static function searchItems($queryTerms, $locationTerms='', $formatTerms='', $pubDateTerms='', $page=1) {
+    $xml = self::query("search-{$queryTerms}-loc:{$locationTerms}-fmt:{$formatTerms}-date:{$pubDateTerms}-p:{$page}", 
       'URL_LIBRARIES_SEARCH_BASE', 
       http_build_query(array(
         'q'   => $queryTerms, 
@@ -453,17 +453,24 @@ class Libraries {
       ))
     );
     
-    $results = array();
-    $total = self::getField($xml, 'totalResults');
+    $results = array(
+      'total'    => self::getField($xml, 'totalResults', 0),
+      'start'    => self::getField($xml, 'startIndex', 0),
+      'end'      => 0,
+      'pagesize' => self::getField($xml, 'itemsPerPage', 0),
+      'items'    => array(),
+    );
     
     if (isset($xml->resultSet, $xml->resultSet->item)) {
       foreach ($xml->resultSet->item as $item) {
         $namespaces = $item->getNameSpaces(true);
         $dc = $item->children($namespaces['dc']);
 
-        $results[] = array(
-          'totalResults' => $total,
-          'index'        => self::getField($item, 'position'),
+        $index = self::getField($item, 'position');
+        if ($index > $results['end']) { $results['end'] = $index; }
+
+        $results['items'][] = array(
+          'index'        => $index,
           'itemId'       => self::getField($item, 'id'),
           'creator'      => self::getField($dc,   'creator'),
           'title'        => self::getField($dc,   'title'),
@@ -615,7 +622,7 @@ class Libraries {
           }
           
           $itemsByStat['collection'] = array(
-            'statMain'            => $statMain,
+            'statMain'            => 'collection',
             'availableItems'      => array(),
             'checkedOutItems'     => array(),
             'unavailableItems'    => array(),
