@@ -51,17 +51,17 @@ switch ($_REQUEST['command']) {
     break;
 
   case 'fullavailability':
-    $itemid = getArg('itemid');
+    $itemid = getArg('itemId');
     $data = Libraries::getFullAvailability($itemid);
     break;
 
   case 'itemdetail':
-    $itemid = getArg('itemid');
+    $itemid = getArg('itemId');
     $data = Libraries::getItemRecord($itemid);
     break;
 
   case 'imagethumbnail':
-    $imageId = getArg('itemid');
+    $imageId = getArg('itemId');
     $data = Libraries::getImageThumbnail($imageId);
     break;
   
