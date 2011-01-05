@@ -559,7 +559,7 @@ class LibrariesModule extends Module {
         
         $locations = $searchConfig['locations'] + Libraries::getLibrarySearchCodes();
         $formats   = $searchConfig['formats']   + Libraries::getFormatSearchCodes();
-        $pubDates  = $searchConfig['pubDates'];
+        $pubDates  = $searchConfig['pubDates']  + Libraries::getPubDateSearchCodes();
         
         $this->assign('locations', $locations);
         $this->assign('formats',   $formats);
@@ -571,27 +571,22 @@ class LibrariesModule extends Module {
 
         $locations = $searchConfig['locations'] + Libraries::getLibrarySearchCodes();
         $formats   = $searchConfig['formats']   + Libraries::getFormatSearchCodes();
-        $pubDates  = $searchConfig['pubDates'];
+        $pubDates  = $searchConfig['pubDates']  + Libraries::getPubDateSearchCodes();
         
-        $keywords     = trim($this->getArg('keywords'));
-        $title        = trim($this->getArg('title'));
-        $author       = trim($this->getArg('author'));
-        $locationTerm = $this->getArg('location');
-        $formatTerm   = $this->getArg('format');
-        $pubDateTerm  = $this->getArg('pubDate');
-        $englishOnly  = $this->getArg('language') == 'english';
-        $page         = $this->getArg('page', 1);
-        if ($page < 1) { $page = 1; }
-
-        $searchTermArray = array();
-        if ($keywords   ) { $searchTermArray[] = '"'.$keywords.'"'; }
-        if ($title      ) { $searchTermArray[] = 'ex-Everything-1.0:"'.$title.'"'; }
-        if ($author     ) { $searchTermArray[] = 'author:"'.$author.'"'; }
-        if ($englishOnly) { $searchTermArray[] = 'language-id:eng'; }
-        $searchTerms = implode('+', $searchTermArray);
+        $keywords   = trim($this->getArg('keywords'));
+        $title      = trim($this->getArg('title'));
+        $author     = trim($this->getArg('author'));
+        $location   = $this->getArg('location');
+        $format     = $this->getArg('format');
+        $pubDate    = $this->getArg('pubDate');
+        $language   = $this->getArg('language');
+        $pageNumber = $this->getArg('page', 1);
         
-        if ($locationTerm == 'any' || $locationTerm == 'all') { $locationTerm = ''; }
-        if ($formatTerm   == 'any' || $formatTerm   == 'all') { $formatTerm   = ''; } 
+        // Sanity check arguments
+        if ($pageNumber < 1) { $pageNumber = 1; }
+        if ($location == 'any' || $location == 'all') { $location = ''; }
+        if ($format   == 'any' || $format   == 'all') { $format   = ''; } 
+        if ($pubDate  == 'any' || $pubDate  == 'all') { $pubDate  = ''; } 
         
         $firstIndex = 1;
         $lastIndex = 1;
@@ -599,9 +594,16 @@ class LibrariesModule extends Module {
         $pageSize = 0;
         $pageCount = 0;
         $results = array();
-        if ($searchTerms) {
+        if ($keywords || $title || $author) {
           $results = array();
-          $data = Libraries::searchItems($searchTerms, $locationTerm, $formatTerm, $pubDateTerm, $page);
+          $data = Libraries::searchItems($keywords, array(
+            'title'    => $title,
+            'author'   => $author,
+            'location' => $location, 
+            'format'   => $format, 
+            'pubDate'  => $pubDate,
+            'language' => $language,
+          ), $pageNumber);
           //error_log(print_r($data, true));
           
           if (count($data['items'])) {
@@ -609,7 +611,7 @@ class LibrariesModule extends Module {
             $firstIndex = $data['start'];
             $lastIndex  = $data['end'];
             $pageSize   = $data['pagesize'];            
-            $pageCount  = ceil($totalCount / count($data));
+            $pageCount  = ceil($totalCount / $pageSize);
           }
           foreach ($data['items'] as $item) {
             $results[] = $this->getItemDetails($item);
@@ -618,24 +620,24 @@ class LibrariesModule extends Module {
 
         $prevURL = '';
         $nextURL = '';
-        if ($page > 1) {
+        if ($pageNumber > 1) {
           $args = $this->args;
-          $args['page'] = $page-1;
+          $args['page'] = $pageNumber-1;
           $prevURL = $this->buildBreadcrumbURL($this->page, $args, false);
         }
-        if ($page < $pageCount) {
+        if ($pageNumber < $pageCount) {
           $args = $this->args;
-          $args['page'] = $page+1;
+          $args['page'] = $pageNumber+1;
           $nextURL = $this->buildBreadcrumbURL($this->page, $args, false);
         }
         
         $this->assign('keywords',    $keywords);
         $this->assign('title',       $title);
         $this->assign('author',      $author);
-        $this->assign('location',    $locationTerm);
-        $this->assign('format',      $formatTerm);
-        $this->assign('pubDate',     $pubDateTerm);
-        $this->assign('englishOnly', $englishOnly);
+        $this->assign('location',    $location);
+        $this->assign('format',      $format);
+        $this->assign('pubDate',     $pubDate);
+        $this->assign('language',    $language);
         
         $this->assign('locations',   $locations);
         $this->assign('formats',     $formats);
@@ -646,7 +648,7 @@ class LibrariesModule extends Module {
         $this->assign('lastIndex',   $lastIndex);
         $this->assign('totalCount',  $totalCount);
         
-        $this->assign('page',        $page);
+        $this->assign('pageNumber',  $pageNumber);
         $this->assign('pageCount',   $pageCount);
         $this->assign('pageSize',    $pageSize);
         $this->assign('prevURL',     $prevURL);

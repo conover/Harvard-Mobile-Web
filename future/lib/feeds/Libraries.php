@@ -423,6 +423,14 @@ class Libraries {
     return $codes;
   }
   
+  public static function getPubDateSearchCodes() {
+    $end = intval(strftime('%Y'));
+    return array(
+      ($end-3)."-$end"  => 'In the last 3 years',
+      ($end-10)."-$end" => 'In the last 10 years', 
+    );
+  }
+  
   public static function getLibraries() {
     return self::getInstitutionsByType('library');
   }
@@ -443,19 +451,48 @@ class Libraries {
     return self::getInstitutionDetails('archive', $id, $preferredName);
   }
 
-  public static function searchItems($queryTerms, $locationTerms='', $formatTerms='', $pubDateTerms='', $page=1) {
-    $xml = self::query("search-{$queryTerms}-loc:{$locationTerms}-fmt:{$formatTerms}-date:{$pubDateTerms}-p:{$page}", 
-      'URL_LIBRARIES_SEARCH_BASE', 
-      http_build_query(array(
-        'q'   => $queryTerms, 
-        'lib' => $locationTerms, 
-        'fmt' => $formatTerms,
-      ))
+  public static function searchItems($keywords, $searchParams=array(), $page=1) {
+    $qParamMapping = array(
+      'title'    => 'ex-Everything-1.0',
+      'author'   => 'author',
+      'language' => 'language-id',
+      'pubDate'  => 'ex-Everything-6.0',
     );
+    $getParamMapping = array(
+      'format'   => 'fmt', 
+      'location' => 'lib', 
+    );
+  
+    $queryTermArray = array();
+    if (trim($keywords)) { $queryTermArray[] = $keywords; }
+    foreach ($qParamMapping as $searchParam => $qParam) {
+      if (isset($searchParams[$searchParam]) && trim($searchParams[$searchParam])) {
+        $value = trim($searchParams[$searchParam]);
+        if (strpos($value, ' ') !== FALSE) {
+          $value = '"'.$value.'"';
+        }
+        $queryTermArray[] = "{$qParam}:$value";
+      }      
+    }
+    
+    $args = array(
+      'q'       => implode(' ', $queryTermArray), 
+      'curpage' => $page,
+    );
+    foreach ($getParamMapping as $searchParam => $getParam) {
+      if (isset($searchParams[$searchParam]) && trim($searchParams[$searchParam])) {
+        $args[$getParam] = trim($searchParams[$searchParam]);
+      }
+    }
+    $urlSuffix = http_build_query($args);
+  
+    $xml = self::query("search-{$urlSuffix}", 
+      'URL_LIBRARIES_SEARCH_BASE', $urlSuffix);
     
     $results = array(
+      'q'        => $args['q'],
       'total'    => self::getField($xml, 'totalResults', 0),
-      'start'    => self::getField($xml, 'startIndex', 0),
+      'start'    => 0,
       'end'      => 0,
       'pagesize' => self::getField($xml, 'itemsPerPage', 0),
       'items'    => array(),
@@ -468,7 +505,7 @@ class Libraries {
 
         $index = self::getField($item, 'position');
         if ($index > $results['end']) { $results['end'] = $index; }
-
+        if ($results['start'] > $index || $results['start'] < 1) { $results['start'] = $index; }
         $results['items'][] = array(
           'index'        => $index,
           'itemId'       => self::getField($item, 'id'),

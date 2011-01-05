@@ -19,13 +19,15 @@
 {block name="pageControls"}
   {if $prevURL}
     {$prevPageItem = array()}
-    {$prevPageItem['title'] = "Previous results"}
+    {capture name="prevTitle" assign="prevTitle"}Previous {$pageSize} results{/capture}
+    {$prevPageItem['title'] = $prevTitle}
     {$prevPageItem['url'] = $prevURL}
     {$tmp = array_unshift($items, $prevPageItem)}
   {/if}
   {if $nextURL}
     {$nextPageItem = array()}
-    {$nextPageItem['title'] = "Next results"}
+    {capture name="nextTitle" assign="nextTitle"}Next {$pageSize} results{/capture}
+    {$nextPageItem['title'] = $nextTitle}
     {$nextPageItem['url'] = $nextURL}
     {$tmp = array_push($items, $nextPageItem)}
   {/if}

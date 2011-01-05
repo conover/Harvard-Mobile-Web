@@ -41,7 +41,7 @@
       <tr>
         <th></th>
         <td>
-          <input type="checkbox" id="language" name="language" value="english"{if $englishOnly} checked="checked"{/if} />
+          <input type="checkbox" id="language" name="language" value="eng"{if $language == 'eng'} checked="checked"{/if} />
           <label for="language">English language only</label>
         </td>
     </table>
