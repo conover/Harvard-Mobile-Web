@@ -585,7 +585,7 @@ class LibrariesModule extends Module {
 
         $searchTermArray = array();
         if ($keywords   ) { $searchTermArray[] = '"'.$keywords.'"'; }
-        if ($title      ) { $searchTermArray[] = 'title:"'.$title.'"'; }
+        if ($title      ) { $searchTermArray[] = 'ex-Everything-1.0:"'.$title.'"'; }
         if ($author     ) { $searchTermArray[] = 'author:"'.$author.'"'; }
         if ($englishOnly) { $searchTermArray[] = 'language-id:eng'; }
         $searchTerms = implode('+', $searchTermArray);
