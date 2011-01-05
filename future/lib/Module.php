@@ -775,9 +775,10 @@ abstract class Module {
     return 0;
   }
   
-  protected function urlForSearch($searchTerms) {
+  protected function urlForFederatedSearch($searchTerms) {
     return $this->buildBreadcrumbURL("/{$this->id}/search", array(
       'filter' => $searchTerms,
+      'federatedSource' => 1
     ), false);
   }
 }
