@@ -7,6 +7,7 @@
         <img class="infoLink" src="/common/images/info_button@2x.png" alt="get info" width="44" height="38" />
       </a>
       {$location['name']}
+      {if $location['primaryname'] != $location['name']}<br/>({$location['primaryname']}){/if}
     </h2>
     <span class="distance">
       {if $location['hours'] && $location['hours'] != 'closed'}
@@ -21,47 +22,44 @@
 {foreach $location['collections'] as $collection}
   <div class="nonfocal">
     <h3>{$collection['name']}</h3>
-  {foreach $collection['items'] as $item}
-    {if !$item@first}<div class="focal">{/if}
+  {foreach $collection['types'] as $type}
+    {if !$type@first}<div class="nonfocal">{/if}
       {if $item['type'] != 'collection' || $collection['callNumber']}
         <span class="smallprint">
-          {if $item['type'] != 'collection'}{$item['type']}{/if}
-          {if $item['type'] != 'collection' && $collection['callNumber']}<br/>{/if}
+          {if $type['type'] != 'collection'}{$type['type']}{/if}
+          {if $type['type'] != 'collection' && $collection['callNumber']}<br/>{/if}
           {if $collection['callNumber']}{$collection['callNumber']}{/if}
         </span>
       {/if}
     </div>
     
     {$list = array()}
-    {foreach $item['types'] as $type => $info}
-      {if $type != 'collection'}
+    {foreach $type['items'] as $item}
+      {if $type['type'] != 'collection'}
         {$listItem = array()}
         {capture name="title" assign="title"}
-          {if $type == 'available'}
+          {if $item['status'] == 'available'}
             {$class = 'available'}
-          {elseif $type == 'requestable'}
+          {elseif $item['status'] == 'requestable'}
             {$class = 'requestable'}
           {else}
             {$class = 'unavailable'}
           {/if}
           {block name="itemTitle"}
             <span class="itemType {$class}">
-              {$info['count']}
-              {if $type == 'available'}
-                available
-              {elseif $type == 'collection'}
-                may be available
-              {elseif $info['status']}
-                {$info['status']}
-              {else}
-                {$type}
-              {/if}
+              {$item['count']}
+              {if $item['status'] == 'collection'}may be available{else}{$item['status']}{/if}
+              {if $item['secondary']}({$item['secondary']}){/if}
             </span>
+            <span class="itemType"><span class="smallprint">
+              {if $item['callNumber']}{$item['callNumber']}{if $item['description']}, {/if}{/if}
+              {if $item['description']}{$item['description']}{/if}
+            </span></span>
           {/block}
         {/capture}
         {$listItem['title'] = $title}
-        {if $info['url']}
-          {$listItem['url'] = $info['url']}
+        {if $item['url']}
+          {$listItem['url'] = $item['url']}
         {/if}
         {$list[] = $listItem}
       {/if}

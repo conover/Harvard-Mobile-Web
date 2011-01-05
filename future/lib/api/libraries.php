@@ -7,63 +7,71 @@
  *
  *****************************************************************/
 
-require_once realpath(LIB_DIR.'/feeds/LibrariesInfo.php');
+function getArg($key, $default='') {
+  return isset($_REQUEST[$key]) ? stripslashes(trim($_REQUEST[$key])) : $default;
+}
+
+require_once realpath(LIB_DIR.'/feeds/Libraries.php');
 error_log("COMMAND {$_REQUEST['command']}");
 switch ($_REQUEST['command']) {
-    case 'libraries':
-        $data = Libraries::getAllLibraries();
-        break;
+  case 'libraries':
+    $data = Libraries::getLibraries();
+    break;
 
-    case 'archives':
-        $data = Libraries::getAllArchives();
-        break;
+  case 'archives':
+    $data = Libraries::getArchives();
+    break;
 
-    case 'opennow':
-        $data = Libraries::getOpenNow();
-        break;
+  case 'opennow':
+    $data = Libraries::getOpenNow();
+    break;
 
-    case 'libdetail':
-        $libId = urldecode($_REQUEST['id']);
-        $libName = urldecode($_REQUEST['name']);
-        $data = Libraries::getLibraryDetails($libId, $libName);
-        break;
+  case 'libdetail':
+    $libId = getArg('id');
+    $libName = getArg('name');
+    $data = Libraries::getLibraryDetails($libId, $libName);
+    break;
 
-    case 'archivedetail':
-        $archiveId = urldecode($_REQUEST['id']);
-        $archiveName = urldecode($_REQUEST['name']);
-        $data = Libraries::getArchiveDetails($archiveId, $archiveName);
-        break;
+  case 'archivedetail':
+    $archiveId = getArg('id');
+    $archiveName = getArg('name');
+    $data = Libraries::getArchiveDetails($archiveId, $archiveName);
+    break;
 
-    case 'search':
-        $queryTerms =($_REQUEST['q']);
-        $queryTerms = str_replace("\\", "", $queryTerms);
-        $libTerm = isset($_REQUEST['lib']) ? $_REQUEST['lib'] : '';
-        $fmtTerm = isset($_REQUEST['fmt']) ? $_REQUEST['fmt'] : '';
-        
-        $data = Libraries::searchItems($queryTerms, $libTerm, $fmtTerm);
-        break;
+  case 'search':
+    $data = Libraries::searchItems(array(
+      'keywords' => getArg('keywords'), 
+      'title'    => getArg('title'),
+      'author'   => getArg('author'),
+      'location' => getArg('location'),
+      'format'   => getArg('format'),
+      'pubDate'  => getArg('pubDate'),
+      'language' => getArg('language'),
+    ), getArg('page', '1'));
+    break;
 
-    case 'fullavailability':
-        $itemid = urldecode($_REQUEST['itemid']);
-        $data = Libraries::getFullAvailability($itemid);
-        break;
+  case 'fullavailability':
+    $itemid = getArg('itemId');
+    $data = Libraries::getFullAvailability($itemid);
+    break;
 
-    case 'itemdetail':
-        $itemid = urldecode($_REQUEST['itemid']);
-        $data = Libraries::getItemRecord($itemid);
-        break;
+  case 'itemdetail':
+    $itemid = getArg('itemId');
+    $data = Libraries::getItemRecord($itemid);
+    break;
 
-    case 'imagethumbnail':
-        $imageId = urldecode($_REQUEST['itemid']);
-        $data = Libraries::getImageThumbnail($imageId);
-        break;
-    
-    case 'searchcodes':
-        $data = array(
-          'formats'   => Libraries::getFormatSearchCodes(),
-          'locations' => Libraries::getLibrarySearchCodes(),
-        );
-        break;
+  case 'imagethumbnail':
+    $imageId = getArg('itemId');
+    $data = Libraries::getImageThumbnail($imageId);
+    break;
+  
+  case 'searchcodes':
+    $data = array(
+      'formats'   => Libraries::getFormatSearchCodes(),
+      'locations' => Libraries::getLibrarySearchCodes(),
+      'pubDates'  => Libraries::getPubDateSearchCodes(),
+    );
+    break;
 }
 
 echo json_encode($data);
