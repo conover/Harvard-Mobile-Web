@@ -12,8 +12,9 @@
       {if $item['creator']}<br/>{$item['creator']}{/if}
       {if $item['edition']}<br/>{$item['edition']}{/if}
       {if $item['date'] || $item['publisher']}<br/>{$item['date']} {$item['publisher']}{/if}
-      {if $item['formatDesc'] && $item['format']|lower != 'image'}
-        <br/>{$item['formatDesc']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
+      {if ($item['formatDesc'] || $item['type']) && $item['format']|lower != 'image'}
+        <br/>{if $item['formatDesc']}{$item['formatDesc']|capitalize}{if strlen($item['type'])}:{/if}{/if}
+        {if strlen($item['type'])}{$item['type']}{/if}
       {/if}
       {if $item['workType']}<br/>Work Type: {$item['workType']}{/if}
       {if $item['thumbnail']}

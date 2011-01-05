@@ -156,7 +156,7 @@ class LibrariesModule extends Module {
       'creator'    => $this->formatDetail($data, 'creator'),
       'publisher'  => $this->formatDetail($data, 'publisher'),
       'date'       => $this->formatDetail($data, 'date'),
-      'format'     => $this->translateFormat(self::argVal($data['format'], 'formatDetail', 'Book')),
+      'format'     => $this->translateFormat(self::argVal($data['format'], 'formatDetail', '')),
       'formatDesc' => $this->formatDetail($data['format'], 'formatDetail'),
       'type'       => $this->formatDetail($data['format'], 'typeDetail'),
       'url'        => $this->detailURL($data['itemId']),
@@ -482,7 +482,6 @@ class LibrariesModule extends Module {
             
           } else if ($entry['type'] == 'archive') {
             $ldata = Libraries::getArchiveDetails($entry['id'], $entry['name']);
-          
           }
           
           if ($ldata) {
