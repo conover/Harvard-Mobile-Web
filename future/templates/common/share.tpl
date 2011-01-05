@@ -7,17 +7,10 @@
 			<ul>
 				<li><a href="mailto:?"><img src="/device/compliant/common/images/button-email.png" alt="" width="32" height="32" />Email</a></li>
 				<li>
-				    <!--
-				    <a href="https://graph.facebook.com/oauth/authorize?
-                        client_id=API_KEY&
-                        redirect_uri=http://{$smarty.server.SERVER_NAME}{$smarty.server.REQUEST_URI}&
-                        display=touch">
+				    <a href="http://m.facebook.com/sharer.php?u={$urlToBeShared}&t={$shareRemark}">
 				        <img src="/device/compliant/common/images/button-facebook.png" 
-				        alt="" width="32" height="32" />Facebook
-				    </a>
-				    -->
-				    <img src="/device/compliant/common/images/button-facebook.png" 
-			        alt="" width="32" height="32" />Facebook
+			            alt="" width="32" height="32" />Facebook
+			        </a>
 				</li>
 				<li>
 				    <a href="http://m.twitter.com/share?url={$urlToBeShared}&amp;text={$shareRemark}&amp;Via=Harvard">
