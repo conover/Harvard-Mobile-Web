@@ -596,7 +596,8 @@ class LibrariesModule extends Module {
         $results = array();
         if ($keywords || $title || $author) {
           $results = array();
-          $data = Libraries::searchItems($keywords, array(
+          $data = Libraries::searchItems(array(
+            'keywords' => $keywords, 
             'title'    => $title,
             'author'   => $author,
             'location' => $location, 

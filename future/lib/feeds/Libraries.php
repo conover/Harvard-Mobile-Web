@@ -451,8 +451,9 @@ class Libraries {
     return self::getInstitutionDetails('archive', $id, $preferredName);
   }
 
-  public static function searchItems($keywords, $searchParams=array(), $page=1) {
+  public static function searchItems($searchParams=array(), $page=1) {
     $qParamMapping = array(
+      'keywords' => '',
       'title'    => 'ex-Everything-1.0',
       'author'   => 'author',
       'language' => 'language-id',
@@ -464,14 +465,14 @@ class Libraries {
     );
   
     $queryTermArray = array();
-    if (trim($keywords)) { $queryTermArray[] = $keywords; }
     foreach ($qParamMapping as $searchParam => $qParam) {
       if (isset($searchParams[$searchParam]) && trim($searchParams[$searchParam])) {
         $value = trim($searchParams[$searchParam]);
-        if (strpos($value, ' ') !== FALSE) {
-          $value = '"'.$value.'"';
+        // don't quote keywords because we want them treated individually
+        if ($searchParam != 'keywords' && strpos($value, ' ') !== FALSE) {
+          $value = '"'.$value.'"'; 
         }
-        $queryTermArray[] = "{$qParam}:$value";
+        $queryTermArray[] = ($qParam ? "{$qParam}:" : '').$value;
       }      
     }
     

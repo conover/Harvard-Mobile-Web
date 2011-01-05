@@ -39,7 +39,8 @@ switch ($_REQUEST['command']) {
     break;
 
   case 'search':
-    $data = Libraries::searchItems(getArg('keywords'), array(
+    $data = Libraries::searchItems(array(
+      'keywords' => getArg('keywords'), 
       'title'    => getArg('title'),
       'author'   => getArg('author'),
       'location' => getArg('location'),
