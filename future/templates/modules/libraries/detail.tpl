@@ -9,7 +9,7 @@
     <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
     <h2>{$item['title']}</h2>
     <p class="smallprint">
-      {if $item['creator']}<br/>{$item['creator']}{/if}
+      {if $item['creator']}<br/><a class="authorLink" href="{$item['creatorURL']}">{$item['creator']}</a>{/if}
       {if $item['edition']}<br/>{$item['edition']}{/if}
       {if $item['date'] || $item['publisher']}<br/>{$item['publisher']} {$item['date']}{/if}
       {if ($item['formatDesc'] || $item['type']) && $item['format']|lower != 'image'}

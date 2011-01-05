@@ -159,3 +159,14 @@ table.search input[type=text], table.search select {
   text-decoration: underline;
   color: #933;
 }
+
+.nav a.authorLink, .nav a.authorLink:visited {
+  display: inline;
+  color: #933;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+  background: none;
+  border: none;
+}

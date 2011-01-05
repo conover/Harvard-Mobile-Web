@@ -5,7 +5,7 @@
 
 {block name="header"}
   {if $item['edition']}{$item['edition']} | {/if}
-  {if $item['creator']}{$item['creator']} | {/if}
+  {if $item['creator']}<a class="authorLink" href="{$item['creatorURL']}">{$item['creator']}</a> | {/if}
   {if $item['date']}{$item['date']} | {/if}
   {$item['format']|capitalize}{if strlen($item['type'])}: {$item['type']}{/if}
   <br/>

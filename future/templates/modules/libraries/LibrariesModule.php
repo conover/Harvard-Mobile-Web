@@ -459,6 +459,12 @@ class LibrariesModule extends Module {
         $item = $this->getItemDetails($data);
         //error_log(print_r($data, true));
         
+        if ($item['creator']) {
+          $item['creatorURL'] = $this->buildBreadcrumbURL('search', array(
+            'author' => $item['creator'],
+          ));
+        };
+
         $data = Libraries::getFullAvailability($id);
         //error_log(print_r($data, true));
         
