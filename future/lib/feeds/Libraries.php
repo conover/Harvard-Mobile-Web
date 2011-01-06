@@ -554,186 +554,188 @@ class Libraries {
     
     $results = array();
     
-    foreach ($xml->branch as $branch) {
-      $library = array(
-        'name' => strval($branch->repository->name[0]),
-        'id'   => strval($branch->repository->id[0]),
-        'type' => strval($branch->repository->type[0]), 
-        'collection' => array(),
-      );
-      
-      // Make sure library is in the list of institutions:
-      if (!isset($institutionIDs[$library['id']])) { continue; }
-      
-      foreach ($branch->collection as $collection) {
-        $collectionName = strval($collection->collectionname[0]);
-        $collectionCallNumber = strval($collection->callnumber);
+    if (isset($xml->branch)) {
+      foreach ($xml->branch as $branch) {
+        $library = array(
+          'name' => strval($branch->repository->name[0]),
+          'id'   => strval($branch->repository->id[0]),
+          'type' => strval($branch->repository->type[0]), 
+          'collection' => array(),
+        );
         
-        $callNumbersMatch = true;
-        $descriptionsMatch = true;
-        $tempCallNumber = null;
-        $tempDescription = null;
-
-        $itemsByStat = array();
-        $itemCount = 0;
+        // Make sure library is in the list of institutions:
+        if (!isset($institutionIDs[$library['id']])) { continue; }
         
-        // Walk over the items if there are any
-        if (isset($collection->items->itemrecord)) {
-          foreach ($collection->items->itemrecord as $item) {
-            $statString = strtolower($item->stat[0]);
-            $stats = explode(' | ', $statString);
-            $statMain = $stats[0];
-            
-            $checkedOutItem = 
-              (strpos($statString, 'checked out') !== FALSE &&
-               strpos($statString, 'not checked out') === FALSE) || 
-              (strpos($statString, 'on hold') !== FALSE &&
-               strpos($statString, 'not on hold') === FALSE);
-            
-            if (!isset($itemsByStat[$statMain])) {
-              $itemsByStat[$statMain] = array(
-                'statMain'            => $statMain,
-                'availableItems'      => array(),
-                'checkedOutItems'     => array(),
-                'unavailableItems'    => array(),
-                'collectionOnlyItems' => array(),
-                'availCount'          => 0,
-                'unavailCount'        => 0,
-                'requestCount'        => 0,
-                'checkedOutCount'     => 0,
-                'scanAndDeliverCount' => 0,
-                'collectionOnlyCount' => 0,
+        foreach ($branch->collection as $collection) {
+          $collectionName = strval($collection->collectionname[0]);
+          $collectionCallNumber = strval($collection->callnumber);
+          
+          $callNumbersMatch = true;
+          $descriptionsMatch = true;
+          $tempCallNumber = null;
+          $tempDescription = null;
+  
+          $itemsByStat = array();
+          $itemCount = 0;
+          
+          // Walk over the items if there are any
+          if (isset($collection->items->itemrecord)) {
+            foreach ($collection->items->itemrecord as $item) {
+              $statString = strtolower($item->stat[0]);
+              $stats = explode(' | ', $statString);
+              $statMain = $stats[0];
+              
+              $checkedOutItem = 
+                (strpos($statString, 'checked out') !== FALSE &&
+                 strpos($statString, 'not checked out') === FALSE) || 
+                (strpos($statString, 'on hold') !== FALSE &&
+                 strpos($statString, 'not on hold') === FALSE);
+              
+              if (!isset($itemsByStat[$statMain])) {
+                $itemsByStat[$statMain] = array(
+                  'statMain'            => $statMain,
+                  'availableItems'      => array(),
+                  'checkedOutItems'     => array(),
+                  'unavailableItems'    => array(),
+                  'collectionOnlyItems' => array(),
+                  'availCount'          => 0,
+                  'unavailCount'        => 0,
+                  'requestCount'        => 0,
+                  'checkedOutCount'     => 0,
+                  'scanAndDeliverCount' => 0,
+                  'collectionOnlyCount' => 0,
+                );
+              }
+               
+              $itemByStat = array(
+                'callNumber'           => strval($item->call),
+                'description'          => strval($item->desc),
+                'collectionName'       => $collectionName,
+                'collectionCallNumber' => $collectionCallNumber,
+                'available'            => strcasecmp($item->isavail, 'Y') == 0,
+                'unavailable'          => strcasecmp($item->isavail, 'Y') != 0,
+                'checkedOutItem'       => $checkedOutItem,
+                'canRequest'           => false,
+                'requestUrl'           => '',
+                'canScanAndDeliver'    => false,
+                'scanAndDeliverUrl'    => '',
+                'statMain'             => $statMain,
+                'statSecondary'        => implode(' ', array_slice($stats, 1)),
               );
-            }
-             
-            $itemByStat = array(
-              'callNumber'           => strval($item->call),
-              'description'          => strval($item->desc),
-              'collectionName'       => $collectionName,
-              'collectionCallNumber' => $collectionCallNumber,
-              'available'            => strcasecmp($item->isavail, 'Y') == 0,
-              'unavailable'          => strcasecmp($item->isavail, 'Y') != 0,
-              'checkedOutItem'       => $checkedOutItem,
-              'canRequest'           => false,
-              'requestUrl'           => '',
-              'canScanAndDeliver'    => false,
-              'scanAndDeliverUrl'    => '',
-              'statMain'             => $statMain,
-              'statSecondary'        => implode(' ', array_slice($stats, 1)),
-            );
-            
-            if (!strlen($itemByStat['callNumber'])) {
-              $itemByStat['callNumber'] = $collectionCallNumber;
-            }
-            
-            if (isset($item->req)) {
-              foreach($item->req as $req) {
-                if (stripos($req, 'scan') !== FALSE) {
-                  $itemByStat['scanAndDeliverUrl'] = strval($req['href']);
-                  $itemByStat['canScanAndDeliver'] = true;
-                } else {
-                  $itemByStat['requestUrl'] = strval($req['href']);
-                  $itemByStat['canRequest'] = true;
+              
+              if (!strlen($itemByStat['callNumber'])) {
+                $itemByStat['callNumber'] = $collectionCallNumber;
+              }
+              
+              if (isset($item->req)) {
+                foreach($item->req as $req) {
+                  if (stripos($req, 'scan') !== FALSE) {
+                    $itemByStat['scanAndDeliverUrl'] = strval($req['href']);
+                    $itemByStat['canScanAndDeliver'] = true;
+                  } else {
+                    $itemByStat['requestUrl'] = strval($req['href']);
+                    $itemByStat['canRequest'] = true;
+                  }
                 }
               }
-            }
-            
-            if ($itemByStat['available']        ) { $itemsByStat[$statMain]['availCount']++; }
-            if ($itemByStat['unavailable']      ) { $itemsByStat[$statMain]['unavailCount']++; }
-            if ($itemByStat['canRequest']       ) { $itemsByStat[$statMain]['requestCount']++; }
-            if ($itemByStat['checkedOutItem']   ) { $itemsByStat[$statMain]['checkedOutCount']++; }
-            if ($itemByStat['canScanAndDeliver']) { $itemsByStat[$statMain]['scanAndDeliverCount']++; }
-            
-            if ($itemByStat['available']) {
-              $itemsByStat[$statMain]['availableItems'][] = $itemByStat;
               
-            } else if ($itemByStat['checkedOutItem']) {
-              $itemsByStat[$statMain]['checkedOutItems'][] = $itemByStat;
+              if ($itemByStat['available']        ) { $itemsByStat[$statMain]['availCount']++; }
+              if ($itemByStat['unavailable']      ) { $itemsByStat[$statMain]['unavailCount']++; }
+              if ($itemByStat['canRequest']       ) { $itemsByStat[$statMain]['requestCount']++; }
+              if ($itemByStat['checkedOutItem']   ) { $itemsByStat[$statMain]['checkedOutCount']++; }
+              if ($itemByStat['canScanAndDeliver']) { $itemsByStat[$statMain]['scanAndDeliverCount']++; }
               
-            } else {
-              $itemsByStat[$statMain]['unavailableItems'][] = $itemByStat;
-            }
-            
-            $itemCount++;
-            
-            // Remember whether or not all items have the same call number and/or description            
-            if (!isset($tempCallNumber)) {
-              $tempCallNumber = $itemByStat['callNumber'];
+              if ($itemByStat['available']) {
+                $itemsByStat[$statMain]['availableItems'][] = $itemByStat;
+                
+              } else if ($itemByStat['checkedOutItem']) {
+                $itemsByStat[$statMain]['checkedOutItems'][] = $itemByStat;
+                
+              } else {
+                $itemsByStat[$statMain]['unavailableItems'][] = $itemByStat;
+              }
               
-            } else if ($tempCallNumber != $itemByStat['callNumber']) {
-              $callNumbersMatch = false;
-            }
-            if (!isset($tempDescription)) {
-              $tempDescription = $itemByStat['description'];
+              $itemCount++;
               
-            } else if ($tempDescription != $itemByStat['description']) {
-              $descriptionsMatch = false;
-            }
-          }
-        }
-        
-        if ($itemCount == 0) { // No items means it's a collection only item
-          $collectionAvail = array();
-          if (isset($collection->holdtag)) {
-            foreach($collection->holdtag as $holdtag) {
-              $collectionAvail[] = strval($holdtag->availval[0]);
+              // Remember whether or not all items have the same call number and/or description            
+              if (!isset($tempCallNumber)) {
+                $tempCallNumber = $itemByStat['callNumber'];
+                
+              } else if ($tempCallNumber != $itemByStat['callNumber']) {
+                $callNumbersMatch = false;
+              }
+              if (!isset($tempDescription)) {
+                $tempDescription = $itemByStat['description'];
+                
+              } else if ($tempDescription != $itemByStat['description']) {
+                $descriptionsMatch = false;
+              }
             }
           }
           
-          $itemsByStat['collection'] = array(
-            'statMain'            => 'collection',
-            'availableItems'      => array(),
-            'checkedOutItems'     => array(),
-            'unavailableItems'    => array(),
-            'collectionOnlyItems' => array(
-              array(
-                'collectionName'       => $collectionName,
-                'collectionCallNumber' => $collectionCallNumber,
-                'collectionAvailVal'   => $collectionAvail,
-                'noItemMessage'        => strval($branch->noitems[0]),
-              ),
-            ),
-            'availCount'          => 0,
-            'unavailCount'        => 0,
-            'requestCount'        => 0,
-            'checkedOutCount'     => 0,
-            'scanAndDeliverCount' => 0,
-            'collectionOnlyCount' => 1,
-          );
-        }
-
-        // Categorize by type        
-        if (count($itemsByStat) <= 1) {
-          if (isset($itemsByStat['collection'])) {
-            $displayType = 'V';   // type 5: collection-only display
+          if ($itemCount == 0) { // No items means it's a collection only item
+            $collectionAvail = array();
+            if (isset($collection->holdtag)) {
+              foreach($collection->holdtag as $holdtag) {
+                $collectionAvail[] = strval($holdtag->availval[0]);
+              }
+            }
             
-          } else if ($callNumbersMatch && $descriptionsMatch) {
-            $displayType = 'I';   // type 1: everything same
-          } else {
-            $displayType = 'III'; // type 3: only diff call numbers or desc
+            $itemsByStat['collection'] = array(
+              'statMain'            => 'collection',
+              'availableItems'      => array(),
+              'checkedOutItems'     => array(),
+              'unavailableItems'    => array(),
+              'collectionOnlyItems' => array(
+                array(
+                  'collectionName'       => $collectionName,
+                  'collectionCallNumber' => $collectionCallNumber,
+                  'collectionAvailVal'   => $collectionAvail,
+                  'noItemMessage'        => strval($branch->noitems[0]),
+                ),
+              ),
+              'availCount'          => 0,
+              'unavailCount'        => 0,
+              'requestCount'        => 0,
+              'checkedOutCount'     => 0,
+              'scanAndDeliverCount' => 0,
+              'collectionOnlyCount' => 1,
+            );
           }
-        } else {
-          if ($callNumbersMatch && $descriptionsMatch) {
-            $displayType = 'II';  // type 2: only diff holding stats within same collection
+  
+          // Categorize by type        
+          if (count($itemsByStat) <= 1) {
+            if (isset($itemsByStat['collection'])) {
+              $displayType = 'V';   // type 5: collection-only display
+              
+            } else if ($callNumbersMatch && $descriptionsMatch) {
+              $displayType = 'I';   // type 1: everything same
+            } else {
+              $displayType = 'III'; // type 3: only diff call numbers or desc
+            }
           } else {
-            $displayType = 'IV';  // type 4: everything diff
+            if ($callNumbersMatch && $descriptionsMatch) {
+              $displayType = 'II';  // type 2: only diff holding stats within same collection
+            } else {
+              $displayType = 'IV';  // type 4: everything diff
+            }
+          }
+          
+          // Add the collection if it is valid
+          if (strlen($collectionName)) {
+            $library['collection'][] = array(
+              'collectionName'       => $collectionName,
+              'collectionCallNumber' => $collectionCallNumber,
+              'displayType'          => $displayType,
+              'itemsByStat'          => array_values($itemsByStat),
+            );
           }
         }
         
-        // Add the collection if it is valid
-        if (strlen($collectionName)) {
-          $library['collection'][] = array(
-            'collectionName'       => $collectionName,
-            'collectionCallNumber' => $collectionCallNumber,
-            'displayType'          => $displayType,
-            'itemsByStat'          => array_values($itemsByStat),
-          );
-        }
+        $results[] = $library;
       }
-      
-      $results[] = $library;
     }
-
+    
     return $results;
   }
   

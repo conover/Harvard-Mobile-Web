@@ -267,6 +267,28 @@ class LibrariesModule extends Module {
               foreach ($keyParams as $param => $paramKey) {
                 $items[$key][$param] = self::argVal($itemByStat, $paramKey);
               }
+              if ($status == 'collection') {
+                $extraDescriptionLines = array();
+                
+                $itemMessage = self::argVal($itemByStat, 'noItemMessage');
+                if ($itemMessage) {
+                  $extraDescriptionLines[] = $itemMessage;
+                }
+                
+                $availArray = self::argVal($itemByStat, 'collectionAvailVal');
+                if ($availArray) {
+                  $extraDescriptionLines = array_merge($extraDescriptionLines, $availArray);
+                }
+                
+                if (!$itemMessage && !$availArray) {
+                  $extraDescriptionLines[] = 'Contact the library for more information.';
+                }
+                
+                if (isset($items[$key]['description'])) { 
+                  $items[$key]['description'] .= '<br/>'; 
+                }
+                $items[$key]['description'] .= implode('<br/>', $extraDescriptionLines);
+              }
             }
             $items[$key]['count']++;
           }
@@ -286,6 +308,7 @@ class LibrariesModule extends Module {
         );
       }
     }
+    //error_log(print_r($results, true));
     
     return $results;
   }
