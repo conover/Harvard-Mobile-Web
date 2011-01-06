@@ -725,6 +725,10 @@ class Libraries {
     return array(
       'itemId'         => $id,
       'title'          => self::getField($dc,   'title'),
+      // UTF-8 encoded, non-Latin title (so Chinese, Japanese, Korean, etc.)
+      // Yes, the casing of the variables really is different in the feed.
+      'nonLatinTitle'  => self::getField($item, 'vernacularTitle'),
+      'nonLatinCreator'=> self::getField($item, 'vernacularcreator'),
       'creator'        => self::getField($dc,   'creator'),
       'publisher'      => self::getField($dc,   'publisher'),
       'date'           => self::getField($dc,   'date'),
