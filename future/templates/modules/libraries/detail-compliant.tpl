@@ -3,7 +3,7 @@
 {block name="header"}
     <a id="bookmark" class="{if $item['bookmarked']}bookmarked{/if}" onclick="toggleBookmark(this, '{$item['id']}', '{$item['cookie']}')"></a>
     <h2>{$item['title']}{if $item['nonLatinTitle']} ({$item['nonLatinTitle']}){/if}</h2>
-    <p class="smallprint">
+    <div class="smallprint">
       {if $item['creator']}<br/><a class="authorLink" href="{$item['creatorURL']}">{$item['creator']}</a>{/if}
       {if $item['nonLatinCreator']} ({$item['nonLatinCreator']}){/if}
       {if $item['edition']}<br/>{$item['edition']}{/if}
@@ -22,5 +22,5 @@
           {if $item['fullImageUrl']}<br/><span class="smallprint">(click for full image)</span></a>{/if}
         </div>
       {/if}
-    </p>
+    </div>
 {/block}
