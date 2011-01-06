@@ -821,11 +821,13 @@ class LibrariesModule extends Module {
           
           $entry = array(
             'label' => 'Directions',
-            'title' => $this->formatDetail($directions),
           );
           if (strpos($directions, 'http') === 0) {
+            $entry['title'] = 'See website';
             $entry['url'] = $directions;
             $entry['class'] = 'external';
+          } else {
+            $entry['title'] = $this->formatDetail($directions);
           }
           
           $info['directions'][] = $entry;

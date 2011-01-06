@@ -86,13 +86,22 @@ class Libraries {
       return '';
     }
     
-    if (strpos($value, 'http') !== FALSE && 
-        preg_match(';href="([^"]+)";', $value, $matches)) {
-      $value = $matches[1]; // grab the first url
-    } else {
-      preg_replace(';<br\s./>;', " \n", $value);
-    }
-    return trim(HTML2TEXT($value));
+    // We accept two types of data:
+    // 1: urls (starts with 'http')
+    // 2: text without html links in it
+    //
+    // The reason for this is that our touch interfaces can't handle small tappable
+    // targets, such as links in the middle of blocks of small text
+    
+    if (strpos($value, 'http') === FALSE) {
+      preg_replace(';<br\s./>;', " \n", $value); // not a url
+      $value = HTML2TEXT(trim($value));
+      
+    } else if (strpos($value, '<a ') !== FALSE && strpos($value, 'href="') !== FALSE) {
+      $value = '';  // skip fields which have html links 
+    } 
+    
+    return $value;
   }
   
   private static function formatField($field, $value) {
