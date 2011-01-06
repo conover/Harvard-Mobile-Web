@@ -529,18 +529,18 @@ class Libraries {
         if ($index > $results['end']) { $results['end'] = $index; }
         if ($results['start'] > $index || $results['start'] < 1) { $results['start'] = $index; }
         $results['items'][] = array(
-          'index'        => $index,
-          'itemId'       => self::getField($item, 'id'),
-          'creator'      => self::getField($dc,   'creator'),
+          'index'           => $index,
+          'itemId'          => self::getField($item, 'id'),
+          'creator'         => self::getField($dc,   'creator'),
           // This is extracted as vernacularcreator in the detail version
           'nonLatinCreator' => self::getField($item, 'vernacularauthor'),
-          'itemId'       => self::getField($item, 'id'),
-          'title'        => self::getField($dc,   'title'),
+          'itemId'          => self::getField($item, 'id'),
+          'title'           => self::getField($dc,   'title'),
           // The var casing is different from the same info in the detail (vernacularTitle)
-          'nonLatinTitle'=> self::getField($item, 'vernaculartitle'),
-          'date'         => self::getField($dc,   'date'),
-          'format'       => self::getField($dc,   'format'),
-          'edition'      => self::getField($item, 'edition'),
+          'nonLatinTitle'   => self::getField($item, 'vernaculartitle'),
+          'date'            => self::getField($dc,   'date'),
+          'format'          => self::getField($dc,   'format'),
+          'edition'         => self::getField($item, 'edition'),
         );
       }
     }
@@ -753,23 +753,23 @@ class Libraries {
     $GLOBALS['librariesDebugEntryName'] = "item '".self::getField($dc, 'title')."'";
 
     return array(
-      'itemId'         => $id,
-      'title'          => self::getField($dc,   'title'),
+      'itemId'          => $id,
+      'title'           => self::getField($dc,   'title'),
       // UTF-8 encoded, non-Latin title (so Chinese, Japanese, Korean, etc.)
       // Yes, the casing of the variables really is different in the feed.
-      'nonLatinTitle'  => self::getField($item, 'vernacularTitle'),
-      'nonLatinCreator'=> self::getField($item, 'vernacularcreator'),
-      'creator'        => self::getField($dc,   'creator'),
-      'publisher'      => self::getField($dc,   'publisher'),
-      'date'           => self::getField($dc,   'date'),
-      'format'         => self::getField($dc,   'format'),
-      'edition'        => self::getField($item, 'edition'),
-      'identifier'     => self::getField($dc,   'identifier'),
-      'numberofimages' => self::getField($item, 'numberofimages', 0),
-      'worktype'       => self::getField($item, 'workType'),
-      'thumbnail'      => self::getField($item, 'thumbnail'),
-      'cataloglink'    => self::getField($item, 'cataloglink'),
-      'fullimagelink'  => self::getField($item, 'fullimage'),
+      'nonLatinTitle'   => self::getField($item, 'vernacularTitle'),
+      'nonLatinCreator' => self::getField($item, 'vernacularcreator'),
+      'creator'         => self::getField($dc,   'creator'),
+      'publisher'       => self::getField($dc,   'publisher'),
+      'date'            => self::getField($dc,   'date'),
+      'format'          => self::getField($dc,   'format'),
+      'edition'         => self::getField($item, 'edition'),
+      'identifier'      => self::getField($dc,   'identifier'),
+      'numberofimages'  => self::getField($item, 'numberofimages', 0),
+      'worktype'        => self::getField($item, 'workType'),
+      'thumbnail'       => self::getField($item, 'thumbnail'),
+      'cataloglink'     => self::getField($item, 'cataloglink'),
+      'fullimagelink'   => self::getField($item, 'fullimage'),
     );
   }
   

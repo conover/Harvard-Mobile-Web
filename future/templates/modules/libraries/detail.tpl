@@ -14,6 +14,7 @@
 {if $item['isOnline']}
   {$results[$i] = array()}
   {$results[$i]['title'] = '<strong>Available Online</strong>'}
+  {$results[$i]['class'] = 'external'}
   {$results[$i]['url'] = $item['onlineUrl']}
   {$i = $i + 1}
 {/if}
