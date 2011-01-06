@@ -5,7 +5,7 @@
     <h2>{$item['title']}{if $item['nonLatinTitle']} ({$item['nonLatinTitle']}){/if}</h2>
     <p class="smallprint">
       {if $item['creator']}<br/><a class="authorLink" href="{$item['creatorURL']}">{$item['creator']}</a>{/if}
-      {if $item['nonLatinCreator']}<br/><a class="authorLink" href="{$item['creatorURL']}">{$item['nonLatinCreator']}</a>{/if}
+      {if $item['nonLatinCreator']} ({$item['nonLatinCreator']}){/if}
       {if $item['edition']}<br/>{$item['edition']}{/if}
       {if $item['date'] || $item['publisher']}<br/>{$item['publisher']} {$item['date']}{/if}
       {if ($item['formatDesc'] || $item['type']) && $item['format']|lower != 'image'}
