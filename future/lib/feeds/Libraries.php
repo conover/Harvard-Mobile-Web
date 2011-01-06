@@ -93,9 +93,8 @@ class Libraries {
     // The reason for this is that our touch interfaces can't handle small tappable
     // targets, such as links in the middle of blocks of small text
     
-    if (strpos($value, 'http') === FALSE) {
-      preg_replace(';<br\s./>;', " \n", $value); // not a url
-      $value = HTML2TEXT(trim($value));
+    if (strpos($value, 'http://') === FALSE && strpos($value, 'https://') === FALSE) {
+      $value = HTML2TEXT(preg_replace(';<br\s*/>;', " \n", trim($value))); // not a url
       
     } else if (strpos($value, '<a ') !== FALSE && strpos($value, 'href="') !== FALSE) {
       $value = '';  // skip fields which have html links 
