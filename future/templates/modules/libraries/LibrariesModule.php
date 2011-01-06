@@ -340,9 +340,10 @@ class LibrariesModule extends Module {
     return strcmp($a['title'], $b['title']);
   }
   
-  protected function urlForSearch($searchTerms) {
+  protected function urlForFederatedSearch($searchTerms) {
     return $this->buildBreadcrumbURL("/{$this->id}/search", array(
       'keywords' => $searchTerms,
+      'federated' => 1
     ), false);
   }
 
