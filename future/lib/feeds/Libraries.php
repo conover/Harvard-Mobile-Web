@@ -80,7 +80,7 @@ class Libraries {
     return $xml;
   }
   
-  private static function stripHTML($value) {
+  private static function stripHTML($field, $value) {
     if (!is_string($value)) { 
       error_log(__FUNCTION__."(): field value is not a string: ".print_r($value, true));
       return '';
@@ -96,7 +96,9 @@ class Libraries {
     if (strpos($value, 'http://') === FALSE && strpos($value, 'https://') === FALSE) {
       $value = HTML2TEXT(preg_replace(';<br\s*/>;', " \n", trim($value))); // not a url
       
-    } else if (strpos($value, '<a ') !== FALSE && strpos($value, 'href="') !== FALSE) {
+    } else if (strpos($value, '<a ') !== FALSE && strpos($value, 'href=') !== FALSE) {
+      error_log("Warning: skipped HTML with links in field '$field'".
+        (isset($GLOBALS['librariesDebugEntryName']) ? " in {$GLOBALS['librariesDebugEntryName']}" : ''));
       $value = '';  // skip fields which have html links 
     } 
     
@@ -124,7 +126,7 @@ class Libraries {
             }            
           } else if (isset($entry[0]) && strval($entry[0])) {
             // a text description of the hours
-            $hoursStrings[] = self::stripHTML(strval($entry[0]));
+            $hoursStrings[] = self::stripHTML($field, strval($entry[0]));
           }
         }
         
@@ -146,7 +148,7 @@ class Libraries {
         }
         break;
     }
-    return self::stripHTML($value);
+    return self::stripHTML($field, $value);
   }
   
   private static function getField($obj, $fields, $default='') {
@@ -319,6 +321,9 @@ class Libraries {
       if (isset($type) && $type != self::getField($institution, 'type')) { continue; }
       //error_log(print_r($institution, true));
 
+      $GLOBALS['librariesDebugEntryName'] = 
+        self::getField($institution, 'type')." '".self::getField($institution, 'primaryname')."'";
+    
       $hours = self::getField($institution, 'hoursofoperation');
 
       $institutions[] = array(
@@ -344,7 +349,10 @@ class Libraries {
     
     foreach ($xml->institution as $institution) {
       if ($type != 'all' && $type != self::getField($institution, 'type')) { continue; }
-
+      
+      $GLOBALS['librariesDebugEntryName'] = 
+        self::getField($institution, 'type')." '".self::getField($institution, 'primaryname')."'";
+          
       $institutions[] = array(
         'name'         => self::getField($institution, 'name'),
         'id'           => self::getField($institution, 'id'),
@@ -359,6 +367,9 @@ class Libraries {
     $urlBase = ($type == 'library') ? 'URL_LIB_DETAIL_BASE' : 'URL_ARCHIVE_DETAIL_BASE';
   
     $xml = self::query("$type-{$id}", $urlBase, $id);
+    
+    $GLOBALS['librariesDebugEntryName'] = 
+      self::getField($xml, 'type')." '".self::getField($xml, array('names', 'primaryname'))."'";
     
     //error_log(print_r($institution, true));
     $primaryName = self::getField($xml, array('names', 'primaryname'));
@@ -511,6 +522,8 @@ class Libraries {
       foreach ($xml->resultSet->item as $item) {
         $namespaces = $item->getNameSpaces(true);
         $dc = $item->children($namespaces['dc']);
+
+        $GLOBALS['librariesDebugEntryName'] = "item '".self::getField($dc, 'title')."'";
 
         $index = self::getField($item, 'position');
         if ($index > $results['end']) { $results['end'] = $index; }
@@ -730,6 +743,8 @@ class Libraries {
     $namespaces = $item->getNameSpaces(true);
     $dc = $item->children($namespaces['dc']);
     
+    $GLOBALS['librariesDebugEntryName'] = "item '".self::getField($dc, 'title')."'";
+
     return array(
       'itemId'         => $id,
       'title'          => self::getField($dc,   'title'),
