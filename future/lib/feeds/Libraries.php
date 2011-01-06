@@ -532,7 +532,12 @@ class Libraries {
           'index'        => $index,
           'itemId'       => self::getField($item, 'id'),
           'creator'      => self::getField($dc,   'creator'),
+          // This is extracted as vernacularcreator in the detail version
+          'nonLatinCreator' => self::getField($item, 'vernacularauthor'),
+          'itemId'       => self::getField($item, 'id'),
           'title'        => self::getField($dc,   'title'),
+          // The var casing is different from the same info in the detail (vernacularTitle)
+          'nonLatinTitle'=> self::getField($item, 'vernaculartitle'),
           'date'         => self::getField($dc,   'date'),
           'format'       => self::getField($dc,   'format'),
           'edition'      => self::getField($item, 'edition'),
