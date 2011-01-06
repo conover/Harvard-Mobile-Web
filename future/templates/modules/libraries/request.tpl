@@ -1,0 +1,51 @@
+{include file="findInclude:common/header.tpl"}
+
+<div class="nonfocal">
+  {block name="header"}
+    <h2>
+      <a id="infoLink" href="{$info['infoUrl']}">
+        <img class="infoLink" src="/common/images/info_button@2x.png" alt="get info" width="44" height="38" />
+      </a>
+      {$info['name']}
+      {if $info['primaryname'] != $info['name']}<br/>({$info['primaryname']}){/if}
+    </h2>
+    {if $info['status'] == 'available'}
+      <span class="distance">
+        {if $info['hours'] && $info['hours'] != 'closed'}
+          Open today {$info['hours']}
+        {else}
+          Closed today
+        {/if}
+      </span><br/>
+    {/if}
+  {/block}
+</div>
+<div class="nonfocal itemInfo">
+  <h3>{$info['collectionName']}</h3>
+  {if $info['status'] != 'collection' || $info['callNumber']}
+    <p class="smallprint">
+      {if $info['callNumber']}{$info['callNumber']}{/if}
+      <br/>{$info['type']}
+      {if $info['secondary']}<br/>{$info['status']} ({$info['secondary']}){/if}
+    </p>
+  {/if}
+</div>
+
+{$requestLinks = array()}
+{if $info['requestUrl']}
+  {$requestLink = array()}
+  {$requestLink['title'] = "Request item"}
+  {$requestLink['url'] = $info['requestUrl']}
+  {$requestLink['class'] = "external"}
+  {$requestLinks[] = $requestLink}
+{/if}
+{if $info['scanUrl']}
+  {$requestLink = array()}
+  {$requestLink['title'] = "Scan and deliver item"}
+  {$requestLink['url'] = $info['scanUrl']}
+  {$requestLink['class'] = "external"}
+  {$requestLinks[] = $requestLink}
+{/if}
+{include file="findInclude:common/navlist.tpl" navlistItems=$requestLinks subTitleNewline=true accessKey=false linkTarget="new"}
+
+{include file="findInclude:common/footer.tpl"}

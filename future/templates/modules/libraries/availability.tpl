@@ -20,10 +20,10 @@
 </div>
 
 {foreach $location['collections'] as $collection}
-  <div class="nonfocal">
+  <div class="nonfocal itemInfo">
     <h3>{$collection['name']}</h3>
   {foreach $collection['types'] as $type}
-    {if !$type@first}<div class="nonfocal">{/if}
+    {if !$type@first}<div class="nonfocal itemInfo">{/if}
       {if $item['type'] != 'collection' || $collection['callNumber']}
         <span class="smallprint">
           {if $type['type'] != 'collection'}{$type['type']}{/if}

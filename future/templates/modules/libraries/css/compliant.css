@@ -170,3 +170,7 @@ table.search input[type=text], table.search select {
   background: none;
   border: none;
 }
+
+.itemInfo, .itemInfo .smallprint {
+  line-height: normal;
+}
