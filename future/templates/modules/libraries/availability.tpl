@@ -35,34 +35,32 @@
     
     {$list = array()}
     {foreach $type['items'] as $item}
-      {if $type['type'] != 'collection'}
-        {$listItem = array()}
-        {capture name="title" assign="title"}
-          {if $item['status'] == 'available'}
-            {$class = 'available'}
-          {elseif $item['status'] == 'requestable'}
-            {$class = 'requestable'}
-          {else}
-            {$class = 'unavailable'}
-          {/if}
-          {block name="itemTitle"}
-            <span class="itemType {$class}">
-              {$item['count']}
-              {if $item['status'] == 'collection'}may be available{else}{$item['status']}{/if}
-              {if $item['secondary']}({$item['secondary']}){/if}
-            </span>
-            <span class="itemType"><span class="smallprint">
-              {if $item['callNumber']}{$item['callNumber']}{if $item['description']}, {/if}{/if}
-              {if $item['description']}{$item['description']}{/if}
-            </span></span>
-          {/block}
-        {/capture}
-        {$listItem['title'] = $title}
-        {if $item['url']}
-          {$listItem['url'] = $item['url']}
+      {$listItem = array()}
+      {capture name="title" assign="title"}
+        {if $item['status'] == 'available'}
+          {$class = 'available'}
+        {elseif $item['status'] == 'requestable'}
+          {$class = 'requestable'}
+        {else}
+          {$class = 'unavailable'}
         {/if}
-        {$list[] = $listItem}
+        {block name="itemTitle"}
+          <span class="itemType {$class}">
+            {$item['count']}
+            {if $item['status'] == 'collection'}may be available{else}{$item['status']}{/if}
+            {if $item['secondary']}({$item['secondary']}){/if}
+          </span>
+          <span class="itemType"><span class="smallprint">
+            {if $item['callNumber']}{$item['callNumber']}{if $item['description']}<br/>{/if}{/if}
+            {if $item['description']}{$item['description']}{/if}
+          </span></span>
+        {/block}
+      {/capture}
+      {$listItem['title'] = $title}
+      {if $item['url']}
+        {$listItem['url'] = $item['url']}
       {/if}
+      {$list[] = $listItem}
     {/foreach}
     {if count($list)}
       <div class="items">
