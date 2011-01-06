@@ -150,9 +150,13 @@ class LibrariesModule extends Module {
   }
   
   private function getItemDetails($data) {
+    // error_log(json_encode($data));
     $details = array(
       'id'         => $data['itemId'],
       'title'      => $this->formatDetail($data, 'title', 'Unknown title'),
+      // Used for non-english versions of the title, creator, UTF-8 encoded:
+      'nonLatinTitle' => $this->formatDetail($data, 'nonLatinTitle'),
+      'nonLatinCreator' => $this->formatDetail($data, 'nonLatinCreator'),
       'creator'    => $this->formatDetail($data, 'creator'),
       'publisher'  => $this->formatDetail($data, 'publisher'),
       'date'       => $this->formatDetail($data, 'date'),
