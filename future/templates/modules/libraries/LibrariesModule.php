@@ -158,7 +158,6 @@ class LibrariesModule extends Module {
       'nonLatinTitle'   => $this->formatDetail($data, 'nonLatinTitle'),
       'nonLatinCreator' => $this->formatDetail($data, 'nonLatinCreator'),
       'creator'         => $this->formatDetail($data, 'creator'),
-      'creatorLink'     => self::argVal($data, 'creatorLink', ''),
       'publisher'       => $this->formatDetail($data, 'publisher'),
       'date'            => $this->formatDetail($data, 'date'),
       'format'          => $this->translateFormat(self::argVal($data['format'], 'formatDetail', '')),
@@ -169,6 +168,19 @@ class LibrariesModule extends Module {
       'cookie'          => LIBRARY_ITEMS_COOKIE,
     );
     
+    if ($details['creator']) {
+      $creatorLink = self::argVal($data, 'creatorLink', '');
+      if ($creatorLink) {
+        $details['creatorURL'] = $this->buildBreadcrumbURL('search', array(
+          'q' => $creatorLink,
+        ));
+      } else {
+        $details['creatorURL'] = $this->buildBreadcrumbURL('search', array(
+          'author' => self::argVal($data, 'creator', ''),
+        ));
+      }
+    };
+
     if (isset($data['index'])) {
       $details['index'] = $data['index'];
     }
@@ -495,18 +507,6 @@ class LibrariesModule extends Module {
         $item = $this->getItemDetails($data);
         //error_log(print_r($data, true));
         
-        if ($item['creator']) {
-          if ($item['creatorLink']) {
-            $item['creatorURL'] = $this->buildBreadcrumbURL('search', array(
-              'q' => $item['creatorLink'],
-            ));
-          } else {
-            $item['creatorURL'] = $this->buildBreadcrumbURL('search', array(
-              'author' => $item['creator'],
-            ));
-          }
-        };
-
         $data = Libraries::getFullAvailability($id);
         //error_log(print_r($data, true));
         
