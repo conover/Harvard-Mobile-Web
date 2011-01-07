@@ -39,14 +39,16 @@ switch ($_REQUEST['command']) {
     break;
 
   case 'search':
+    // empty strings are ignored by searchItems() when building queries
     $data = Libraries::searchItems(array(
-      'keywords' => getArg('keywords'), 
+      'q'        => getArg('q'),         // the full query
+      'keywords' => getArg('keywords'),  // space-separated list of keywords
       'title'    => getArg('title'),
       'author'   => getArg('author'),
-      'location' => getArg('location'),
-      'format'   => getArg('format'),
-      'pubDate'  => getArg('pubDate'),
-      'language' => getArg('language'),
+      'location' => getArg('location'),  // library/archive location code
+      'format'   => getArg('format'),    // format code
+      'pubDate'  => getArg('pubDate'),   // YYYY-YYYY (4 digit year range)
+      'language' => getArg('language'),  // language code
     ), getArg('page', '1'));
     break;
 

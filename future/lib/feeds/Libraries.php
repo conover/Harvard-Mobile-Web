@@ -236,6 +236,12 @@ class Libraries {
         }
         return $availability;
       
+      case 'authorlink':
+        if ($exists && isset($value[0])) {
+          return urldecode((string)$value[0]);
+        }
+        break;
+      
       default: 
         if ($exists && isset($value[0])) {
           return self::formatField($lastField, (string)$value[0]);
@@ -472,6 +478,7 @@ class Libraries {
 
   public static function searchItems($searchParams=array(), $page=1) {
     $qParamMapping = array(
+      'q'        => '',
       'keywords' => '',
       'title'    => 'ex-Everything-1.0',
       'author'   => 'author',
@@ -487,11 +494,20 @@ class Libraries {
     foreach ($qParamMapping as $searchParam => $qParam) {
       if (isset($searchParams[$searchParam]) && trim($searchParams[$searchParam])) {
         $value = trim($searchParams[$searchParam]);
-        // don't quote keywords because we want them treated individually
-        if ($searchParam != 'keywords' && strpos($value, ' ') !== FALSE) {
-          $value = '"'.$value.'"'; 
+        switch ($searchParam) {
+          case 'q':
+          case 'keywords':
+            // don't quote keywords or full queries
+            $queryTermArray[] = $value;
+            break;
+            
+          default:
+            if (strpos($value, ' ') !== FALSE) {
+              $value = '"'.$value.'"'; 
+            }
+            $queryTermArray[] = ($qParam ? "{$qParam}:" : '').$value;
+            break;
         }
-        $queryTermArray[] = ($qParam ? "{$qParam}:" : '').$value;
       }      
     }
     
@@ -506,8 +522,7 @@ class Libraries {
     }
     $urlSuffix = http_build_query($args);
   
-    $xml = self::query("search-{$urlSuffix}", 
-      'URL_LIBRARIES_SEARCH_BASE', $urlSuffix);
+    $xml = self::query("search-{$urlSuffix}", 'URL_LIBRARIES_SEARCH_BASE', $urlSuffix);
     
     $results = array(
       'q'        => $args['q'],
@@ -760,6 +775,7 @@ class Libraries {
       'nonLatinTitle'   => self::getField($item, 'vernacularTitle'),
       'nonLatinCreator' => self::getField($item, 'vernacularcreator'),
       'creator'         => self::getField($dc,   'creator'),
+      'creatorLink'     => self::getField($item, 'authorlink'),
       'publisher'       => self::getField($dc,   'publisher'),
       'date'            => self::getField($dc,   'date'),
       'format'          => self::getField($dc,   'format'),

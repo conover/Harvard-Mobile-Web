@@ -158,6 +158,7 @@ class LibrariesModule extends Module {
       'nonLatinTitle'   => $this->formatDetail($data, 'nonLatinTitle'),
       'nonLatinCreator' => $this->formatDetail($data, 'nonLatinCreator'),
       'creator'         => $this->formatDetail($data, 'creator'),
+      'creatorLink'     => self::argVal($data, 'creatorLink', ''),
       'publisher'       => $this->formatDetail($data, 'publisher'),
       'date'            => $this->formatDetail($data, 'date'),
       'format'          => $this->translateFormat(self::argVal($data['format'], 'formatDetail', '')),
@@ -495,9 +496,15 @@ class LibrariesModule extends Module {
         //error_log(print_r($data, true));
         
         if ($item['creator']) {
-          $item['creatorURL'] = $this->buildBreadcrumbURL('search', array(
-            'author' => $item['creator'],
-          ));
+          if ($item['creatorLink']) {
+            $item['creatorURL'] = $this->buildBreadcrumbURL('search', array(
+              'q' => $item['creatorLink'],
+            ));
+          } else {
+            $item['creatorURL'] = $this->buildBreadcrumbURL('search', array(
+              'author' => $item['creator'],
+            ));
+          }
         };
 
         $data = Libraries::getFullAvailability($id);
@@ -685,6 +692,7 @@ class LibrariesModule extends Module {
         $formats   = $searchConfig['formats']   + Libraries::getFormatSearchCodes();
         $pubDates  = $searchConfig['pubDates']  + Libraries::getPubDateSearchCodes();
         
+        $q          = trim($this->getArg('q'));  // full query
         $keywords   = trim($this->getArg('keywords'));
         $title      = trim($this->getArg('title'));
         $author     = trim($this->getArg('author'));
@@ -706,15 +714,16 @@ class LibrariesModule extends Module {
         $pageSize = 0;
         $pageCount = 0;
         $results = array();
-        if ($keywords || $title || $author) {
+        if ($q || $keywords || $title || $author) {
           $results = array();
           $data = Libraries::searchItems(array(
+            'q'        => $q, 
             'keywords' => $keywords, 
             'title'    => $title,
             'author'   => $author,
             'location' => $location, 
             'format'   => $format, 
-            'pubDate'  => $pubDate,
+            'pubDate'  => $pubDate, 
             'language' => $language,
           ), $pageNumber);
           //error_log(print_r($data, true));
@@ -744,7 +753,7 @@ class LibrariesModule extends Module {
           $nextURL = $this->buildBreadcrumbURL($this->page, $args, false);
         }
         
-        $this->assign('keywords',    $keywords);
+        $this->assign('keywords',    implode(' ', array($keywords, $q)));
         $this->assign('title',       $title);
         $this->assign('author',      $author);
         $this->assign('location',    $location);
