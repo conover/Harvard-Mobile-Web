@@ -22,27 +22,37 @@
 </div>
 <div class="nonfocal itemInfo">
   <h3>{$info['collectionName']}</h3>
-  {if $info['status'] != 'collection' || $info['callNumber']}
+  {if $info['type'] != 'collection' || $info['callNumber']}
     <p class="smallprint">
       {if $info['callNumber']}{$info['callNumber']}{/if}
       <br/>{$info['type']}
-      {if $info['secondary']}<br/>{$info['status']} ({$info['secondary']}){/if}
+      <br/>
+      {if $item['state'] == 'collection'}
+        may be available
+      {else}
+        {$item['state']}
+      {/if}
+      {if $info['type'] != 'collection'}
+        {if $info['status']}({$info['status']}){/if}
+      {else}
+        {if $info['message']}({$info['message']}){/if}
+      {/if}
     </p>
   {/if}
 </div>
 
 {$requestLinks = array()}
-{if $info['requestUrl']}
+{if $info['requestURL']}
   {$requestLink = array()}
-  {$requestLink['title'] = "Request item"}
-  {$requestLink['url'] = $info['requestUrl']}
+  {$requestLink['title'] = "Request Item"}
+  {$requestLink['url'] = $info['requestURL']}
   {$requestLink['class'] = "external"}
   {$requestLinks[] = $requestLink}
 {/if}
-{if $info['scanUrl']}
+{if $info['scanURL']}
   {$requestLink = array()}
-  {$requestLink['title'] = "Scan and deliver item"}
-  {$requestLink['url'] = $info['scanUrl']}
+  {$requestLink['title'] = "Scan &amp; Deliver"}
+  {$requestLink['url'] = $info['scanURL']}
   {$requestLink['class'] = "external"}
   {$requestLinks[] = $requestLink}
 {/if}

@@ -336,7 +336,7 @@ class Libraries {
         'name'         => self::getField($institution, 'name'),
         'primaryname'  => self::getField($institution, 'primaryname'),
         'id'           => self::getField($institution, 'id'),
-        'type'         => $type,
+        'type'         => self::getField($institution, 'type'),
         'address'      => self::getField($institution, array('location', 'address')),
         'latitude'     => self::getField($institution, array('location', 'latitude')),
         'longitude'    => self::getField($institution, array('location', 'longitude')),
@@ -415,7 +415,248 @@ class Libraries {
       'hoursOfOperationString' => !$hoursIsArray ? implode('; ', $hours) : '',
     );
   }
+
+  private static function getItemState($item) {
+    $state = 'unavailable';
   
+    $statusString = strtolower(self::getField($item, 'stat'));
+    if (strcasecmp($item->isavail, 'Y') == 0) {
+      $state = 'available'; 
+      
+    } else if ((strpos($statusString, 'checked out') !== FALSE &&
+                strpos($statusString, 'not checked out') === FALSE) || 
+               (strpos($statusString, 'on hold') !== FALSE &&
+                strpos($statusString, 'not on hold') === FALSE) || 
+               (strpos($statusString, 'on order') !== FALSE &&
+                strpos($statusString, 'not on order') === FALSE)) { 
+      // haven't seen 'not on hold' or 'not on order' but better safe than sorry
+      $state = 'requestable';
+      
+    } else if (strpos($statusString, 'lost') === FALSE && self::getField($item, 'req')) {
+      foreach($item->req as $req) {
+        if (self::getField($req, 'href')) {
+          $state = 'requestable';
+          break;
+        }
+      }
+    }
+
+    return $state;
+  }
+
+  private static function getItemAvailabilitySummaryForInstitution($branch) {
+    // Brief collection information - grouped by item loan type
+    
+    $categories = array();
+    
+    foreach ($branch->collection as $collection) {
+      $collectionItemCount = 0;
+      
+      // Walk over the items if there are any
+      if (isset($collection->items->itemrecord)) {
+        foreach ($collection->items->itemrecord as $item) {
+          $statusString = strtolower(self::getField($item, 'stat'));
+          $statusArray = explode(' | ', $statusString);
+          $type = $statusArray[0];
+          
+          $state = self::getItemState($item);
+  
+          if (!isset($categories[$type])) {
+            $categories[$type] = array(
+              'type'        => $type,
+              'available'   => 0,
+              'requestable' => 0,
+              'unavailable' => 0,
+              'collection'  => 0,
+              'total'       => 0,
+            );
+          }
+          $categories[$type]['total']++;
+          if ($state == 'available') {
+            $categories[$type]['available']++;
+            
+          } else if ($state == 'requestable') {
+            $categories[$type]['requestable']++;
+            
+          } else if ($state == 'unavailable') {
+            $categories[$type]['unavailable']++;
+          }
+          $collectionItemCount++;
+        }
+      }
+      
+      // No items means it's a collection only item
+      if (!$collectionItemCount) { 
+        $descriptions = array();
+        if (isset($collection->holdtag)) {
+          foreach($collection->holdtag as $holdtag) {
+            $descriptions[] = self::getField($holdtag, 'availval');
+          }
+        }
+  
+        $categories[] = array(
+          'type'        => 'collection',
+          'available'   => 0,
+          'requestable' => 0,
+          'unavailable' => 0,
+          'collection'  => 1,
+          'total'       => 1,
+        );
+      }
+    }
+    
+    return array_values($categories);
+  }
+
+  private static function getItemAvailabilityForInstitution($branch) {
+    // Detailed collection information - grouped by collection
+    //
+    // Within a collection items are grouped into set where all the following
+    // fields are the same:
+    // - callNumber
+    // - state
+    // - loan type
+    // - status
+    // - description
+    // - request url (if any)
+    // - scan and deliver url (if any)
+
+    $collections = array();
+    
+    foreach ($branch->collection as $collection) {
+      $categories = array();
+      
+      if (isset($collection->items->itemrecord)) {
+        foreach ($collection->items->itemrecord as $item) {
+          $statusString = strtolower(self::getField($item, 'stat'));
+          $statusArray = explode(' | ', $statusString);
+          $type = $statusArray[0];
+  
+          $itemDetails = array(
+            'state'             => self::getItemState($item),
+            'status'            => implode(' ', array_slice($statusArray, 1)),
+            'callNumber'        => self::getField($item, 'call'),
+            'description'       => self::getField($item, 'desc'),
+            'requestURL'        => '',
+            'scanAndDeliverURL' => '',
+            'message'           => '',
+          );
+          if (!strlen($itemDetails['callNumber'])) {
+            $itemDetails['callNumber'] = self::getField($collection, 'callnumber');
+          }
+          
+          if (isset($item->req)) {
+            foreach($item->req as $req) {
+              $url = self::getField($req, 'href');
+              
+              if (stripos($req, 'scan') !== FALSE) {
+                $itemDetails['scanAndDeliverURL'] = $url;
+              } else {
+                $itemDetails['requestURL'] = $url;
+              }
+            }
+          }
+          
+          if (!isset($categories[$type])) {
+            $categories[$type] = array(
+              'type'  => $type,
+              'items' => array(),
+            );
+          }
+          
+          $key = implode('-', $itemDetails);
+          if (!isset($categories[$type]['items'][$key])) {
+            $categories[$type]['items'][$key] = $itemDetails;
+            $categories[$type]['items'][$key]['count'] = 0;
+          }
+          $categories[$type]['items'][$key]['count']++;
+        }
+      }
+  
+      // No items means it's a collection only item
+      if (!count($categories)) { 
+        $descriptions = array();
+        if (isset($collection->holdtag)) {
+          foreach($collection->holdtag as $holdtag) {
+            $descriptions[] = self::getField($holdtag, 'availval');
+          }
+        }
+  
+        $categories[] = array(
+          'type'  => 'collection',
+          'items' => array(
+            array(
+              'state'             => 'collection',
+              'status'            => '',
+              'callNumber'        => self::getField($collection, 'callnumber'),
+              'description'       => implode("\n", $descriptions),
+              'requestUrl'        => '',
+              'scanAndDeliverUrl' => '',
+              'message'           => self::getField($branch, 'noitems'),
+              'count'             => 1,
+            ),
+          )
+        );
+      }
+      
+      foreach ($categories as $type => $category) {
+        $categories[$type]['items'] = array_values($categories[$type]['items']);
+      }
+
+      $collections[] = array(
+        'name'       => self::getField($collection, 'collectionname'),
+        'callNumber' => self::getField($collection, 'callnumber'),
+        'categories' => array_values($categories),
+      );
+    }
+    
+    return $collections;
+  }
+
+  private static function getItemAvailabilityAtDetailLevel($itemId, $detailLevel) {
+    $xml = self::query("avail-{$itemId}", 'URL_LIBRARIES_AVAILABILITY_BASE', $itemId);
+    
+    // Get the full list of known institution IDs for later use below
+    $institutionIDs = array();
+    foreach (self::getInstitutionsByType() as $institution) {
+      $institutionIDs["{$institution['type']}_{$institution['id']}"] = true;
+    }
+    
+    $results = array(
+      'id'           => $itemId,
+      'institutions' => array(),
+    );
+    
+    if (isset($xml->branch)) {
+      foreach ($xml->branch as $branch) {
+        $institution = array(
+          'id'          => self::getField($branch, array('repository', 'id')),
+          'type'        => self::getField($branch, array('repository', 'type')), 
+          'name'        => self::getField($branch, array('repository', 'name')),
+        );
+
+        // Make sure library is in the list of institutions:
+        if (!isset($institutionIDs["{$institution['type']}_{$institution['id']}"])) { 
+          continue; 
+        }
+        
+        if ($detailLevel == 'brief') {
+          if (!isset($institution['categories'])) {
+            $institution['categories'] = array();
+          }
+          $institution['categories'] = self::getItemAvailabilitySummaryForInstitution($branch);
+          
+        } else {
+          $institution['collections'] = self::getItemAvailabilityForInstitution($branch);
+        }
+        
+        $results['institutions'][] = $institution;
+      }
+    }
+    
+    return $results;    
+  }
+
   //
   // Public functions
   //
@@ -563,6 +804,14 @@ class Libraries {
     return $results;
   }
 
+  public static function getItemAvailability($itemId) {
+    return self::getItemAvailabilityAtDetailLevel($itemId, 'full');
+  }
+
+  public static function getItemAvailabilitySummary($itemId) {
+    return self::getItemAvailabilityAtDetailLevel($itemId, 'brief');
+  }
+
   public static function getFullAvailability($id) {
     $xml = self::query("avail-{$id}", 'URL_LIBRARIES_AVAILABILITY_BASE', $id);
     
@@ -659,20 +908,24 @@ class Libraries {
                 }
               }
               
-              if ($itemByStat['available']        ) { $itemsByStat[$statMain]['availCount']++; }
-              if ($itemByStat['unavailable']      ) { $itemsByStat[$statMain]['unavailCount']++; }
-              if ($itemByStat['canRequest']       ) { $itemsByStat[$statMain]['requestCount']++; }
-              if ($itemByStat['checkedOutItem']   ) { $itemsByStat[$statMain]['checkedOutCount']++; }
-              if ($itemByStat['canScanAndDeliver']) { $itemsByStat[$statMain]['scanAndDeliverCount']++; }
-              
-              if ($itemByStat['available']) {
+              if ($itemByStat['available'] || $itemByStat['canScanAndDeliver']) {
                 $itemsByStat[$statMain]['availableItems'][] = $itemByStat;
+                $itemsByStat[$statMain]['availCount']++;
                 
-              } else if ($itemByStat['checkedOutItem']) {
+              } else if ($itemByStat['checkedOutItem'] || $itemByStat['canRequest']) {
                 $itemsByStat[$statMain]['checkedOutItems'][] = $itemByStat;
+                $itemsByStat[$statMain]['checkedOutCount']++;
                 
               } else {
                 $itemsByStat[$statMain]['unavailableItems'][] = $itemByStat;
+                $itemsByStat[$statMain]['unavailCount']++;
+              }
+              
+              if ($itemByStat['canRequest']) { 
+                $itemsByStat[$statMain]['requestCount']++;
+              }
+              if ($itemByStat['canScanAndDeliver']) { 
+                $itemsByStat[$statMain]['scanAndDeliverCount']++; 
               }
               
               $itemCount++;

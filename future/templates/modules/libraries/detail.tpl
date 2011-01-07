@@ -27,20 +27,20 @@
       <strong>{$location['name']}</strong><br/>
       <div class="distance" id="location_{$location['id']}"></div>
     {/block}
-    {foreach $location['info'] as $info}
+    {foreach $location['categories'] as $category}
       
-      {if $info['available'] > 0}
+      {if $category['available'] > 0}
         {$class = 'available'}
-      {elseif $info['requestable'] > 0}
+      {elseif $category['requestable'] > 0}
         {$class = 'requestable'}
       {else}
         {$class = 'unavailable'}
       {/if}
       {capture name="itemText" assign="itemText"}
-        {if $info['collection'] > 0}
-          {$info['collection']} may be available
+        {if $category['collection'] > 0}
+          {$category['collection']} may be available
         {else}
-          {$info['available']} of {$info['total']} available - {$info['type']}
+          {$category['available']} of {$category['total']} available - {$category['type']}
         {/if}
       {/capture}
       {block name="item"}

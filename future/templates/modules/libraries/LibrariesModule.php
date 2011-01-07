@@ -343,9 +343,9 @@ class LibrariesModule extends Module {
     return $this->buildBreadcrumbURL('detail', $args, !$toggleBookmark && $addBreadcrumb);
   }
   
-  private function availabilityURL($itemID, $type, $id) {
+  private function availabilityURL($itemId, $type, $id) {
     return $this->buildBreadcrumbURL('availability', array(
-      'itemID' => $itemID,
+      'itemId' => $itemId,
       'type'   => $type,
       'id'     => $id,
     ));
@@ -507,35 +507,28 @@ class LibrariesModule extends Module {
         $item = $this->getItemDetails($data);
         //error_log(print_r($data, true));
         
-        $data = Libraries::getFullAvailability($id);
+        $data = Libraries::getItemAvailabilitySummary($id);
         //error_log(print_r($data, true));
         
-        $locations = array();
+        $locations = $data['institutions'];
         $locationCoords = array();
-        foreach ($data as $entry) {
-          $info = $this->formatBriefItemAvailability($entry);
-          if (!count($info)) { continue; }
-          
-          $locations[] = array(
-            'id'    => $entry['id'],
-            'type'  => $entry['type'],
-            'name'  => $this->formatDetail($entry, 'name'),
-            'info'  => $info,
-            'url'   => $this->availabilityURL($id, $entry['type'], $entry['id']),
-          );
-          
-          $ldata = null;
-          if ($entry['type'] == 'library') {
-            $ldata = Libraries::getLibraryDetails($entry['id'], $entry['name']);
+        foreach ($locations as $index => $location) {
+          $locations[$index]['name'] = $this->formatDetail($location, 'name');
+          $locations[$index]['url'] = 
+            $this->availabilityURL($id, $location['type'], $location['id']);
+                    
+          $libData = null;
+          if ($location['type'] == 'library') {
+            $libData = Libraries::getLibraryDetails($location['id'], $location['name']);
             
-          } else if ($entry['type'] == 'archive') {
-            $ldata = Libraries::getArchiveDetails($entry['id'], $entry['name']);
+          } else if ($location['type'] == 'archive') {
+            $libData = Libraries::getArchiveDetails($location['id'], $location['name']);
           }
           
-          if ($ldata) {
-            $locationCoords[$entry['id']] = array(
-              'lat' => floatVal($ldata['latitude']),
-              'lon' => floatVal($ldata['longitude']),
+          if ($libData) {
+            $locationCoords[$location['id']] = array(
+              'lat' => floatVal($libData['latitude']),
+              'lon' => floatVal($libData['longitude']),
             );
           }
         }
@@ -550,22 +543,22 @@ class LibrariesModule extends Module {
         break;
       
       case 'availability':
-        $itemID = $this->getArg('itemID');
+        $itemId = $this->getArg('itemId');
         $type   = $this->getArg('type');
         $id     = $this->getArg('id');
           
-        if (!$itemID || !$id) {
+        if (!$itemId || !$id) {
           $this->redirectTo('index');
         }
         
-        $itemData = Libraries::getItemRecord($itemID);
+        $itemData = Libraries::getItemRecord($itemId);
 
         $location = array();
         $name = '';
         
-        $data = Libraries::getFullAvailability($itemID);
+        $data = Libraries::getItemAvailability($itemId);
 
-        foreach ($data as $entry) {
+        foreach ($data['institutions'] as $entry) {
           if ($entry['id'] != $id) { continue; }
           //error_log(print_r($entry, true));
           
@@ -587,30 +580,28 @@ class LibrariesModule extends Module {
             $this->redirectTo('index');
           }
           
-          $collections = $this->formatItemAvailabilityInfo($entry);
+          $collections = $entry['collections'];
           
-          foreach ($collections as $c => $collection) {
-            foreach ($collection['types'] as $t => $itemType) {
-              foreach ($itemType['items'] as $i => $item) {
-                if (self::argVal($item, 'requestUrl') || self::argVal($item, 'scanUrl')) {
-                  $callNumber = $item['callNumber'] ? 
-                    $item['callNumber'] : $collection['callNumber'];
-
+          foreach ($collections as $col => $collection) {
+            foreach ($collection['categories'] as $cat => $category) {
+              foreach ($category['items'] as $i => $item) {
+                if (self::argVal($item, 'requestURL') || self::argVal($item, 'scanAndDeliverURL')) {
                   $url = $this->buildBreadcrumbURL('request', array(
                     'libId'      => $id, 
                     'libType'    => $type, 
                     'libName'    => $name, 
-                    'itemID'     => $itemID,
+                    'itemId'     => $itemId,
                     'cName'      => $collection['name'], 
-                    'cNumber'    => $callNumber, 
-                    'type'       => $itemType['type'],
+                    'cNumber'    => $item['callNumber'], 
+                    'type'       => $category['type'],
+                    'state'      => $item['state'],
                     'status'     => $item['status'],
-                    'secondary'  => $item['secondary'],
-                    'requestUrl' => self::argVal($item, 'requestUrl'),
-                    'scanUrl'    => self::argVal($item, 'scanUrl'),
+                    'message'    => $item['message'],
+                    'requestURL' => $item['requestURL'],
+                    'scanURL'    => $item['scanAndDeliverURL'],
                   ));
                   
-                  $collections[$c]['types'][$t]['items'][$i]['url'] = $url;
+                  $collections[$col]['categories'][$cat]['items'][$i]['url'] = $url;
                 }
               }
             }
@@ -638,11 +629,11 @@ class LibrariesModule extends Module {
         $libId   = $this->getArg('libId');
         $libName = $this->getArg('libName');
           
-        $itemID = $this->getArg('itemID');
-        if (!$itemID) {
+        $itemId = $this->getArg('itemId');
+        if (!$itemId) {
           $this->redirectTo('index');
         }
-        $itemData = Libraries::getItemRecord($itemID);
+        $itemData = Libraries::getItemRecord($itemId);
 
         if ($libType == 'library') {
           $libData = Libraries::getLibraryDetails($libId, $libName);
@@ -657,19 +648,20 @@ class LibrariesModule extends Module {
         }
 
         $this->assign('info', array(
-          'name'             => $libName,
-          'primaryname'      => $this->formatDetail($libData, 'primaryname'),
-          'hours'            => $this->formatDetail($libData, 'hrsOpenToday'),
-          'infoUrl'          => $this->locationAndHoursURL($libType, $libId, $libName, false, true),
+          'name'           => $libName,
+          'primaryname'    => $this->formatDetail($libData, 'primaryname'),
+          'hours'          => $this->formatDetail($libData, 'hrsOpenToday'),
+          'infoUrl'        => $this->locationAndHoursURL($libType, $libId, $libName, false, true),
           
-          'title'            => $this->formatDetail($itemData, 'title', 'Unknown title'),
-          'collectionName'   => $this->getArg('cName'),
-          'callNumber'       => $this->getArg('cNumber'),
-          'type'             => $this->getArg('type'),
-          'status'           => $this->getArg('status'),
-          'secondary'        => $this->getArg('secondary'),
-          'requestUrl'       => $this->getArg('requestUrl'),
-          'scanUrl'          => $this->getArg('scanUrl'),
+          'title'          => $this->formatDetail($itemData, 'title', 'Unknown title'),
+          'collectionName' => $this->getArg('cName'),
+          'callNumber'     => $this->getArg('cNumber'),
+          'type'           => $this->getArg('type'),
+          'state'          => $this->getArg('state'),
+          'status'         => $this->getArg('status'),
+          'message'        => $this->getArg('message'),
+          'requestURL'     => $this->getArg('requestURL'),
+          'scanURL'        => $this->getArg('scanURL'),
         ));
         break;
       

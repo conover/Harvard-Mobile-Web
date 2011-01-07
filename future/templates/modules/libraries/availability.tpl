@@ -22,33 +22,36 @@
 {foreach $location['collections'] as $collection}
   <div class="nonfocal itemInfo">
     <h3>{$collection['name']}</h3>
-  {foreach $collection['types'] as $type}
-    {if !$type@first}<div class="nonfocal itemInfo">{/if}
-      {if $item['type'] != 'collection' || $collection['callNumber']}
-        <span class="smallprint">
-          {if $type['type'] != 'collection'}{$type['type']}{/if}
-          {if $type['type'] != 'collection' && $collection['callNumber']}<br/>{/if}
-          {if $collection['callNumber']}{$collection['callNumber']}{/if}
-        </span>
-      {/if}
+    {if $collection['callNumber']}<span class="smallprint">{$collection['callNumber']}</span>{/if}
+  {foreach $collection['categories'] as $category}
+    {if !$category@first}<div class="nonfocal itemInfo">{/if}
+      {if $category['type'] != 'collection'}<br/><span class="smallprint">{$category['type']}</span>{/if}
     </div>
     
     {$list = array()}
-    {foreach $type['items'] as $item}
+    {foreach $category['items'] as $item}
       {$listItem = array()}
       {capture name="title" assign="title"}
-        {if $item['status'] == 'available'}
+        {if $item['state'] == 'available'}
           {$class = 'available'}
-        {elseif $item['status'] == 'requestable'}
-          {$class = 'requestable'}
-        {else}
+        {elseif $item['state'] == 'unavailable' || $category['type'] == 'collection'}
           {$class = 'unavailable'}
+        {else}
+          {$class = 'requestable'}
         {/if}
         {block name="itemTitle"}
           <span class="itemType {$class}">
             {$item['count']}
-            {if $item['status'] == 'collection'}may be available{else}{$item['status']}{/if}
-            {if $item['secondary']}({$item['secondary']}){/if}
+            {if $item['state'] == 'collection'}
+              may be available
+            {else}
+              {$item['state']}
+            {/if}
+            {if $category['type'] != 'collection'}
+              {if $item['status']}({$item['status']}){/if}
+            {else}
+              {if $item['message']}({$item['message']}){/if}
+            {/if}
           </span>
           <span class="itemType"><span class="smallprint">
             {if $item['callNumber']}{$item['callNumber']}{if $item['description']}<br/>{/if}{/if}
@@ -60,11 +63,13 @@
       {if $item['url']}
         {$listItem['url'] = $item['url']}
       {/if}
+      {block name="extraItemInfo"}
+      {/block}
       {$list[] = $listItem}
     {/foreach}
     {if count($list)}
       <div class="items">
-        {include file="findInclude:common/navlist.tpl" navlistItems=$list subTitleNewline=false accessKey=false}
+        {include file="findInclude:common/navlist.tpl" navlistItems=$list subTitleNewline=false accessKey=false labelColon=false}
       </div>
     {/if}
   {/foreach}

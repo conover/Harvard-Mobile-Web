@@ -56,6 +56,14 @@ switch ($_REQUEST['command']) {
     $itemid = getArg('itemId');
     $data = Libraries::getFullAvailability($itemid);
     break;
+  
+  case 'itemavailability':
+    $data = Libraries::getItemAvailability(getArg('itemId'));
+    break;
+
+  case 'itemavailabilitysummary':
+    $data = Libraries::getItemAvailabilitySummary(getArg('itemId'));
+    break;
 
   case 'itemdetail':
     $itemid = getArg('itemId');
