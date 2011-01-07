@@ -85,27 +85,35 @@
 }
 .listItems .book {
   background-image: url(/modules/libraries/images/book.png);
+  min-height: 16px;
 }
 .listItems .image {
   background-image: url(/modules/libraries/images/image.png);
+  min-height: 16px;
 }
 .listItems .journal {
   background-image: url(/modules/libraries/images/journal.png);
+  min-height: 16px;
 }
 .listItems .map {
   background-image: url(/modules/libraries/images/map.png);
+  min-height: 16px;
 }
 .listItems .musicscore {
   background-image: url(/modules/libraries/images/musicscore.png);
+  min-height: 16px;
 }
 .listItems .soundrecording {
   background-image: url(/modules/libraries/images/soundrecording.png);
+  min-height: 16px;
 }
 .listItems .computerfile {
   background-image: url(/modules/libraries/images/computerfile.png);
+  min-height: 16px;
 }
 .listItems .video {
   background-image: url(/modules/libraries/images/video.png);
+  min-height: 16px;
 }
 
 table.search {
@@ -169,4 +177,8 @@ table.search input[type=text], table.search select {
   text-decoration: underline;
   background: none;
   border: none;
+}
+
+.itemInfo, .itemInfo .smallprint {
+  line-height: normal;
 }

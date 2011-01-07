@@ -236,6 +236,12 @@ class Libraries {
         }
         return $availability;
       
+      case 'authorlink':
+        if ($exists && isset($value[0])) {
+          return urldecode((string)$value[0]);
+        }
+        break;
+      
       default: 
         if ($exists && isset($value[0])) {
           return self::formatField($lastField, (string)$value[0]);
@@ -472,6 +478,7 @@ class Libraries {
 
   public static function searchItems($searchParams=array(), $page=1) {
     $qParamMapping = array(
+      'q'        => '',
       'keywords' => '',
       'title'    => 'ex-Everything-1.0',
       'author'   => 'author',
@@ -487,11 +494,20 @@ class Libraries {
     foreach ($qParamMapping as $searchParam => $qParam) {
       if (isset($searchParams[$searchParam]) && trim($searchParams[$searchParam])) {
         $value = trim($searchParams[$searchParam]);
-        // don't quote keywords because we want them treated individually
-        if ($searchParam != 'keywords' && strpos($value, ' ') !== FALSE) {
-          $value = '"'.$value.'"'; 
+        switch ($searchParam) {
+          case 'q':
+          case 'keywords':
+            // don't quote keywords or full queries
+            $queryTermArray[] = $value;
+            break;
+            
+          default:
+            if (strpos($value, ' ') !== FALSE) {
+              $value = '"'.$value.'"'; 
+            }
+            $queryTermArray[] = ($qParam ? "{$qParam}:" : '').$value;
+            break;
         }
-        $queryTermArray[] = ($qParam ? "{$qParam}:" : '').$value;
       }      
     }
     
@@ -506,8 +522,7 @@ class Libraries {
     }
     $urlSuffix = http_build_query($args);
   
-    $xml = self::query("search-{$urlSuffix}", 
-      'URL_LIBRARIES_SEARCH_BASE', $urlSuffix);
+    $xml = self::query("search-{$urlSuffix}", 'URL_LIBRARIES_SEARCH_BASE', $urlSuffix);
     
     $results = array(
       'q'        => $args['q'],
@@ -529,18 +544,18 @@ class Libraries {
         if ($index > $results['end']) { $results['end'] = $index; }
         if ($results['start'] > $index || $results['start'] < 1) { $results['start'] = $index; }
         $results['items'][] = array(
-          'index'        => $index,
-          'itemId'       => self::getField($item, 'id'),
-          'creator'      => self::getField($dc,   'creator'),
+          'index'           => $index,
+          'itemId'          => self::getField($item, 'id'),
+          'creator'         => self::getField($dc,   'creator'),
           // This is extracted as vernacularcreator in the detail version
           'nonLatinCreator' => self::getField($item, 'vernacularauthor'),
-          'itemId'       => self::getField($item, 'id'),
-          'title'        => self::getField($dc,   'title'),
+          'itemId'          => self::getField($item, 'id'),
+          'title'           => self::getField($dc,   'title'),
           // The var casing is different from the same info in the detail (vernacularTitle)
-          'nonLatinTitle'=> self::getField($item, 'vernaculartitle'),
-          'date'         => self::getField($dc,   'date'),
-          'format'       => self::getField($dc,   'format'),
-          'edition'      => self::getField($item, 'edition'),
+          'nonLatinTitle'   => self::getField($item, 'vernaculartitle'),
+          'date'            => self::getField($dc,   'date'),
+          'format'          => self::getField($dc,   'format'),
+          'edition'         => self::getField($item, 'edition'),
         );
       }
     }
@@ -753,23 +768,24 @@ class Libraries {
     $GLOBALS['librariesDebugEntryName'] = "item '".self::getField($dc, 'title')."'";
 
     return array(
-      'itemId'         => $id,
-      'title'          => self::getField($dc,   'title'),
+      'itemId'          => $id,
+      'title'           => self::getField($dc,   'title'),
       // UTF-8 encoded, non-Latin title (so Chinese, Japanese, Korean, etc.)
       // Yes, the casing of the variables really is different in the feed.
-      'nonLatinTitle'  => self::getField($item, 'vernacularTitle'),
-      'nonLatinCreator'=> self::getField($item, 'vernacularcreator'),
-      'creator'        => self::getField($dc,   'creator'),
-      'publisher'      => self::getField($dc,   'publisher'),
-      'date'           => self::getField($dc,   'date'),
-      'format'         => self::getField($dc,   'format'),
-      'edition'        => self::getField($item, 'edition'),
-      'identifier'     => self::getField($dc,   'identifier'),
-      'numberofimages' => self::getField($item, 'numberofimages', 0),
-      'worktype'       => self::getField($item, 'workType'),
-      'thumbnail'      => self::getField($item, 'thumbnail'),
-      'cataloglink'    => self::getField($item, 'cataloglink'),
-      'fullimagelink'  => self::getField($item, 'fullimage'),
+      'nonLatinTitle'   => self::getField($item, 'vernacularTitle'),
+      'nonLatinCreator' => self::getField($item, 'vernacularcreator'),
+      'creator'         => self::getField($dc,   'creator'),
+      'creatorLink'     => self::getField($item, 'authorlink'),
+      'publisher'       => self::getField($dc,   'publisher'),
+      'date'            => self::getField($dc,   'date'),
+      'format'          => self::getField($dc,   'format'),
+      'edition'         => self::getField($item, 'edition'),
+      'identifier'      => self::getField($dc,   'identifier'),
+      'numberofimages'  => self::getField($item, 'numberofimages', 0),
+      'worktype'        => self::getField($item, 'workType'),
+      'thumbnail'       => self::getField($item, 'thumbnail'),
+      'cataloglink'     => self::getField($item, 'cataloglink'),
+      'fullimagelink'   => self::getField($item, 'fullimage'),
     );
   }
   
