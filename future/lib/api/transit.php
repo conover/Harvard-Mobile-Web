@@ -82,6 +82,9 @@ switch ($command) {
       $data = formatRouteInfo($routeID, $routeInfo);
 
       $vehicles = $view->getRouteVehicles($routeID);
+      foreach($vehicles as $id => $vehicle) {
+        $vehicles[$id]['id'] = $id;
+      }
       $data['vehicleLocations'] = array_values($vehicles);
 
       $stops = array();
