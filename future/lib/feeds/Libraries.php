@@ -457,36 +457,36 @@ class Libraries {
         foreach ($collection->items->itemrecord as $item) {
           $statusString = strtolower(self::getField($item, 'stat'));
           $statusArray = explode(' | ', $statusString);
-          $type = $statusArray[0];
+          $holdingStatus = $statusArray[0];
           
           $state = self::getItemState($item);
   
-          if (!isset($categories[$type])) {
-            $categories[$type] = array(
-              'type'        => $type,
-              'available'   => 0,
-              'requestable' => 0,
-              'unavailable' => 0,
-              'collection'  => 0,
-              'total'       => 0,
+          if (!isset($categories[$holdingStatus])) {
+            $categories[$holdingStatus] = array(
+              'holdingStatus' => $holdingStatus,
+              'available'     => 0,
+              'requestable'   => 0,
+              'unavailable'   => 0,
+              'collection'    => 0,
+              'total'         => 0,
             );
           }
-          $categories[$type]['total']++;
+          $categories[$holdingStatus]['total']++;
           if ($state == 'available') {
-            $categories[$type]['available']++;
+            $categories[$holdingStatus]['available']++;
             
           } else if ($state == 'requestable') {
-            $categories[$type]['requestable']++;
+            $categories[$holdingStatus]['requestable']++;
             
           } else if ($state == 'unavailable') {
-            $categories[$type]['unavailable']++;
+            $categories[$holdingStatus]['unavailable']++;
           }
           $collectionItemCount++;
         }
       }
       
       // No items means it's a collection only item
-      if (!$collectionItemCount) { 
+      if (!$collectionItemCount && !self::getField($collection, 'online')) { 
         $descriptions = array();
         if (isset($collection->holdtag)) {
           foreach($collection->holdtag as $holdtag) {
@@ -495,12 +495,12 @@ class Libraries {
         }
   
         $categories[] = array(
-          'type'        => 'collection',
-          'available'   => 0,
-          'requestable' => 0,
-          'unavailable' => 0,
-          'collection'  => 1,
-          'total'       => 1,
+          'holdingStatus' => 'collection',
+          'available'     => 0,
+          'requestable'   => 0,
+          'unavailable'   => 0,
+          'collection'    => 1,
+          'total'         => 1,
         );
       }
     }
@@ -515,8 +515,8 @@ class Libraries {
     // fields are the same:
     // - callNumber
     // - state
-    // - loan type
-    // - status
+    // - holding status
+    // - secondary status
     // - description
     // - request url (if any)
     // - scan and deliver url (if any)
@@ -524,17 +524,19 @@ class Libraries {
     $collections = array();
     
     foreach ($branch->collection as $collection) {
+      if (self::getField($collection, 'online')) { continue; }
+    
       $categories = array();
       
       if (isset($collection->items->itemrecord)) {
         foreach ($collection->items->itemrecord as $item) {
           $statusString = strtolower(self::getField($item, 'stat'));
           $statusArray = explode(' | ', $statusString);
-          $type = $statusArray[0];
+          $holdingStatus = $statusArray[0];
   
           $itemDetails = array(
             'state'             => self::getItemState($item),
-            'status'            => implode(' ', array_slice($statusArray, 1)),
+            'secondaryStatus'   => implode(' ', array_slice($statusArray, 1)),
             'callNumber'        => self::getField($item, 'call'),
             'description'       => self::getField($item, 'desc'),
             'requestURL'        => '',
@@ -557,19 +559,19 @@ class Libraries {
             }
           }
           
-          if (!isset($categories[$type])) {
-            $categories[$type] = array(
-              'type'  => $type,
-              'items' => array(),
+          if (!isset($categories[$holdingStatus])) {
+            $categories[$holdingStatus] = array(
+              'holdingStatus' => $holdingStatus,
+              'items'         => array(),
             );
           }
           
           $key = implode('-', $itemDetails);
-          if (!isset($categories[$type]['items'][$key])) {
-            $categories[$type]['items'][$key] = $itemDetails;
-            $categories[$type]['items'][$key]['count'] = 0;
+          if (!isset($categories[$holdingStatus]['items'][$key])) {
+            $categories[$holdingStatus]['items'][$key] = $itemDetails;
+            $categories[$holdingStatus]['items'][$key]['count'] = 0;
           }
-          $categories[$type]['items'][$key]['count']++;
+          $categories[$holdingStatus]['items'][$key]['count']++;
         }
       }
   
@@ -583,11 +585,11 @@ class Libraries {
         }
   
         $categories[] = array(
-          'type'  => 'collection',
+          'holdingStatus' => 'collection',
           'items' => array(
             array(
-              'state'             => 'collection',
-              'status'            => '',
+              'state'             => 'may be available',
+              'secondaryStatus'   => '',
               'callNumber'        => self::getField($collection, 'callnumber'),
               'description'       => implode("\n", $descriptions),
               'requestUrl'        => '',
@@ -599,8 +601,8 @@ class Libraries {
         );
       }
       
-      foreach ($categories as $type => $category) {
-        $categories[$type]['items'] = array_values($categories[$type]['items']);
+      foreach ($categories as $holdingStatus => $category) {
+        $categories[$holdingStatus]['items'] = array_values($categories[$holdingStatus]['items']);
       }
 
       $collections[] = array(
@@ -645,9 +647,11 @@ class Libraries {
             $institution['categories'] = array();
           }
           $institution['categories'] = self::getItemAvailabilitySummaryForInstitution($branch);
+          if (!count($institution['categories'])) { continue; }
           
         } else {
           $institution['collections'] = self::getItemAvailabilityForInstitution($branch);
+          if (!count($institution['collections'])) { continue; }
         }
         
         $results['institutions'][] = $institution;

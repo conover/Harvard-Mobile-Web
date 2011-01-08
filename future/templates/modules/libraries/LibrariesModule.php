@@ -593,9 +593,9 @@ class LibrariesModule extends Module {
                     'itemId'     => $itemId,
                     'cName'      => $collection['name'], 
                     'cNumber'    => $item['callNumber'], 
-                    'type'       => $category['type'],
+                    'hStatus'    => $category['holdingStatus'],
                     'state'      => $item['state'],
-                    'status'     => $item['status'],
+                    'sStatus'    => $item['secondaryStatus'],
                     'message'    => $item['message'],
                     'requestURL' => $item['requestURL'],
                     'scanURL'    => $item['scanAndDeliverURL'],
@@ -648,20 +648,20 @@ class LibrariesModule extends Module {
         }
 
         $this->assign('info', array(
-          'name'           => $libName,
-          'primaryname'    => $this->formatDetail($libData, 'primaryname'),
-          'hours'          => $this->formatDetail($libData, 'hrsOpenToday'),
-          'infoUrl'        => $this->locationAndHoursURL($libType, $libId, $libName, false, true),
+          'name'            => $libName,
+          'primaryname'     => $this->formatDetail($libData, 'primaryname'),
+          'hours'           => $this->formatDetail($libData, 'hrsOpenToday'),
+          'infoUrl'         => $this->locationAndHoursURL($libType, $libId, $libName, false, true),
           
-          'title'          => $this->formatDetail($itemData, 'title', 'Unknown title'),
-          'collectionName' => $this->getArg('cName'),
-          'callNumber'     => $this->getArg('cNumber'),
-          'type'           => $this->getArg('type'),
-          'state'          => $this->getArg('state'),
-          'status'         => $this->getArg('status'),
-          'message'        => $this->getArg('message'),
-          'requestURL'     => $this->getArg('requestURL'),
-          'scanURL'        => $this->getArg('scanURL'),
+          'title'           => $this->formatDetail($itemData, 'title', 'Unknown title'),
+          'collectionName'  => $this->getArg('cName'),
+          'callNumber'      => $this->getArg('cNumber'),
+          'holdingStatus'   => $this->getArg('hStatus'),
+          'state'           => $this->getArg('state'),
+          'secondaryStatus' => $this->getArg('sStatus'),
+          'message'         => $this->getArg('message'),
+          'requestURL'      => $this->getArg('requestURL'),
+          'scanURL'         => $this->getArg('scanURL'),
         ));
         break;
       

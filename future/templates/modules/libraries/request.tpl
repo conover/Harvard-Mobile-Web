@@ -22,17 +22,17 @@
 </div>
 <div class="nonfocal itemInfo">
   <h3>{$info['collectionName']}</h3>
-  {if $info['type'] != 'collection' || $info['callNumber']}
+  {if $info['holdingStatus'] != 'collection' || $info['callNumber']}
     <p class="smallprint">
       {if $info['callNumber']}{$info['callNumber']}{/if}
-      <br/>{$info['type']}
+      {if $info['holdingStatus'] != 'collection'}<br/>{$info['holdingStatus']}{/if}
       <br/>
       {if $item['state'] == 'collection'}
         may be available
       {else}
         {$item['state']}
       {/if}
-      {if $info['type'] != 'collection'}
+      {if $info['holdingStatus'] != 'collection'}
         {if $info['status']}({$info['status']}){/if}
       {else}
         {if $info['message']}({$info['message']}){/if}

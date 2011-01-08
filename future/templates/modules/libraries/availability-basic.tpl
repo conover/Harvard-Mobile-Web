@@ -16,14 +16,9 @@
 {/block}
 
 {block name="itemTitle"}
-  {$item['count']}
-  {if $item['state'] == 'collection'}
-    may be available
-  {else}
-    {$item['state']}
-  {/if}
-  {if $category['type'] != 'collection'}
-    {if $item['status']}({$item['status']}){/if}
+  {$item['count']} {$item['state']}
+  {if $category['holdingStatus'] != 'collection'}
+    {if $item['secondaryStatus']}({$item['secondaryStatus']}){/if}
   {else}
     {if $item['message']}({$item['message']}){/if}
   {/if}<br/>

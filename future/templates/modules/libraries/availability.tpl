@@ -25,7 +25,7 @@
     {if $collection['callNumber']}<span class="smallprint">{$collection['callNumber']}</span>{/if}
   {foreach $collection['categories'] as $category}
     {if !$category@first}<div class="nonfocal itemInfo">{/if}
-      {if $category['type'] != 'collection'}<br/><span class="smallprint">{$category['type']}</span>{/if}
+      {if $category['holdingStatus'] != 'collection'}<br/><span class="smallprint">{$category['holdingStatus']}</span>{/if}
     </div>
     
     {$list = array()}
@@ -34,21 +34,16 @@
       {capture name="title" assign="title"}
         {if $item['state'] == 'available'}
           {$class = 'available'}
-        {elseif $item['state'] == 'unavailable' || $category['type'] == 'collection'}
-          {$class = 'unavailable'}
-        {else}
+        {elseif $item['state'] == 'requestable'}
           {$class = 'requestable'}
+        {else}
+          {$class = 'unavailable'}
         {/if}
         {block name="itemTitle"}
           <span class="itemType {$class}">
-            {$item['count']}
-            {if $item['state'] == 'collection'}
-              may be available
-            {else}
-              {$item['state']}
-            {/if}
-            {if $category['type'] != 'collection'}
-              {if $item['status']}({$item['status']}){/if}
+            {$item['count']} {$item['state']}
+            {if $category['holdingStatus'] != 'collection'}
+              {if $item['secondaryStatus']}({$item['secondaryStatus']}){/if}
             {else}
               {if $item['message']}({$item['message']}){/if}
             {/if}

@@ -40,7 +40,7 @@
         {if $category['collection'] > 0}
           {$category['collection']} may be available
         {else}
-          {$category['available']} of {$category['total']} available - {$category['type']}
+          {$category['available']} of {$category['total']} available - {$category['holdingStatus']}
         {/if}
       {/capture}
       {block name="item"}
