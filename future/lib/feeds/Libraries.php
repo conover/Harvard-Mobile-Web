@@ -94,7 +94,7 @@ class Libraries {
     // targets, such as links in the middle of blocks of small text
     
     if (strpos($value, 'http://') === FALSE && strpos($value, 'https://') === FALSE) {
-      $value = HTML2TEXT(preg_replace(';<br\s*/>;', " \n", trim($value))); // not a url
+      $value = HTML2TEXT(preg_replace(';<br\s*/>\s*\n?;', "\n", trim($value))); // not a url
       
     } else if (strpos($value, '<a ') !== FALSE && strpos($value, 'href=') !== FALSE) {
       error_log("Warning: skipped HTML with links in field '$field'".
