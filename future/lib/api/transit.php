@@ -211,8 +211,8 @@ function formatRouteInfo($routeID, $routeInfo) {
   if (isset($routeInfo['stopIconUrl'])) {
     $result['stopMarkerUrl'] = $routeInfo['stopIconUrl'];
   }
-  if (isset($routeInfo['genericIconUrl'])) {
-    $result['vehicleIconUrl'] = $routeInfo['vehicleIconUrl'];
+  if (isset($routeInfo['vehicleIconUrl'])) {
+    $result['genericIconUrl'] = $routeInfo['vehicleIconUrl'];
   }
   return $result;
 }
