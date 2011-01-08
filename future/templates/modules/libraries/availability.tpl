@@ -22,10 +22,10 @@
 {foreach $location['collections'] as $collection}
   <div class="nonfocal itemInfo">
     <h3>{$collection['name']}</h3>
-    {if $collection['callNumber']}<span class="smallprint">{$collection['callNumber']}</span>{/if}
+    {if $collection['callNumber']}<span class="smallprint">{$collection['callNumber']}</span><br/>{/if}
   {foreach $collection['categories'] as $category}
     {if !$category@first}<div class="nonfocal itemInfo">{/if}
-      {if $category['holdingStatus'] != 'collection'}<br/><span class="smallprint">{$category['holdingStatus']}</span>{/if}
+      {if $category['holdingStatus'] != 'collection'}<span class="smallprint">{$category['holdingStatus']}</span>{/if}
     </div>
     
     {$list = array()}
