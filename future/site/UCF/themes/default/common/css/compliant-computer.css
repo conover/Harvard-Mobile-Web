@@ -16,7 +16,7 @@
 .firefox .gloss li a { padding:11px 9px 8px 0; }
 .firefox .tabs { height:45px; }
 
-.safari .gloss li input[type="search"] { padding-left:0; }
+.webkit .gloss li input[type="search"] { padding-left:0; }
 
 /******************************************************************************\
   IE
