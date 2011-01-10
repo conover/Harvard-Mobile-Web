@@ -749,7 +749,6 @@ class LibrariesModule extends Module {
             
               $entries[] = array(
                 'title' => $range,
-                'subtitle' => '('.count($group).')',
                 'url' => $this->buildBreadcrumbURL($this->page, $args, true),
               );
             }
@@ -802,7 +801,6 @@ class LibrariesModule extends Module {
             foreach ($groups as $range => $group) {
               $entries[] = array(
                 'title' => $range,
-                'subtitle' => '('.count($group).')',
                 'url' => $this->buildBreadcrumbURL($this->page, array(
                   'range' => $range
                 ), true),

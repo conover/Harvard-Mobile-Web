@@ -64,6 +64,7 @@ function Initialize(&$path=null) {
   
   $testPath = DOCUMENT_ROOT.DIRECTORY_SEPARATOR;
   $urlBase = '/';
+  $foundPath = false;
   if (realpath($testPath) != realpath(WEBROOT_DIR)) {
     foreach ($pathParts as $dir) {
       $test = $testPath.$dir.DIRECTORY_SEPARATOR;
@@ -72,12 +73,13 @@ function Initialize(&$path=null) {
         $testPath = $test;
         $urlBase .= $dir.'/';
         if (realpath($test) == realpath(WEBROOT_DIR)) {
+          $foundPath = true;
           break;
         }
       }
     }
   }
-  define('URL_BASE', $urlBase);
+  define('URL_BASE', $foundPath ? $urlBase : '/');
   define('FULL_URL_BASE', sprintf("http://%s%s", $_SERVER['HTTP_HOST'], URL_BASE));
 
   define('COOKIE_PATH', URL_BASE); // We are installed under URL_BASE
@@ -102,8 +104,7 @@ function Initialize(&$path=null) {
   
   // Strips out the leading part of the url for sites where 
   // the base is not located at the document root, ie.. /mobile or /m 
-  /* this is code is not need for harvard, temporarily commenting this code
-     for mix deploy between old mobile web code, and new api code 
+  // Also strips off the leading slash (needed by device debug below)
   if (isset($path)) {
     // Strip the URL_BASE off the path
     $baseLen = strlen(URL_BASE);
@@ -111,9 +112,6 @@ function Initialize(&$path=null) {
       $path = substr($path, $baseLen);
     }
   }  
-  */
-
-
 
   //
   // Initialize global device classifier
