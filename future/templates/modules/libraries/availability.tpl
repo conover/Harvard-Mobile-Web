@@ -42,11 +42,7 @@
         {block name="itemTitle"}
           <span class="itemType {$class}">
             {$item['count']} {$item['state']}
-            {if $category['holdingStatus'] != 'collection'}
-              {if $item['secondaryStatus']}({$item['secondaryStatus']}){/if}
-            {else}
-              {if $item['message']}({$item['message']}){/if}
-            {/if}
+            {if $item['secondaryStatus']}({$item['secondaryStatus']}){/if}
           </span>
           <span class="itemType"><span class="smallprint">
             {if $item['callNumber']}{$item['callNumber']}{if $item['description']}<br/>{/if}{/if}

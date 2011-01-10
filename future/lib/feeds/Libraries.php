@@ -520,6 +520,16 @@ class Libraries {
     // - description
     // - request url (if any)
     // - scan and deliver url (if any)
+    //
+    // Item keys:
+    // 'state'             => [available|requestable|unavailable|may be available]
+    // 'secondaryStatus'   => (optional) Informational message
+    // 'callNumber'        => (optional) The item's call number
+    // 'description'       => (optional) A description of the item
+    // 'requestURL'        => (optional) A url to request the item be put on hold for the user
+    // 'scanAndDeliverURL' => (optional) A url to request the item be scanned and delivered to the user
+    // 'count'             => The number of items matching this category
+    // (optional item keys may be missing or empty strings)
 
     $collections = array();
     
@@ -541,7 +551,6 @@ class Libraries {
             'description'       => self::getField($item, 'desc'),
             'requestURL'        => '',
             'scanAndDeliverURL' => '',
-            'message'           => '',
           );
           if (!strlen($itemDetails['callNumber'])) {
             $itemDetails['callNumber'] = self::getField($collection, 'callnumber');
@@ -589,12 +598,11 @@ class Libraries {
           'items' => array(
             array(
               'state'             => 'may be available',
-              'secondaryStatus'   => '',
+              'secondaryStatus'   => self::getField($branch, 'noitems'),
               'callNumber'        => self::getField($collection, 'callnumber'),
               'description'       => implode("\n", $descriptions),
-              'requestUrl'        => '',
-              'scanAndDeliverUrl' => '',
-              'message'           => self::getField($branch, 'noitems'),
+              'requestURL'        => '',
+              'scanAndDeliverURL' => '',
               'count'             => 1,
             ),
           )
@@ -632,9 +640,9 @@ class Libraries {
     if (isset($xml->branch)) {
       foreach ($xml->branch as $branch) {
         $institution = array(
-          'id'          => self::getField($branch, array('repository', 'id')),
-          'type'        => self::getField($branch, array('repository', 'type')), 
-          'name'        => self::getField($branch, array('repository', 'name')),
+          'id'   => self::getField($branch, array('repository', 'id')),
+          'type' => self::getField($branch, array('repository', 'type')), 
+          'name' => self::getField($branch, array('repository', 'name')),
         );
 
         // Make sure library is in the list of institutions:
@@ -889,9 +897,9 @@ class Libraries {
                 'unavailable'          => strcasecmp($item->isavail, 'Y') != 0,
                 'checkedOutItem'       => $checkedOutItem,
                 'canRequest'           => false,
-                'requestUrl'           => '',
+                'requestURL'           => '',
                 'canScanAndDeliver'    => false,
-                'scanAndDeliverUrl'    => '',
+                'scanAndDeliverURL'    => '',
                 'statMain'             => $statMain,
                 'statSecondary'        => implode(' ', array_slice($stats, 1)),
               );
@@ -903,10 +911,10 @@ class Libraries {
               if (isset($item->req)) {
                 foreach($item->req as $req) {
                   if (stripos($req, 'scan') !== FALSE) {
-                    $itemByStat['scanAndDeliverUrl'] = strval($req['href']);
+                    $itemByStat['scanAndDeliverURL'] = strval($req['href']);
                     $itemByStat['canScanAndDeliver'] = true;
                   } else {
-                    $itemByStat['requestUrl'] = strval($req['href']);
+                    $itemByStat['requestURL'] = strval($req['href']);
                     $itemByStat['canRequest'] = true;
                   }
                 }

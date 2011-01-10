@@ -261,43 +261,6 @@ class LibrariesModule extends Module {
     return strcmp($a['title'], $b['title']);
   }
   
-  protected function urlForFederatedSearch($searchTerms) {
-    return $this->buildBreadcrumbURL("/{$this->id}/search", array(
-      'keywords' => $searchTerms,
-      'federated' => 1
-    ), false);
-  }
-
-  public function federatedSearch($searchTerms, $maxCount, &$results) {
-    $count = 0;
-    $results = array();
-  
-    $data = array_values(Libraries::searchItems($searchTerms, '', ''));
-    $count = count($data);
-
-    if ($count) {
-      $limit = min($maxCount, $count);
-      
-      for ($i = 0; $i < $limit; $i++) {
-        $subtitle = trim(self::argVal($data[$i], 'date', ''));
-        $creator = self::argVal($data[$i], 'creator', '');
-        if ($creator) {
-          if ($subtitle && $creator) { $subtitle .= ' | '; }
-          $subtitle .= $creator;
-        }
-      
-        $results[] = array(
-          'title'    => self::argVal($data[$i], 'title', 'Unknown title'),
-          'subtitle' => $subtitle ? $subtitle : null,
-          'url'      => $this->buildBreadcrumbURL("/{$this->id}/detail", array(
-            'id' => $data[$i]['itemId'],
-          ), false),
-        );
-      }
-    }
-    return $count;
-  }
-  
   protected function initializeForPage() {
     switch ($this->page) {
       case 'index':
@@ -469,10 +432,9 @@ class LibrariesModule extends Module {
                     'cNumber'    => $item['callNumber'], 
                     'hStatus'    => $category['holdingStatus'],
                     'state'      => $item['state'],
-                    'sStatus'    => $item['secondaryStatus'],
-                    'message'    => $item['message'],
-                    'requestURL' => $item['requestURL'],
-                    'scanURL'    => $item['scanAndDeliverURL'],
+                    'sStatus'    => self::argVal($item, 'secondaryStatus', ''),
+                    'requestURL' => self::argVal($item, 'requestURL', ''),
+                    'scanURL'    => self::argVal($item, 'scanAndDeliverURL', ''),
                   ));
                   
                   $collections[$col]['categories'][$cat]['items'][$i]['url'] = $url;
@@ -533,7 +495,6 @@ class LibrariesModule extends Module {
           'holdingStatus'   => $this->getArg('hStatus'),
           'state'           => $this->getArg('state'),
           'secondaryStatus' => $this->getArg('sStatus'),
-          'message'         => $this->getArg('message'),
           'requestURL'      => $this->getArg('requestURL'),
           'scanURL'         => $this->getArg('scanURL'),
         ));

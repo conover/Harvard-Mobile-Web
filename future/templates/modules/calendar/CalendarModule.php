@@ -259,7 +259,6 @@ class CalendarModule extends Module {
     return $this->buildBreadcrumbURL("/{$this->id}/search", array(
       'filter'    => $searchTerms,
       'timeframe' => '0',
-      'federated' => 1
     ), false);
   }
 

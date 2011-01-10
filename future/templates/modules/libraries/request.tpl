@@ -27,16 +27,8 @@
       {if $info['callNumber']}{$info['callNumber']}{/if}
       {if $info['holdingStatus'] != 'collection'}<br/>{$info['holdingStatus']}{/if}
       <br/>
-      {if $item['state'] == 'collection'}
-        may be available
-      {else}
-        {$item['state']}
-      {/if}
-      {if $info['holdingStatus'] != 'collection'}
-        {if $info['status']}({$info['status']}){/if}
-      {else}
-        {if $info['message']}({$info['message']}){/if}
-      {/if}
+      {$info['state']}
+      {if $info['secondaryStatus']}({$info['secondaryStatus']}){/if}
     </p>
   {/if}
 </div>
