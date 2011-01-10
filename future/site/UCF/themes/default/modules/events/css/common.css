@@ -17,12 +17,8 @@
 .event .location{font-size: 18px; font-weight: bold; margin: 0 0 0 0;}
 .event .description{margin: 20px 0;}
 
-.group a {display: inline-block; margin: 0 10px; font-weight: bold;}
 .group {margin: 1em 0;}
-a.arrow { background-image: url(/media/img/chevron.png);  background-position: right center; background-repeat: no-repeat; }
-a.arrow-back{
-	padding-left: 28px; 
-	background-image: url(/media/img/chevron-flip.png);
-	background-position: left center;
-    background-repeat: no-repeat;
-}
+.group a,
+.group span {display: inline-block; margin: 0 10px; font-weight: bold; width: 50px;}
+.group a {width: 30px; text-indent: -1024px; background-image: url(/media/img/chevron.png);  background-position: center; background-repeat: no-repeat; padding: 0;}
+.group a.arrow-back{ background-image: url(/media/img/chevron-flip.png);}

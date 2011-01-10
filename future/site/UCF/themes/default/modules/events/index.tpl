@@ -21,8 +21,9 @@
 <div class="text">
 	{if $next and $prev}
 	<div class="group">
-		<a class="arrow-back previous" href="?list=day&amp;day={urlencode($prev)}">{date('M j, Y', $prev)}</a>
-		<a class="arrow next" href="?list=day&amp;day={urlencode($next)}">{date('M j, Y', $next)}</a>
+		<a class="arrow-back previous" href="?list=day&amp;day={urlencode($prev)}">Previous</a>
+		<span class="date">{date('M j', $now)}</span>
+		<a class="arrow next" href="?list=day&amp;day={urlencode($next)}">Next</a>
 	</div>
 	{/if}
 
