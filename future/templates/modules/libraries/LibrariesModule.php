@@ -26,7 +26,54 @@ class LibrariesModule extends Module {
     'unavailable' => 'unavailableItems',
     'collection'  => 'collectionOnlyItems',
   );
+  
+  private function groupByFirstLetterRange($entries, $maxGroupSize) {
+    $letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
+    $firstLetterGroups = array();
+    for ($i = 0; $i < strlen($letters); $i++) {
+      $firstLetterGroups[substr($letters, $i, 1)] = array();
+    }
+    
+    foreach ($entries as $i => $entry) {
+      $firstLetter = strtoupper(substr($entry['title'], 0, 1));
+      if (!isset($firstLetterGroups[$firstLetter])) {
+        $firstLetterGroups[$firstLetter] = array();
+      }
+      $firstLetterGroups[$firstLetter][] = $entry;
+    }
+    
+    $letterGroups = array();
+    foreach ($firstLetterGroups as $letter => $e) {
+      $i = count($letterGroups)-1;
+      if ($i < 0 || (count($letterGroups[$i]['entries']) + count($e)) > $maxGroupSize) {
+        $letterGroups[] = array(
+          'letters' => array(),
+          'entries' => array(),
+        );
+        $i++;
+      }
+      $letterGroups[$i]['letters'][] = $letter;
+      $letterGroups[$i]['entries'] = array_merge($letterGroups[$i]['entries'], $e);
+      
+    }
+    
+    $groups = array();
+    foreach ($letterGroups as $i => $group) {
+      $first = reset($group['letters']);
+      $last = end($group['letters']);
+      
+      if ($first == $last) {
+        $groups[$first] = $group['entries'];
+      } else {
+        $groups["$first - $last"] = $group['entries'];
+      }    
+    }
+    unset($letterGroups);
+    
+    return $groups;
+  }
+
   private function getBookmarks($type) {
     if (isset(self::$typeToCookie[$type])) {
       if (!isset($this->bookmarks[$type])) {
@@ -261,43 +308,6 @@ class LibrariesModule extends Module {
     return strcmp($a['title'], $b['title']);
   }
   
-  protected function urlForFederatedSearch($searchTerms) {
-    return $this->buildBreadcrumbURL("/{$this->id}/search", array(
-      'keywords' => $searchTerms,
-      'federated' => 1
-    ), false);
-  }
-
-  public function federatedSearch($searchTerms, $maxCount, &$results) {
-    $count = 0;
-    $results = array();
-  
-    $data = array_values(Libraries::searchItems($searchTerms, '', ''));
-    $count = count($data);
-
-    if ($count) {
-      $limit = min($maxCount, $count);
-      
-      for ($i = 0; $i < $limit; $i++) {
-        $subtitle = trim(self::argVal($data[$i], 'date', ''));
-        $creator = self::argVal($data[$i], 'creator', '');
-        if ($creator) {
-          if ($subtitle && $creator) { $subtitle .= ' | '; }
-          $subtitle .= $creator;
-        }
-      
-        $results[] = array(
-          'title'    => self::argVal($data[$i], 'title', 'Unknown title'),
-          'subtitle' => $subtitle ? $subtitle : null,
-          'url'      => $this->buildBreadcrumbURL("/{$this->id}/detail", array(
-            'id' => $data[$i]['itemId'],
-          ), false),
-        );
-      }
-    }
-    return $count;
-  }
-  
   protected function initializeForPage() {
     switch ($this->page) {
       case 'index':
@@ -469,10 +479,9 @@ class LibrariesModule extends Module {
                     'cNumber'    => $item['callNumber'], 
                     'hStatus'    => $category['holdingStatus'],
                     'state'      => $item['state'],
-                    'sStatus'    => $item['secondaryStatus'],
-                    'message'    => $item['message'],
-                    'requestURL' => $item['requestURL'],
-                    'scanURL'    => $item['scanAndDeliverURL'],
+                    'sStatus'    => self::argVal($item, 'secondaryStatus', ''),
+                    'requestURL' => self::argVal($item, 'requestURL', ''),
+                    'scanURL'    => self::argVal($item, 'scanAndDeliverURL', ''),
                   ));
                   
                   $collections[$col]['categories'][$cat]['items'][$i]['url'] = $url;
@@ -533,7 +542,6 @@ class LibrariesModule extends Module {
           'holdingStatus'   => $this->getArg('hStatus'),
           'state'           => $this->getArg('state'),
           'secondaryStatus' => $this->getArg('sStatus'),
-          'message'         => $this->getArg('message'),
           'requestURL'      => $this->getArg('requestURL'),
           'scanURL'         => $this->getArg('scanURL'),
         ));
@@ -696,6 +704,14 @@ class LibrariesModule extends Module {
         break;
         
       case 'libraries':
+        $range = $this->getArg('range');
+
+        if ($range && $this->pagetype == 'basic') {
+          $this->setPageTitle($this->getPageTitle()." ($range)");
+          $this->setBreadcrumbTitle($this->getBreadcrumbTitle()." ($range)");
+          $this->setBreadcrumbLongTitle($this->getBreadcrumbLongTitle()." ($range)");
+        }
+        
         $openOnly = $this->getArg('openOnly', false) ? true : false;
         $openNowToggleURL = $this->buildBreadcrumbURL($this->page, 
           $openOnly ? array() : array('openOnly' => 'true'), false);// toggle
@@ -714,12 +730,48 @@ class LibrariesModule extends Module {
         }
         ksort($libraries);
         
+        $entries = array();
+        
+        if ($this->pagetype == 'basic' && count($libraries) > 20) {
+          $groups = $this->groupByFirstLetterRange($libraries, 20);
+        
+          if ($range) {
+            if (isset($groups[$range])) {
+              $entries = $groups[$range];
+            } else {
+              $this->redirectTo($this->page);
+            }
+          } else {
+            $entries = array();
+            foreach ($groups as $range => $group) {
+              $args = array('range' => $range);
+              if ($openOnly) { $args['openOnly'] = 'true'; }
+            
+              $entries[] = array(
+                'title' => $range,
+                'subtitle' => '('.count($group).')',
+                'url' => $this->buildBreadcrumbURL($this->page, $args, true),
+              );
+            }
+          }
+        } else {
+          $entries = $libraries;
+        }
+        
         $this->assign('openOnly',         $openOnly);
         $this->assign('openNowToggleURL', $openNowToggleURL);
-        $this->assign('libraries',        $libraries);
+        $this->assign('entries',          $entries);
         break;
         
       case 'archives':
+        $range = $this->getArg('range');
+
+        if ($range && $this->pagetype == 'basic') {
+          $this->setPageTitle($this->getPageTitle()." ($range)");
+          $this->setBreadcrumbTitle($this->getBreadcrumbTitle()." ($range)");
+          $this->setBreadcrumbLongTitle($this->getBreadcrumbLongTitle()." ($range)");
+        }
+
         $data = Libraries::getArchives();
         //error_log(print_r($data, true));
         
@@ -734,7 +786,34 @@ class LibrariesModule extends Module {
         }
         ksort($archives);
 
-        $this->assign('archives', $archives);
+        $entries = array();
+        
+        if ($this->pagetype == 'basic' && count($archives) > 20) {
+          $groups = $this->groupByFirstLetterRange($archives, 20);
+        
+          if ($range) {
+            if (isset($groups[$range])) {
+              $entries = $groups[$range];
+            } else {
+              $this->redirectTo($this->page);
+            }
+          } else {
+            $entries = array();
+            foreach ($groups as $range => $group) {
+              $entries[] = array(
+                'title' => $range,
+                'subtitle' => '('.count($group).')',
+                'url' => $this->buildBreadcrumbURL($this->page, array(
+                  'range' => $range
+                ), true),
+              );
+            }
+          }
+        } else {
+          $entries = $archives;
+        }
+
+        $this->assign('entries', $entries);
         break;
         
       case 'locationAndHours':        

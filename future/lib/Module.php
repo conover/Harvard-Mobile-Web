@@ -606,11 +606,20 @@ abstract class Module {
   }
   
   // Programmatic overrides for titles generated from backend data
+  protected function getPageTitle() {
+    return $this->pageTitle;
+  }
   protected function setPageTitle($title) {
     $this->pageTitle = $title;
   }
+  protected function getBreadcrumbTitle() {
+    return $this->breadcrumbTitle;
+  }
   protected function setBreadcrumbTitle($title) {
     $this->breadcrumbTitle = $title;
+  }
+  protected function getBreadcrumbLongTitle() {
+    return $this->breadcrumbLongTitle;
   }
   protected function setBreadcrumbLongTitle($title) {
     $this->breadcrumbLongTitle = $title;
@@ -778,7 +787,6 @@ abstract class Module {
   protected function urlForFederatedSearch($searchTerms) {
     return $this->buildBreadcrumbURL("/{$this->id}/search", array(
       'filter' => $searchTerms,
-      'federated' => 1
     ), false);
   }
 }

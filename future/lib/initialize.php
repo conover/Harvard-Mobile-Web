@@ -99,7 +99,11 @@ function Initialize(&$path=null) {
   } else {
     set_exception_handler("exceptionHandlerForDevelopment");
   }
-    
+  
+  // Strips out the leading part of the url for sites where 
+  // the base is not located at the document root, ie.. /mobile or /m 
+  /* this is code is not need for harvard, temporarily commenting this code
+     for mix deploy between old mobile web code, and new api code 
   if (isset($path)) {
     // Strip the URL_BASE off the path
     $baseLen = strlen(URL_BASE);
@@ -107,7 +111,7 @@ function Initialize(&$path=null) {
       $path = substr($path, $baseLen);
     }
   }  
-
+  */
 
 
 

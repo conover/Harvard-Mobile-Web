@@ -17,11 +17,8 @@
 
 {block name="itemTitle"}
   {$item['count']} {$item['state']}
-  {if $category['holdingStatus'] != 'collection'}
-    {if $item['secondaryStatus']}({$item['secondaryStatus']}){/if}
-  {else}
-    {if $item['message']}({$item['message']}){/if}
-  {/if}<br/>
+  {if $item['secondaryStatus']}({$item['secondaryStatus']}){/if}
+  <br/>
 {/block}
 {block name="extraItemInfo"}
   {capture name="label" assign="label"}
