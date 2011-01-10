@@ -41,7 +41,7 @@ class EventsModule extends UCFModule {
 		$this->assign('next', $next);
 		$this->assign('prev', $prev);
 		$this->assign('events', $feed->get_items());
-		$this->setPageTitle('Events for '.$day);
+		$this->setPageTitle('Events for '.date('M jS', $day));
 	}
 	
 	function todayPage(){
