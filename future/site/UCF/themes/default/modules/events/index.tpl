@@ -41,8 +41,19 @@
 				{/if}
 			</div>
 			{/if}
-			<div class="startdate">{date('M j, g:i a', strtotime($event->get_startdate()))}</div>
-			<div class="enddate">{date('M j, g:i a', strtotime($event->get_enddate()))}</div>
+			<div class="range">
+				<span class="start">{date('M j', strtotime($event->get_startdate()))}</span>
+				{if $event->get_enddate() and $event->get_type() == 'ongoing'}
+				<span class="end">{date('M j', strtotime($event->get_enddate()))}</span>
+				{/if}
+			</div>
+			<div class="times">
+				{if date('i', strtotime($event->get_startdate())) == '00'}
+				<span class="start">{date('g a', strtotime($event->get_startdate()))}</span>
+				{else}
+				<span class="start">{date('g:i a', strtotime($event->get_startdate()))}</span>
+				{/if}
+			</div>
 		</header>
 		<div class="description">
 			{$event->get_description()}
