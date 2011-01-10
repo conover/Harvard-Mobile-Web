@@ -5,5 +5,5 @@
 .pad img { float:left; margin-right:12px; margin-bottom:12px; height: 5em;}
 
 .articles{margin-top: 20px;}
-.articles a.img{float:left; margin: 3px 15px 0 0; margin-bottom: 0;}
-.articles a.img img{height: 5em; margin: 0; padding: 0;}
+.articles a.img{float:left; margin: 0 5px 0 0;}
+.articles a.img img{height: 97px; margin: 0; padding: 0; font-size: 16px;}
