@@ -1,16 +1,16 @@
-#map-options { padding:22px 0 0 0; }
+#map-options { padding:5px 0 0 6px; }
 #map-options a { 
-	display:block; padding:7px 10px 5px 22px; 
+	display:block; padding:5px 7px 5px 21px;
 	text-decoration:none; 
 	color:#5577bb; 
 	background:white url(/modules/media/img/google-search.png) no-repeat; 
-	background-position:5px 6px;
+	background-position:4px 4px; font-size:14px;
 	border:1px solid #bbb; 
 	border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px;; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; 
 }
 
-#no-results { font-weight:bold; padding:0 0 8px 20px; margin:0; font-size:22px;  }
+#no-results { font-weight:bold; padding:12px 0 10px 10px; margin:0; font-size:22px;  }
 
 .locate { color: #444; line-height:22px;}
 .locate h3 { font-size:16px; padding:0; margin:0; color:#444; }
