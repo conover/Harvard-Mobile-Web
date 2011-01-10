@@ -32,6 +32,12 @@
 	<div class="block event{if $event->get_type() == 'ongoing'} ongoing{/if}">
 		<header>
 			<h3>{$event->get_title()}</h3>
+			<div class="range">
+				<span class="start">{date('M j', strtotime($event->get_startdate()))}</span>
+				{if $event->get_enddate() and $event->get_type() == 'ongoing'}
+				<span class="end">{date('M j', strtotime($event->get_enddate()))}</span>
+				{/if}
+			</div>
 			{if $event->get_location_url() or $event->get_location_name()}
 			<div class="location">
 				{if $event->get_location_url() and $event->get_location_name()}
@@ -41,12 +47,6 @@
 				{/if}
 			</div>
 			{/if}
-			<div class="range">
-				<span class="start">{date('M j', strtotime($event->get_startdate()))}</span>
-				{if $event->get_enddate() and $event->get_type() == 'ongoing'}
-				<span class="end">{date('M j', strtotime($event->get_enddate()))}</span>
-				{/if}
-			</div>
 			<div class="times">
 				{if date('i', strtotime($event->get_startdate())) == '00'}
 				<span class="start">{date('g a', strtotime($event->get_startdate()))}</span>

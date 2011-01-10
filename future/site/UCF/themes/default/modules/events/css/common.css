@@ -1,4 +1,4 @@
-.event .range {margin-top: 5px;}
+.event .range {}
 .event .range .start,
 .event .range .end{font-weight: bold;}
 .event .range .end{}
@@ -6,7 +6,6 @@
 .event .location{font-size: 18px; font-weight: bold; margin: 0 0 0 0;}
 .event .description{margin: 20px 0;}
 .event .times .start{font-weight: bold;}
-.event .times .start:before{content: "Starts at "; font-weight: normal;}
 
 .group {margin: 1em auto; width: 200px;}
 .group a,
