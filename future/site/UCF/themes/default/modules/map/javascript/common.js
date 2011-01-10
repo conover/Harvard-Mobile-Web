@@ -73,15 +73,21 @@ Campus_Map.gmap = function(){
 	var myOptions = {
 		zoom: 16,
 		center: myLatlng,
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		mapTypeControl: true,
+		//mapTypeId : google.maps.MapTypeId.ROADMAP,
 		mapTypeControlOptions: {
+			mapTypeIds : ['UCF', google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.TERRAIN],
 			style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
 		}
 	}
 	
 	this.resize();
 	this.map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+	
+	var styledMap = new google.maps.StyledMapType({}, { name: "UCF"});
+	this.map.mapTypes.set('UCF', styledMap);
+	this.map.setMapTypeId('UCF');
+	
 	this.controls();
 	
 }
