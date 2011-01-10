@@ -113,3 +113,15 @@ function strip_img_dimensions($str=""){
 	$str = preg_replace('/<img([^>]+)height="[^"]+"([^>]*)>/i', '<img$1$2>', $str);
 	return $str;
 }
+
+/**
+ * undocumented function
+ *
+ * @return void
+ * @author Jared Lang
+ **/
+function filter_title($title){
+	$ignore  = array('UCF Today » ');
+	$replace = array('');
+	return str_replace($ignore, $replace, $title);
+}

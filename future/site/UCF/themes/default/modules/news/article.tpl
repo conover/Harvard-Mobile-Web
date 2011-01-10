@@ -2,7 +2,7 @@
 
 {block name="body"}
 <ul class="gloss">
-	<li class="arrow-back"><a href="../index.php">Return to {$feed->get_title()} Category</a></li>
+	<li class="arrow-back"><a href="../index.php">Return to {filter_title($feed->get_title())} Category</a></li>
 	<li class="arrow"><a href="{$article->get_link()}">Read Original</a></li>
 </ul>
 <div class="pad">
