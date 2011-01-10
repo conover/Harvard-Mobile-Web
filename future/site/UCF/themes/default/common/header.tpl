@@ -5,7 +5,7 @@
 		<meta charset="utf-8" />
 		<title>{$pageTitle}</title>
 		<link href="{$minify['css']}" rel="stylesheet" media="all" type="text/css"/>
-		
+		<link rel="shortcut icon" href="/media/favicon.png" />
 		{foreach $inlineCSSBlocks as $css}
 		<style type="text/css" media="screen">
 		{$css}
