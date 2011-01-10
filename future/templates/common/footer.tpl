@@ -1,5 +1,3 @@
-  {strip}
-  
   {if $moduleDebug && count($moduleDebugStrings)}
     <p class="legend nonfocal">
       {foreach $moduleDebugStrings as $string}
@@ -38,15 +36,15 @@
       {$footerHTML}
     </div>
 
+  {/block}
+
+  {block name="footerJavascript"}
     {foreach $inlineJavascriptFooterBlocks as $script}
       <script type="text/javascript">
         {$script} 
       </script>
     {/foreach}
-
   {/block}
-
-  {/strip}
 </div>
 </body>
 </html>

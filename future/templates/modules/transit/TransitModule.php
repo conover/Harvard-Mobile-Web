@@ -180,6 +180,9 @@ class TransitModule extends Module {
           $mapImageSize = 200;
         }
 
+        $this->addOnLoad('rotateScreen();');
+        $this->addOnOrientationChange('rotateScreen();');
+
         $this->assign('mapImageSrc',  $view->getMapImageForRoute($routeID, $mapImageSize, $mapImageSize));
         $this->assign('mapImageSize', $mapImageSize);
         $this->assign('lastRefresh',  time());
@@ -205,11 +208,11 @@ class TransitModule extends Module {
           }
         }
         
-        $mapImageWidth = 270;
+        $mapImageWidth = 298;
         if ($this->pagetype == 'basic') {
           $mapImageWidth = 200;
         }
-        $mapImageHeight = floor($mapImageWidth/2);
+        $mapImageHeight = floor($mapImageWidth/1.5);
         
         $this->assign('mapImageSrc',    $view->getMapImageForStop($stopID, $mapImageWidth, $mapImageHeight));
         $this->assign('mapImageWidth',  $mapImageWidth);
@@ -220,14 +223,20 @@ class TransitModule extends Module {
         break;
       
       case 'info':
-        $infoConfig = $this->loadWebAppConfigFile('transit-info', 'infoConfig');
         $infoType = $this->getArg('id');
+
+        $feedConfigFile = realpath_exists(SITE_CONFIG_DIR."/feeds/{$this->id}-info.ini");
+        if ($feedConfigFile) {
+          $infoConfig = parse_ini_file($feedConfigFile, true);
+        }
         
-        if (!isset($infoConfig[$infoType], $infoConfig[$infoType]['content']) || 
-            !count($infoConfig[$infoType]['content'])) {
+        if (!isset($infoConfig[$infoType]) || !strlen($infoConfig[$infoType])) {
           $this->redirectTo('index', array());
         }
-        $this->assign('infoType', $infoType);        
+        
+        $this->addInlineCSS('h2 { padding-top: 10pt; }');
+
+        $this->assign('content', $infoConfig[$infoType]);
         break;
         
       case 'announcement':

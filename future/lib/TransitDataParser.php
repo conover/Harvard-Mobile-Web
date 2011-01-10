@@ -2,12 +2,6 @@
 
 require_once('Polyline.php');
 
-define('STATIC_MAPS_URL', 'http://maps.google.com/maps/api/staticmap?');
-
-define('TRANSIT_MAX_ARRIVAL_DELAY', 120*60); // 2 hours
-define('TRANSIT_PREDICTION_THRESHOLD', 320); // 5 mins, 20 seconds
-define('TRANSIT_DEFAULT_ROUTE_COLOR', 'b12727'); // shade of red
-
 class TransitConfig {
   private $parsers = array();
   
@@ -187,6 +181,18 @@ class TransitConfig {
 class TransitDataView {
   private $config = array();
   private $parsers = array();
+  private static $routesCache = null;
+  
+  private static function getRoutesCache() {
+    if (!isset(self::$routesCache)) {
+      self::$routesCache = new DiskCache(
+        $GLOBALS['siteConfig']->getVar('TRANSIT_CACHE_DIR'),
+        $GLOBALS['siteConfig']->getVar('TRANSIT_ROUTE_LIST_CACHE_TIMEOUT'), TRUE);
+      self::$routesCache->preserveFormat();
+      self::$routesCache->setSuffix(".json");
+    } 
+    return self::$routesCache;
+  }
   
   function __construct($transitConfig) {
     $this->config = $transitConfig;
@@ -236,33 +242,42 @@ class TransitDataView {
   
   public function getStopInfoForRoute($routeID, $stopID) {
     $stopInfo = array();
-    $parser = $this->parserForRoute($routeID);
+    $cacheName = "stopInfoForRoute.$routeID.$stopID";
+    $cache = self::getRoutesCache();
     
-    if ($parser['live']) {
-      $stopInfo = $parser['live']->getStopInfoForRoute($routeID, $stopID);
-    }
-    
-    if ($parser['static']) {
-      $staticStopInfo = $parser['static']->getStopInfoForRoute($routeID, $stopID);
-    }
-    
-    if (!$stopInfo) {
-      $stopInfo = $staticStopInfo;
-    }
-    
-    if ($stopInfo) {
-      if (!isset($stopInfo['arrives']) || $staticStopInfo['arrives'] < $stopInfo['arrives']) {
-          $stopInfo['arrives'] = $staticStopInfo['arrives'];
+    if ($cache->isFresh($cacheName)) {
+      $stopInfo = json_decode($cache->read($cacheName), true);
+      
+    } else {
+      $parser = $this->parserForRoute($routeID);
+      
+      if ($parser['live']) {
+        $stopInfo = $parser['live']->getStopInfoForRoute($routeID, $stopID);
       }
-      if (!isset($stopInfo['predictions'])) {
-        $stopInfo['predictions'] = $staticStopInfo['predictions'];
-        
-      } else if (count($staticStopInfo['predictions'])) {
-        $stopInfo['predictions'] = array_merge($stopInfo['predictions'], $staticStopInfo['predictions']);
-        
-        $stopInfo['predictions'] = array_unique($stopInfo['predictions']);
-        sort($stopInfo['predictions']);
+      
+      if ($parser['static']) {
+        $staticStopInfo = $parser['static']->getStopInfoForRoute($routeID, $stopID);
       }
+      
+      if (!$stopInfo) {
+        $stopInfo = $staticStopInfo;
+      }
+      
+      if ($stopInfo) {
+        if (!isset($stopInfo['arrives']) || $staticStopInfo['arrives'] < $stopInfo['arrives']) {
+            $stopInfo['arrives'] = $staticStopInfo['arrives'];
+        }
+        if (!isset($stopInfo['predictions'])) {
+          $stopInfo['predictions'] = $staticStopInfo['predictions'];
+          
+        } else if (count($staticStopInfo['predictions'])) {
+          $stopInfo['predictions'] = array_merge($stopInfo['predictions'], $staticStopInfo['predictions']);
+          
+          $stopInfo['predictions'] = array_unique($stopInfo['predictions']);
+          sort($stopInfo['predictions']);
+        }
+      }
+      $cache->write(json_encode($stopInfo), $cacheName);
     }
     
     return $stopInfo;
@@ -270,55 +285,68 @@ class TransitDataView {
   
   public function getStopInfo($stopID) {
     $stopInfo = array();
+    $cacheName = "stopInfo.$stopID";
+    $cache = self::getRoutesCache();
     
-    foreach ($this->parsersForStop($stopID) as $parser) {
-      $parserInfo = false;
+    if ($cache->isFresh($cacheName)) {
+      $stopInfo = json_decode($cache->read($cacheName), true);
       
-      if ($parser['live']) {
-        $parserInfo = $parser['live']->getStopInfo($stopID);
-      }
-      
-      if ($parser['static']) {
-        $staticParserInfo = $parser['static']->getStopInfo($stopID);
-      }
-      
-      if (!$parserInfo) {
-        $parserInfo = $staticParserInfo;
-      } else if (isset($staticParserInfo['routes'])) {
-        foreach ($parserInfo['routes'] as $routeID => $stopTimes) {
-          if (!count($stopTimes) && isset($staticParserInfo['routes'][$routeID])) {
-            $parserInfo['routes'][$routeID] = $staticParserInfo['routes'][$routeID];
-          }
+    } else {
+      foreach ($this->parsersForStop($stopID) as $parser) {
+        $parserInfo = false;
+        
+        if ($parser['live']) {
+          $parserInfo = $parser['live']->getStopInfo($stopID);
         }
-      }
-      
-      if ($parserInfo) {
-        if (!count($stopInfo)) {
-          $stopInfo = $parserInfo;
+        
+        if ($parser['static']) {
+          $staticParserInfo = $parser['static']->getStopInfo($stopID);
+        }
+        
+        if (!$parserInfo) {
+          $parserInfo = $staticParserInfo;
+        } else if (isset($staticParserInfo['routes'])) {
+          foreach ($parserInfo['routes'] as $routeID => $stopTimes) {
+            if (!isset($stopTimes['arrives']) && isset($staticParserInfo['routes'][$routeID])) {
+              $parserInfo['routes'][$routeID] = $staticParserInfo['routes'][$routeID];
+            }
+          }
         } else {
           foreach ($parserInfo['routes'] as $routeID => $stopTimes) {
-            if (!isset($stopInfo['routes'][$routeID])) {
-              $stopInfo['routes'][$routeID] = $stopTimes;
-            } else {
-              if (!isset($stopTimes['arrives']) || $stopTimes['arrives'] < $stopInfo['routes'][$routeID]['arrives']) {
-                $stopInfo['routes'][$routeID]['arrives'] = $stopTimes['arrives'];
-              }
-              if (!isset($stopTimes['predictions'])) {
-                $stopInfo['routes'][$routeID]['predictions'] = $stopTimes['predictions'];
-                
-              } else if (count($stopTimes['predictions'])) {
-                $stopInfo['routes'][$routeID]['predictions'] = array_merge(
-                  $stopInfo['routes'][$routeID]['predictions'], $stopTimes['predictions']);
-                
-                $stopInfo['routes'][$routeID]['predictions'] = array_unique($stopInfo['routes'][$routeID]['predictions']);
-                sort($stopInfo['routes'][$routeID]['predictions']);
+            if (!isset($stopTimes['arrives'])) {
+              $parserInfo['routes'][$routeID]['arrives'] = 0;
+            }
+          }
+        }
+        
+        if ($parserInfo) {
+          if (!count($stopInfo)) {
+            $stopInfo = $parserInfo;
+          } else {
+            foreach ($parserInfo['routes'] as $routeID => $stopTimes) {
+              if (!isset($stopInfo['routes'][$routeID])) {
+                $stopInfo['routes'][$routeID] = $stopTimes;
+              } else {
+                if (!isset($stopTimes['arrives']) || $stopTimes['arrives'] < $stopInfo['routes'][$routeID]['arrives']) {
+                  $stopInfo['routes'][$routeID]['arrives'] = $stopTimes['arrives'];
+                }
+                if (!isset($stopTimes['predictions'])) {
+                  $stopInfo['routes'][$routeID]['predictions'] = $stopTimes['predictions'];
+                  
+                } else if (count($stopTimes['predictions'])) {
+                  $stopInfo['routes'][$routeID]['predictions'] = array_merge(
+                    $stopInfo['routes'][$routeID]['predictions'], $stopTimes['predictions']);
+                  
+                  $stopInfo['routes'][$routeID]['predictions'] = array_unique($stopInfo['routes'][$routeID]['predictions']);
+                  sort($stopInfo['routes'][$routeID]['predictions']);
+                }
               }
             }
           }
         }
       }
+      $cache->write(json_encode($stopInfo), $cacheName);
     }
-    
     return $stopInfo;
   }
 
@@ -351,127 +379,125 @@ class TransitDataView {
     
     return $image;
   }
-
-  public function routeIsRunning($routeID, $time=null) {
-    $isRunning = false;
-    $parser = $this->parserForRoute($routeID);
-    
-    if ($parser['live']) {
-      $isRunning = $parser['live']->routeIsRunning($routeID, $time);
-      
-    } else if ($parser['static']) {
-      $isRunning = $parser['static']->routeIsRunning($routeID, $time);
-    }
-    
-    return $isRunning;
-  }
   
   public function getRouteInfo($routeID, $time=null) {
     $routeInfo = array();
-    $parser = $this->parserForRoute($routeID);
+    $cacheName = "routeInfo.$routeID";
+    $cache = self::getRoutesCache();
     
-    if ($parser['live']) {
-      $routeInfo = $parser['live']->getRouteInfo($routeID, $time);
-      if (count($routeInfo)) {
-        $routeInfo['live'] = true;
+    if ($cache->isFresh($cacheName) && $time == null) {
+      $routeInfo = json_decode($cache->read($cacheName), true);
+      
+    } else {
+      $parser = $this->parserForRoute($routeID);
+      
+      if ($parser['live']) {
+        $routeInfo = $parser['live']->getRouteInfo($routeID, $time);
+        if (count($routeInfo)) {
+          $routeInfo['live'] = true;
+        }
       }
-    }
-    
-    if ($parser['static']) {
-      $staticRouteInfo = $parser['static']->getRouteInfo($routeID, $time);
       
-      if (!count($routeInfo)) {
-        $routeInfo = $staticRouteInfo;
-      
-      } else if (count($staticRouteInfo)) {
-        if (strlen($staticRouteInfo['name'])) {
-          // static name is better
-          $routeInfo['name'] = $staticRouteInfo['name'];
-        }
-        if (strlen($staticRouteInfo['description'])) {
-          // static description is better
-          $routeInfo['description'] = $staticRouteInfo['description'];
-        }
-        if ($staticRouteInfo['frequency'] != 0) { // prefer static
-          $routeInfo['frequency'] = $staticRouteInfo['frequency'];
-        }
-        if (!count($routeInfo['stops'])) {
-          $routeInfo['stops'] = $staticRouteInfo['stops'];
+      if ($parser['static']) {
+        $staticRouteInfo = $parser['static']->getRouteInfo($routeID, $time);
         
-        } else {
-          // Use the static first stop, not the prediction first stop
-          // Use static stop names if available
-          $firstStop = reset(array_keys($staticRouteInfo['stops']));
-          $foundFirstStop = false;
-          $moveToEnd = array();
-          foreach ($routeInfo['stops'] as $stopID => &$stop) {
-            if (!isset($staticRouteInfo['stops'][$stopID])) {
-              // NextBus sometimes has _ar suffixes on it.  Try stripping them
-              $parts = explode('_', $stopID);
-              if (isset($staticRouteInfo['stops'][$parts[0]])) {
-                //error_log("Warning: static route does not have live stop id $stopID, using {$parts[0]}");
-                $stopID = $parts[0];
-              }
-            }
-            
-            if (isset($staticRouteInfo['stops'][$stopID])) {
-              $stop['name'] = $staticRouteInfo['stops'][$stopID]['name'];
-
-              if (!$stop['hasTiming'] && $staticRouteInfo['stops'][$stopID]['hasTiming']) {
-                $stop['arrives'] = $staticRouteInfo['stops'][$stopID]['arrives'];
-                if (isset($staticRouteInfo['stops'][$stopID]['predictions'])) {
-                  $stop['predictions'] = $staticRouteInfo['stops'][$stopID]['predictions'];
-                } else {
-                  unset($stop['predictions']);
+        if (!count($routeInfo)) {
+          $routeInfo = $staticRouteInfo;
+        
+        } else if (count($staticRouteInfo)) {
+          if (strlen($staticRouteInfo['name'])) {
+            // static name is better
+            $routeInfo['name'] = $staticRouteInfo['name'];
+          }
+          if (strlen($staticRouteInfo['description'])) {
+            // static description is better
+            $routeInfo['description'] = $staticRouteInfo['description'];
+          }
+          if ($staticRouteInfo['frequency'] != 0) { // prefer static
+            $routeInfo['frequency'] = $staticRouteInfo['frequency'];
+          }
+          if (!count($routeInfo['stops'])) {
+            $routeInfo['stops'] = $staticRouteInfo['stops'];
+          
+          } else {
+            // Use the static first stop, not the prediction first stop
+            // Use static stop names if available
+            $firstStop = reset(array_keys($staticRouteInfo['stops']));
+            $foundFirstStop = false;
+            $moveToEnd = array();
+            foreach ($routeInfo['stops'] as $stopID => &$stop) {
+              if (!isset($staticRouteInfo['stops'][$stopID])) {
+                // NextBus sometimes has _ar suffixes on it.  Try stripping them
+                $parts = explode('_', $stopID);
+                if (isset($staticRouteInfo['stops'][$parts[0]])) {
+                  //error_log("Warning: static route does not have live stop id $stopID, using {$parts[0]}");
+                  $stopID = $parts[0];
                 }
               }
-            } else {
-              error_log("Warning: static route info does not have live stop id $stopID");
+              
+              if (isset($staticRouteInfo['stops'][$stopID])) {
+                $stop['name'] = $staticRouteInfo['stops'][$stopID]['name'];
+  
+                if (!$stop['hasTiming'] && $staticRouteInfo['stops'][$stopID]['hasTiming']) {
+                  $stop['arrives'] = $staticRouteInfo['stops'][$stopID]['arrives'];
+                  if (isset($staticRouteInfo['stops'][$stopID]['predictions'])) {
+                    $stop['predictions'] = $staticRouteInfo['stops'][$stopID]['predictions'];
+                  } else {
+                    unset($stop['predictions']);
+                  }
+                }
+              } else {
+                error_log("Warning: static route info does not have live stop id $stopID");
+              }
+              
+              if ($foundFirstStop || TransitDataParser::isSameStop($stopID, $firstStop)) {
+                $foundFirstStop = true;
+              } else {
+                $moveToEnd[$stopID] = $stop;
+                unset($routeInfo['stops'][$stopID]);
+              }
             }
-            
-            if ($foundFirstStop || TransitDataParser::isSameStop($stopID, $firstStop)) {
-              $foundFirstStop = true;
-            } else {
-              $moveToEnd[$stopID] = $stop;
-              unset($routeInfo['stops'][$stopID]);
-            }
+            $routeInfo['stops'] += $moveToEnd;
           }
-          $routeInfo['stops'] += $moveToEnd;
-        }
-      }
-    }
-    
-    if (count($routeInfo)) {
-      $now = time();
-      
-      // Walk the stops to figure out which is upcoming
-      $stopIDs     = array_keys($routeInfo['stops']);
-      $firstStopID = reset($stopIDs);
-      
-      $firstStopPrevID  = end($stopIDs);
-      if (TransitDataParser::isSameStop($firstStopID, $firstStopPrevID)) {
-        $firstStopPrevID = prev($stopIDs);
-      }
-      
-      foreach ($stopIDs as $index => $stopID) {
-        if (!isset($routeInfo['stops'][$stopID]['upcoming'])) {
-          $arrives = $routeInfo['stops'][$stopID]['arrives'];
-    
-          if ($stopID == $firstStopID) {
-            $prevArrives = $routeInfo['stops'][$firstStopPrevID]['arrives'];
-          } else {
-            $prevArrives = $routeInfo['stops'][$stopIDs[$index-1]]['arrives'];
-          }
-    
-          // Suppress any soonest stops which are more than 2 hours from now
-          $routeInfo['stops'][$stopID]['upcoming'] = 
-              (abs($arrives - $now) < TRANSIT_MAX_ARRIVAL_DELAY) && $arrives <= $prevArrives;
         }
       }
       
-      $routeInfo['lastupdate'] = $now;
+      if (count($routeInfo)) {
+        $now = time();
+        
+        // Walk the stops to figure out which is upcoming
+        $stopIDs     = array_keys($routeInfo['stops']);
+        $firstStopID = reset($stopIDs);
+        
+        $firstStopPrevID  = end($stopIDs);
+        if (TransitDataParser::isSameStop($firstStopID, $firstStopPrevID)) {
+          $firstStopPrevID = prev($stopIDs);
+        }
+        
+        foreach ($stopIDs as $index => $stopID) {
+          if (!isset($routeInfo['stops'][$stopID]['upcoming'])) {
+            $arrives = $routeInfo['stops'][$stopID]['arrives'];
+      
+            if ($stopID == $firstStopID) {
+              $prevArrives = $routeInfo['stops'][$firstStopPrevID]['arrives'];
+            } else {
+              $prevArrives = $routeInfo['stops'][$stopIDs[$index-1]]['arrives'];
+            }
+      
+            // Suppress any soonest stops which are more than 2 hours from now
+            $routeInfo['stops'][$stopID]['upcoming'] = 
+                (abs($arrives - $now) < $GLOBALS['siteConfig']->getVar('TRANSIT_MAX_ARRIVAL_DELAY')) && 
+                $arrives <= $prevArrives;
+          }
+        }
+        
+        $routeInfo['lastupdate'] = $now;
+      }
+      if ($time == null) {
+        $cache->write(json_encode($routeInfo), $cacheName);
+      }
     }
-
+    
     return $routeInfo;    
   }
   
@@ -530,43 +556,53 @@ class TransitDataView {
 
   private function getAllRoutes($time=null) {
     $allRoutes = array();
-
-    foreach ($this->parsers as $parser) {
-      $routes = array();
+    $cacheName = 'allRoutes';
+    $cache = self::getRoutesCache();
+    
+    if ($cache->isFresh($cacheName) && $time == null) {
+      $allRoutes = json_decode($cache->read($cacheName), true);
       
-      if ($parser['live']) {
-        $routes = $parser['live']->getRoutes($time);
-      }
-      
-      if ($parser['static']) {
-        $staticRoutes = $parser['static']->getRoutes($time);
-        if (!count($routes)) {
-          $routes = $staticRoutes;
-        } else {
-          foreach ($routes as $routeID => $routeInfo) {
-            if (isset($staticRoutes[$routeID])) {
-              if (!$routeInfo['running']) {
-                $routes[$routeID] = $staticRoutes[$routeID];
-              } else {
-                // static name is better
-                $routes[$routeID]['name'] = $staticRoutes[$routeID]['name'];
-                $routes[$routeID]['description'] = $staticRoutes[$routeID]['description'];
-                
-                if ($staticRoutes[$routeID]['frequency'] != 0) {
-                  $routes[$routeID]['frequency'] = $staticRoutes[$routeID]['frequency'];
+    } else {
+      foreach ($this->parsers as $parser) {
+        $routes = array();
+        
+        if ($parser['live']) {
+          $routes = $parser['live']->getRoutes($time);
+        }
+        
+        if ($parser['static']) {
+          $staticRoutes = $parser['static']->getRoutes($time);
+          if (!count($routes)) {
+            $routes = $staticRoutes;
+          } else {
+            foreach ($routes as $routeID => $routeInfo) {
+              if (isset($staticRoutes[$routeID])) {
+                if (!$routeInfo['running']) {
+                  $routes[$routeID] = $staticRoutes[$routeID];
+                } else {
+                  // static name is better
+                  $routes[$routeID]['name'] = $staticRoutes[$routeID]['name'];
+                  $routes[$routeID]['description'] = $staticRoutes[$routeID]['description'];
+                  
+                  if ($staticRoutes[$routeID]['frequency'] != 0) {
+                    $routes[$routeID]['frequency'] = $staticRoutes[$routeID]['frequency'];
+                  }
                 }
               }
             }
-          }
-          // Pull in static routes with no live data
-          foreach ($staticRoutes as $routeID => $staticRouteInfo) {
-            if (!isset($routes[$routeID])) {
-              $routes[$routeID] = $staticRouteInfo;
+            // Pull in static routes with no live data
+            foreach ($staticRoutes as $routeID => $staticRouteInfo) {
+              if (!isset($routes[$routeID])) {
+                $routes[$routeID] = $staticRouteInfo;
+              }
             }
           }
         }
+        $allRoutes += $routes;
       }
-      $allRoutes += $routes;
+      if ($time == null) {
+        $cache->write(json_encode($allRoutes), $cacheName);
+      }
     }
     
     return $allRoutes;
@@ -632,7 +668,7 @@ abstract class TransitDataParser {
   private $stops     = array();
   private $overrides = array();
   
-  static protected $arrows = array(
+  static private $arrows = array(
     '1' => 'n',
     '2' => 'ne',
     '3' => 'e',
@@ -642,8 +678,7 @@ abstract class TransitDataParser {
     '7' => 'w',
     '8' => 'nw',
   );
-  
-  
+    
   public static function factory($class, $args, $overrides, $whitelist) {
     $parser = null;
     $parserClassFile = realpath_exists(LIB_DIR."/$class.php");
@@ -736,22 +771,66 @@ abstract class TransitDataParser {
   public function hasStop($id) {
     return isset($this->stops[$id]);
   }
-  
+ 
+  protected function getMapIconUrlForRouteStop($routeID) {
+    if($_SERVER['SERVER_NAME'] != 'localhost') {
+      $iconURL = "http://".SERVER_HOST."/modules/transit/images/shuttle_stop_dot.png";
+    } else {
+      return $GLOBALS['siteConfig']->getVar('GOOGLE_CHART_API_URL').http_build_query(array(
+        'chst' => 'd_simple_text_icon_left',
+        'chld' => '|9|000|glyphish_target|12|'.$this->getRouteColor($routeID).'|FFF',
+      ));
+    }
+  }
+ 
+  protected function getMapIconUrlForStopPin($stopID) {
+    if($_SERVER['SERVER_NAME'] != 'localhost') {
+      $iconURL = "http://".SERVER_HOST."/modules/transit/images/shuttle_stop_pin.png";
+    } else {
+      return $GLOBALS['siteConfig']->getVar('GOOGLE_CHART_API_URL').http_build_query(array(
+        'chst' => 'd_map_pin_icon',
+        'chld' => 'bus|'.$GLOBALS['siteConfig']->getVar('TRANSIT_DEFAULT_ROUTE_COLOR'),
+      ));
+    }
+  }
+ 
+  protected function getMapIconUrlForRouteVehicle($routeID, $vehicle=null) {
+    // same icon for every vehicle by default
+    return $GLOBALS['siteConfig']->getVar('GOOGLE_CHART_API_URL').http_build_query(array(
+      'chst' => 'd_map_pin_icon',
+      'chld' => 'bus|'.$this->getRouteColor($routeID),
+    ));
+  }
+ 
   protected function getMapMarkersForVehicles($vehicles) {
     $query = '';
     
-    foreach ($vehicles as $vehicle) {
-      $markers .= "|{$vehicle['lat']},{$vehicle['lon']}";
+    if (count($vehicles)) {
+      $firstVehicle = reset($vehicles);
+    
+      $markers = "icon:".$this->getMapIconUrlForRouteVehicle($firstVehicle['routeID']);
+      foreach ($vehicles as $vehicle) {
+        $markers .= "|{$vehicle['lat']},{$vehicle['lon']}";
+      }
+      $query .= '&'.http_build_query(array(
+        'markers' => $markers,
+      ));
     }
-    $query .= '&'.http_build_query(array(
-      'markers' => $markers,
-    ));
     
     return $query;
   }  
   
+  protected function getDirectionForHeading($heading) {
+    $arrowIndex = ($heading / 45) + 1.5;
+    if ($arrowIndex > 8) { $arrowIndex = 8; }
+    if ($arrowIndex < 0) { $arrowIndex = 0; }
+    $arrowIndex = floor($arrowIndex);
+    
+    return self::$arrows[$arrowIndex];
+}
+  
   protected function getRouteColor($routeID) {
-    return TRANSIT_DEFAULT_ROUTE_COLOR;
+    return $GLOBALS['siteConfig']->getVar('TRANSIT_DEFAULT_ROUTE_COLOR');
   }
 
   //
@@ -798,13 +877,9 @@ abstract class TransitDataParser {
         $this->updatePredictionData($route->getID());
         
         $routePredictions[$routeID] = $route->getPredictionsForStop($stopID, $now);
-        if (isset($routePredictions[$routeID]['arrives'])) {
-          $routePredictions[$routeID]['live'] = $this->isLive();
-        }
+        $routePredictions[$routeID]['name'] = $this->getRoute($routeID)->getName();
+        $routePredictions[$routeID]['live'] = $this->isLive();
       }
-    }
-    foreach ($routePredictions as $routeID => $prediction) {
-      $routePredictions[$routeID]['name'] = $this->getRoute($routeID)->getName();
     }
     
     $stopInfo = array(
@@ -818,7 +893,7 @@ abstract class TransitDataParser {
 
     return $stopInfo;
   }
- 
+  
   public function getMapImageForStop($id, $width=270, $height=270) {
     if (!isset($this->stops[$id])) {
       error_log(__FUNCTION__."(): Warning no such stop '$id'");
@@ -827,17 +902,7 @@ abstract class TransitDataParser {
     
     $stop = $this->stops[$id];
     $coords = $stop->getCoordinates();
-    
-    $iconURL = false;
-    if($_SERVER['SERVER_NAME'] != 'localhost') {
-      $iconURL = "http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}".
-          "/modules/transit/images/shuttle_stop_pin.png";
-    } else {
-      $iconURL = "http://chart.apis.google.com/chart?".http_build_query(array(
-        'chst' => 'd_map_pin_icon',
-        'chld' => 'bus|'.TRANSIT_DEFAULT_ROUTE_COLOR,
-      ));
-    }
+    $iconURL = $this->getMapIconUrlForStopPin($id);
     
     $query = http_build_query(array(
       'sensor'  => 'false',
@@ -845,7 +910,7 @@ abstract class TransitDataParser {
       'markers' => "icon:$iconURL|{$coords['lat']},{$coords['lon']}",
     ));
     
-    return STATIC_MAPS_URL.$query;
+    return $GLOBALS['siteConfig']->getVar('GOOGLE_STATIC_MAPS_URL').$query;
   }
 
   public function getMapImageForRoute($id, $width=270, $height=270) {
@@ -883,7 +948,7 @@ abstract class TransitDataParser {
       ), 0, '&amp;');
     }
     
-    return STATIC_MAPS_URL.$query;
+    return $GLOBALS['siteConfig']->getVar('GOOGLE_STATIC_MAPS_URL').$query;
   }
 
   public function routeIsRunning($routeID, $time=null) {
@@ -923,14 +988,17 @@ abstract class TransitDataParser {
     $route = $this->routes[$routeID];
 
     $routeInfo = array(
-      'agency'      => $route->getAgencyID(),
-      'name'        => $route->getName(),
-      'description' => $route->getDescription(),
-      'live'        => $this->isLive(),
-      'frequency'   => $route->getServiceFrequency($time),
-      'running'     => $route->isRunning($time, $inService),
-      'inService'   => $inService,
-      'stops'       => array(),
+      'agency'         => $route->getAgencyID(),
+      'name'           => $route->getName(),
+      'description'    => $route->getDescription(),
+      'color'          => $this->getRouteColor($routeID),
+      'live'           => $this->isLive(),
+      'frequency'      => $route->getServiceFrequency($time),
+      'running'        => $route->isRunning($time, $inService),
+      'inService'      => $inService,
+      'stopIconUrl'    => $this->getMapIconUrlForRouteStop($routeID),
+      'vehicleIconUrl' => $this->getMapIconUrlForRouteVehicle($routeID),
+      'stops'          => array(),
     );
 
     // Check if there are a valid services and segments
@@ -1076,8 +1144,10 @@ abstract class TransitDataParser {
       $routes[$routeID] = array(
         'name'        => $route->getName(),
         'description' => $route->getDescription(),
+        'color'       => $this->getRouteColor($routeID),
         'frequency'   => round($route->getServiceFrequency($time) / 60),
         'agency'      => $route->getAgencyID(),
+        'live'        => $this->isLive(),
       );
       $routes[$routeID]['running'] = $route->isRunning($time, $inService);
       $routes[$routeID]['inService'] = $inService;
@@ -1140,6 +1210,29 @@ define('HOUR_MULTIPLIER', 10000);
 define('MINUTE_MULTIPLIER', 100);
 
 class TransitTime {   
+  static $localTimezone = null;
+  static $gmtTimezone = null;
+  
+  private static function getLocalTimezone() {
+    if (!isset(self::$localTimezone)) {
+      self::$localTimezone = new DateTimeZone(LOCAL_TIMEZONE);
+    }
+    return self::$localTimezone;
+  }
+
+  private static function getGMTTimezone() {
+    if (!isset(self::$gmtTimezone)) {
+      self::$gmtTimezone = new DateTimeZone('GMT');
+    }
+    return self::$gmtTimezone;
+  }
+  
+  public static function getLocalDatetimeFromTimestamp($timestamp) {
+    $datetime = new DateTime('@'.$timestamp, self::getGMTTimezone());
+    $datetime->setTimeZone(self::getLocalTimezone()); 
+    return $datetime;
+  }
+
   static public function getCurrentTime() {
     return time();
     //return strtotime("01:45:00 11/3/2010");
@@ -1165,11 +1258,6 @@ class TransitTime {
       $minutes -= $addHours*60;
     }
     
-    if ($hours > 23) {
-      $days = floor($hours/24);
-      $hours -= $days*24;
-    }
-
     return $hours*HOUR_MULTIPLIER + $minutes*MINUTE_MULTIPLIER + $seconds;
   }
   
@@ -1179,11 +1267,6 @@ class TransitTime {
     $hours = intval($hours);
     $minutes = intval($minutes);
     $seconds = intval($seconds);
-    
-    if ($hours > 23) {
-      $days = floor($hours/24);
-      $hours -= $days*24;
-    }
     
     return self::createFromComponents($hours, $minutes, $seconds);
   }
@@ -1198,16 +1281,20 @@ class TransitTime {
   }
   
   public static function getTimestampOnDate($tt, $dateTimestamp) {
-    $date = new DateTime('@'.$dateTimestamp);
+    $date = self::getLocalDatetimeFromTimestamp($dateTimestamp);
 
     list($hours, $minutes, $seconds) = explode(':', $date->format('G:i:s'));
     $dateTT = self::createFromComponents($hours, $minutes, $seconds);
   
-    if (self::compare($tt, $dateTT) < 0) {
-      date_modify($date, '+1 day'); // earlier than date -- will be for the next day
+    list($hours, $minutes, $seconds) = self::getComponents($tt);
+
+    if ($hours > 23) {
+      $date->modify('+1 day'); // will be for the next day
     }
     
-    return strtotime($date->format('Y-m-d').' '.self::getString($tt));
+    $date->setTime($hours, $minutes, $seconds);
+    
+    return $date->format('U');
   }
   
   public static function compare($tt1, $tt2) {
@@ -1242,14 +1329,15 @@ class TransitTime {
   }
   
   public static function isTimeInRange($timestamp, $fromTT, $toTT) {
-    $time = new DateTime('@'.$timestamp);
+    $time = self::getLocalDatetimeFromTimestamp($timestamp);
+    
     $tt = TransitTime::createFromString($time->format('G:i:s'));
     
     $afterStart = TransitTime::compare($fromTT, $tt) <= 0;
     $beforeEnd  = TransitTime::compare($toTT, $tt) >= 0;
     $inRange = $afterStart && $beforeEnd;
     
-    //error_log($tt->getString()." is ".($inRange ? '' : 'not ')."in range ".$this->from->getString().' - '.$this->to->getString());
+    //error_log(TransitTime::getString($tt)." is ".($inRange ? '' : 'not ')."in range ".TransitTime::getString($fromTT).' - '.TransitTime::getString($toTT));
     return $inRange;
   }
 }
@@ -1455,22 +1543,18 @@ class TransitRoute {
     return false;
   }
   
-  private function getArrivalTimesForStop($time, $stopID=null) {
-    $arrivalOffsets = array();
-    foreach ($this->directions as $direction) {
+  private function getFirstStopIDAndDirection() {
+    foreach ($this->directions as $directionID => $direction) {
       foreach ($direction['segments'] as $segment) {
-        if ($segment->getService()->isRunning($time)) {
-          $arrivalOffsets = array_merge(
-            $arrivalOffsets, $segment->getArrivalTimesForStop($stopID));
+        foreach ($segment->getStops() as $stopInfo) {
+          return array($stopInfo['stopID'], $directionID);
         }
       }
     }
-    $arrivalOffsets = array_unique($arrivalOffsets);
-    sort($arrivalOffsets);
-    return $arrivalOffsets;
+    return array(false, false);
   }
   
-  public function getServiceFrequency($time, $stopID=null) {
+  public function getServiceFrequency($time) {
     // Time between shuttles at the same stop
     $frequency = 0;
     
@@ -1486,18 +1570,33 @@ class TransitRoute {
         if ($frequency > 0) { break; }
       }
     } else {
-      $arrivalTimes = $this->getArrivalTimesForStop($time, $stopID);
-      for ($i = 0; $i < count($arrivalTimes); $i++) {
-        if ($arrivalTimes[$i] > $time) {
-          if (isset($arrivalTimes[$i+1])) {
-            $frequency = $arrivalTimes[$i+1] - $arrivalTimes[$i];
-          } else if (isset($arrivalTimes[$i-1])) {
-            $frequency = $arrivalTimes[$i] - $arrivalTimes[$i-1];
+      // grab the first stop and check how often vehicles arrive at it
+      list($stopID, $directionID) = $this->getFirstStopIDAndDirection();
+            
+      if ($stopID) {
+        $arrivalTimes = array();
+        
+        foreach ($this->directions[$directionID]['segments'] as $segment) {
+          if ($segment->getService()->isRunning($time)) {
+            $segmentArrivalTimes = $segment->getArrivalTimesForStop($stopID);
+            $arrivalTimes = array_merge($arrivalTimes, $segmentArrivalTimes);
           }
         }
-        if ($frequency > 0) { break; }
+        $arrivalTimes = array_unique($arrivalTimes);
+        sort($arrivalTimes);
+      
+        for ($i = 0; $i < count($arrivalTimes); $i++) {
+          if ($arrivalTimes[$i] > $time) {
+            if (isset($arrivalTimes[$i+1])) {
+              $frequency = $arrivalTimes[$i+1] - $arrivalTimes[$i];
+            } else if (isset($arrivalTimes[$i-1])) {
+              $frequency = $arrivalTimes[$i] - $arrivalTimes[$i-1];
+            }
+          }
+          if ($frequency > 0 && $frequency < MAX_ARRIVAL_DELAY) { break; }
+        }
       }
-
+      if ($frequency == 0) { $frequency = 60*60; } // default to 1 hour
     }
     return $frequency;
   }
@@ -1554,13 +1653,15 @@ class TransitService {
   public function isRunning($time) {
     if ($this->live) { return true; }
   
-    $date = intval(strftime('%Y%m%d', $time));
-    $dayName = strftime('%A', $time);
+    $datetime = TransitTime::getLocalDatetimeFromTimestamp($time);
     
-    $hour = intval(strftime('%H', $time));
+    $hour = intval($datetime->format('H'));
     if ($hour < 5) {
-      $date--; // before 5am is part of the previous day
+      $datetime->modify('-1 day'); // before 5am is part of the previous day
     }
+    
+    $date = intval($datetime->format('Ymd'));
+    $dayName = $datetime->format('l');
     
     $insideValidDateRange = false;
     foreach ($this->dateRanges as $dateRange) {

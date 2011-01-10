@@ -1,33 +1,31 @@
-{include file="findInclude:common/header.tpl"}
+{block name="header"}
+    {include file="findInclude:common/header.tpl"}
+{/block}
+
 
 {$tabBodies = array()}
 
 {capture name="runningPane" assign="runningPane"}
-  {strip}
   {block name="runningPane"}
     {foreach $runningRoutes as $section}
       <h3>{$section['heading']}</h3>
       {include file="findInclude:common/navlist.tpl" navlistItems=$section['items'] accessKey=false nested=true}
     {/foreach}
   {/block}
-  {strip}
 {/capture}
 {$tabBodies['running'] = $runningPane}
 
 {capture name="offlinePane" assign="offlinePane"}
-  {strip}
   {block name="offlinePane"}
     {foreach $offlineRoutes as $section}
       <h3>{$section['heading']}</h3>
       {include file="findInclude:common/navlist.tpl" navlistItems=$section['items'] accessKey=false nested=true}
     {/foreach}
   {/block}
-  {strip}
 {/capture}
 {$tabBodies['offline'] = $offlinePane}
 
 {capture name="newsPane" assign="newsPane"}
-  {strip}
   {block name="newsPane"}
     {foreach $news as $section}
       <h3>{$section['heading']}</h3>
@@ -37,19 +35,16 @@
       {include file="findInclude:common/navlist.tpl" navlistItems=$section['items'] accessKey=false nested=true subTitleNewline=true}
     {/foreach}
   {/block}
-  {strip}
 {/capture}
 {$tabBodies['news'] = $newsPane}
 
 {capture name="infoPane" assign="infoPane"}
-  {strip}
   {block name="infoPane"}
     {foreach $infosections as $section}
       <h3>{$section['heading']}</h3>
       {include file="findInclude:common/navlist.tpl" navlistItems=$section['items'] accessKey=false nested=true subTitleNewline=true}
     {/foreach}
   {/block}
-  {strip}
 {/capture}
 {$tabBodies['info'] = $infoPane}
 

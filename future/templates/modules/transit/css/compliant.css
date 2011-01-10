@@ -42,6 +42,10 @@
 	text-align: center;
 }
 
+#map img {
+	border: 1px solid #999;
+}
+
 .stop-map {
     border: 2pt solid white;
 }
@@ -70,100 +74,6 @@
 	font-size: 14px;
 	font-weight: normal;
 	color: #506d8e;
-}
-
-
-
-
-/* Tall (portrait) orientation */
-
-body.portrait {
-	width: 100%;
-}
-
-body.portrait #timestamp {
-	display: block;
-}
-
-body.portrait #tabs {
-	display: block;
-}
-
-body.portrait .tabbody {
-	font-size: 17px;
-}
-
-body.portrait #scheduletab, #maptab {
-	width: auto;
-}
-
-body.portrait #mapimage {
-	width: 270px;
-	height: 270px;
-	text-align: center;
-}
-
-body.portrait #rotatemsg1 {
-	display: inline;
-}
-
-body.portrait #rotatemsg2 {
-	display: none;
-}
-
-
-
-/* Wide (landscape) orientation */
-
-body.landscape {
-	width: 100%;
-}
-
-body.landscape #timestamp {
-	display: inline;
-}
-
-body.landscape #schedule {
-	border-bottom: 1px solid #f0f0f0;
-	margin: 0 0 16px 0;
-}
-
-body.landscape #tabs {
-	display: none;
-}
-
-body.landscape .tabbody {
-	display: block !important;
-	float: left;
-	font-size: 14px;
-}
-
-body.landscape #scheduletab {
-	width: 47%;
-}
-
-body.landscape #maptab {
-	width: 53%;
-}
-
-body.landscape #map {
-	width: 225px;
-	height: 225px;
-	text-align: right;
-}
-
-body.landscape #mapimage {
-	width: 225px;
-	height: 225px;
-	margin-left: 0;
-}
-
-body.landscape #rotatemsg1 {
-	display: none;
-}
-
-body.landscape #rotatemsg2 {
-	display: inline;
 }
 
 .ampm {

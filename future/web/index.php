@@ -60,10 +60,6 @@ if (preg_match(';^.*favicon.ico$;', $path, $matches)) {
       }        
     }
   }
-  
-  // image not found
-  header("HTTP/1.0 404 Not Found");
-  exit;
 
 } else if (preg_match(';^.*media/(.*)$;', $path, $matches)) {
   //
@@ -98,6 +94,11 @@ if (preg_match(';^.*favicon.ico$;', $path, $matches)) {
   if (isset($_REQUEST['module']) && $_REQUEST['module']) {
     $id = $_REQUEST['module'];
     $api = realpath_exists(LIB_DIR."/api/$id.php");
+    
+    if ($id == 'shuttles') {
+      $id = 'transit';
+      $api = realpath_exists(LIB_DIR."/api/$id.php");
+    }
     
     if ($api) {
       PageViews::log_api($id, $GLOBALS['deviceClassifier']->getPlatform());
@@ -157,8 +158,8 @@ if (preg_match(';^.*favicon.ico$;', $path, $matches)) {
 }
 
 //
-// Unsupported Request
+// Unsupported Request or File Not Found
 //
 
-header('Status: 404 Not Found');
-die;
+header("{$_SERVER['SERVER_PROTOCOL']} 404 Not Found");
+exit;

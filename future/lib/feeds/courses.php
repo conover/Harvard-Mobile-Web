@@ -394,6 +394,8 @@ class CourseData {
 
   public static function get_subject_details($subjectId) {
     $args = array('q' => 'id:'.$subjectId);
+    
+    self::addTermQueryToArgs($args);
     $urlString = $GLOBALS['siteConfig']->getVar('COURSES_BASE_URL').http_build_query($args);
 
     error_log("COURSE DEBUG: " . $urlString);

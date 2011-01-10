@@ -1,7 +1,7 @@
 <?php
 
-require_once('TransitDataParser.php');
-require_once('DiskCache.php');
+require_once realpath(LIB_DIR.'/TransitDataParser.php');
+require_once realpath(LIB_DIR.'/DiskCache.php');
 
 class TranslocTransitDataParser extends TransitDataParser {
   private static $caches = array();
@@ -12,26 +12,27 @@ class TranslocTransitDataParser extends TransitDataParser {
     return true;
   }
   
+  protected function getMapIconUrlForRouteStop($routeID) {
+    return $GLOBALS['siteConfig']->getVar('TRANSLOC_MARKERS_URL').http_build_query(array(
+      'm' => 'stop',
+      'c' => $this->getRouteColor($routeID),
+    ));
+  }
+ 
+  protected function getMapIconUrlForRouteVehicle($routeID, $vehicle=null) {
+    return $GLOBALS['siteConfig']->getVar('TRANSLOC_MARKERS_URL').http_build_query(array(
+      'm' => 'bus',
+      'c' => $this->getRouteColor($routeID),
+      'h' => $this->getDirectionForHeading(isset($vehicle) ? $vehicle['heading'] : 4),
+    ));
+  }
+
   protected function getMapMarkersForVehicles($vehicles) {
     $query = '';
     
     foreach ($vehicles as $vehicle) {
-      $arrowIndex = ($vehicle['heading'] / 45) + 1.5;
-      if ($arrowIndex > 8) { $arrowIndex = 8; }
-      if ($arrowIndex < 0) { $arrowIndex = 0; }
-      $arrowIndex = floor($arrowIndex);
-
-      $iconParams = array(
-        'm' => 'bus',
-        'c' => $this->getRouteColor($vehicle['routeID']),
-        'h' => self::$arrows[$arrowIndex],
-      );
-    
-      $iconURL = sprintf($GLOBALS['siteConfig']->getVar('TRANSLOC_MARKERS_URL_FORMAT'), 
-        $vehicle['agencyID']).http_build_query($iconParams);
-
       $query .= '&'.http_build_query(array(
-        'markers' => "icon:{$iconURL}|{$vehicle['lat']},{$vehicle['lon']}",
+        'markers' => "icon:{$vehicle['iconURL']}|{$vehicle['lat']},{$vehicle['lon']}",
       ));
     }
     
@@ -82,6 +83,12 @@ class TranslocTransitDataParser extends TransitDataParser {
           'agencyID'        => $this->getRoute($vehicleInfo['r'])->getAgencyID(),
           'routeID'         => $vehicleInfo['r'],
         );
+        if (isset($vehicleInfo['s'])) {
+          $vehicles[$vehicleInfo['id']]['speed'] = $vehicleInfo['s'];
+        }
+        $vehicles[$vehicleInfo['id']]['iconURL'] = 
+          $this->getMapIconUrlForRouteVehicle($vehicleInfo['r'], $vehicles[$vehicleInfo['id']]);
+
       } else {
         error_log('Warning: inactive route '.$vehicleInfo['r'].
           ' has active vehicle '.$vehicleInfo['id']);
@@ -220,9 +227,9 @@ class TranslocTransitDataParser extends TransitDataParser {
       $url = sprintf($GLOBALS['siteConfig']->getVar('TRANSLOC_SERVICE_URL_FORMAT'), 
         $hostname, $action).http_build_query($params);
       
-      error_log("TranslocTransitDataParser requesting $url", 0);
+      //error_log("TranslocTransitDataParser requesting $url", 0);
       $contents = file_get_contents($url);
-      error_log("TranslocTransitDataParser got data", 0);
+      //error_log("TranslocTransitDataParser got data", 0);
       
       if (!$contents) {
         error_log("Failed to read contents from $url, reading expired cache");

@@ -4,7 +4,10 @@ require_once realpath(LIB_DIR.'/TemplateEngine.php');
 require_once realpath(LIB_DIR.'/HTMLPager.php');
 require_once realpath(LIB_DIR.'/User.php');
 
+define('MODULE_BREADCRUMB_PARAM', '_b');
+
 abstract class Module {
+
   protected $id = 'none';
   
   protected $session;
@@ -234,6 +237,31 @@ abstract class Module {
     
     return "$page/".(strlen($argString) ? "?$argString" : "");
   }
+  
+  protected function buildMailtoLink($to, $subject, $body) {
+    $to = trim($to);
+    
+    // Some old BlackBerries will give you an error about unsupported protocol
+    // if you have a mailto: link that doesn't have a "@" in the recipient 
+    // field. So we can't leave this field blank for these models. It's not
+    // a matter of being <= 9000 either, since there are Curves that are fine.
+    $modelsNeedingToField = array("8100", "8220", "8230", "9000");
+    if ($to == '') {
+      foreach ($modelsNeedingToField as $model) {
+        if (strpos($_SERVER['HTTP_USER_AGENT'], "BlackBerry".$model) !== FALSE) {
+          $to = '@';
+          break;
+        }
+      }
+    }
+
+    $url = "mailto:{$to}?".http_build_query(array("subject" => $subject, 
+                                                  "body" => $body));
+    // mailto url's do not respect '+' (as space) so we convert to %20
+    $url = str_replace('+', '%20', $url); 
+    
+    return $url;
+  }
 
   protected function redirectToModule($id, $args=array()) {
     $url = URL_BASE."{$id}/?". http_build_query($args);
@@ -277,11 +305,12 @@ abstract class Module {
     $className = ucfirst($id).'Module';
     
     $modulePaths = array(
-      THEME_DIR."/modules/$id/$className.php",
-      MODULES_DIR."/$id/$className.php",
+      THEME_DIR."/modules/$id/Theme{$className}.php"=>"Theme" .$className,
+      SITE_DIR."/modules/$id/Site{$className}.php"=>"Site" .$className,
+      MODULES_DIR."/$id/$className.php"=>$className
     );
     
-    foreach($modulePaths as $path){ 
+    foreach($modulePaths as $path=>$className){ 
       $moduleFile = realpath_exists($path);
       if ($moduleFile && include_once($moduleFile)) {
         return new $className($page, $args);
@@ -462,32 +491,71 @@ abstract class Module {
   // Breadcrumbs
   //
   private function loadBreadcrumbs() {
-    if (isset($this->args['breadcrumbs'])) {
-      $breadcrumbs = unserialize(rawurldecode($this->args['breadcrumbs']));
+    if (isset($this->args[MODULE_BREADCRUMB_PARAM])) {
+      $breadcrumbs = unserialize(urldecode($this->args[MODULE_BREADCRUMB_PARAM]));
       if (is_array($breadcrumbs)) {
+        for ($i = 0; $i < count($breadcrumbs); $i++) {
+          $b = $breadcrumbs[$i];
+          
+          $breadcrumbs[$i]['title'] = $b['t'];
+          $breadcrumbs[$i]['longTitle'] = $b['lt'];
+          
+          $breadcrumbs[$i]['url'] = "{$b['p']}.php";
+          if (strlen($b['a'])) {
+            $breadcrumbs[$i]['url'] .= "?{$b['a']}";
+          }
+          
+          $linkCrumbs = array_slice($breadcrumbs, 0, $i);
+          if (count($linkCrumbs)) { 
+            $this->cleanBreadcrumbs(&$linkCrumbs);
+            
+            $crumbParam = http_build_query(array(
+              MODULE_BREADCRUMB_PARAM => urlencode(serialize($linkCrumbs))
+            ));
+            if (strlen($crumbParam)) {
+              $breadcrumbs[$i]['url'] .= (strlen($b['a']) ? '&' : '?').$crumbParam;
+            }
+          }
+        }
+
         $this->breadcrumbs = $breadcrumbs;
+        
       }
     }
     //error_log(__FUNCTION__."(): loaded breadcrumbs ".print_r($this->breadcrumbs, true));
   }
   
+  private function cleanBreadcrumbs(&$breadcrumbs) {
+    foreach ($breadcrumbs as $index => $breadcrumb) {
+      unset($breadcrumbs[$index]['url']);
+      unset($breadcrumbs[$index]['title']);
+      unset($breadcrumbs[$index]['longTitle']);
+    }
+  }
+  
   private function getBreadcrumbString($addBreadcrumb=true) {
     $breadcrumbs = $this->breadcrumbs;
     
+    $this->cleanBreadcrumbs(&$breadcrumbs);
+    
     if ($addBreadcrumb && $this->page != 'index') {
+      $args = $this->args;
+      unset($args[MODULE_BREADCRUMB_PARAM]);
+      
       $breadcrumbs[] = array(
-        'title'     => $this->breadcrumbTitle,
-        'longTitle' => $this->breadcrumbLongTitle,
-        'url'       => self::buildURL($this->page, $this->args),
+        't'  => $this->breadcrumbTitle,
+        'lt' => $this->breadcrumbLongTitle,
+        'p'  => $this->page,
+        'a'  => http_build_query($args),
       );
     }
     //error_log(__FUNCTION__."(): saving breadcrumbs ".print_r($breadcrumbs, true));
-    return rawurlencode(serialize($breadcrumbs));
+    return urlencode(serialize($breadcrumbs));
   }
   
   private function getBreadcrumbArgs($addBreadcrumb=true) {
     return array(
-      'breadcrumbs' => $this->getBreadcrumbString($addBreadcrumb),
+      MODULE_BREADCRUMB_PARAM => $this->getBreadcrumbString($addBreadcrumb),
     );
   }
 
@@ -539,11 +607,20 @@ abstract class Module {
   }
   
   // Programmatic overrides for titles generated from backend data
+  protected function getPageTitle() {
+    return $this->pageTitle;
+  }
   protected function setPageTitle($title) {
     $this->pageTitle = $title;
   }
+  protected function getBreadcrumbTitle() {
+    return $this->breadcrumbTitle;
+  }
   protected function setBreadcrumbTitle($title) {
     $this->breadcrumbTitle = $title;
+  }
+  protected function getBreadcrumbLongTitle() {
+    return $this->breadcrumbLongTitle;
   }
   protected function setBreadcrumbLongTitle($title) {
     $this->breadcrumbLongTitle = $title;
@@ -708,7 +785,7 @@ abstract class Module {
     return 0;
   }
   
-  protected function urlForSearch($searchTerms) {
+  protected function urlForFederatedSearch($searchTerms) {
     return $this->buildBreadcrumbURL("/{$this->id}/search", array(
       'filter' => $searchTerms,
     ), false);
