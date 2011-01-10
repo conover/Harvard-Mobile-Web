@@ -13,24 +13,12 @@ class YoutubeModule extends UCFModule {
 	function initializeForPage(){
 		
 		
-		#todo, build out error module so it can send an email if issue encountered
+		$feed = new SimplePie();
+		$feed->set_feed_url('http://gdata.youtube.com/feeds/base/users/UCF/uploads?alt=rss&v=2&orderby=published&client=ytapi-youtube-profile');
+		$feed->set_cache_location(CACHE_DIR);
+		$feed->init();
+		$this->assign('videos', $feed->get_items());
 		
-		
-		$content = $this->fromCache('http://m.youtube.com/ucf');
-		$matches = Array();
-		preg_match('/(Videos \([0-9]+\))[^>]+>([\s\S]+<\/div>)[\s\S]+<span[^>]+>[^>]+>Next page/', $content, $matches);
-		$content = $matches[2];
-		$content = preg_replace('/<hr[^>]*>/', '', $content);
-		$content = preg_replace('/style="[^"]+"/', '', $content);
-		$content = preg_replace('/width="[^"]+"/', '', $content);
-		$content = preg_replace('/height="[^"]+"/', '', $content);
-		$content = preg_replace('/valign="[^"]+"/', '', $content);
-		$content = preg_replace('/href="\//', 'href="http://m.youtube.com/', $content);
-		$content = str_replace("w=40&amp;h=30", "w=160&amp;h=120", $content);
-		$content = str_replace("<table", '<div class="block"><table', $content);
-		$content = str_replace("table>", 'table></div>', $content);
-		
-		$this->assign('count',  $matches[1]);
-		$this->assign('content', $content);
+
 	}
 }
