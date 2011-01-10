@@ -70,6 +70,7 @@ Campus_Map.geoLocate('showGeoLoc');
 {if $traffic}
 	var trafficLayer = new google.maps.TrafficLayer();
 	trafficLayer.setMap(Campus_Map.map);
+	Campus_Map.map.setZoom(14);
 {/if}
 </script>
 </body>

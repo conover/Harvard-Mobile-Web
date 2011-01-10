@@ -71,7 +71,7 @@ Campus_Map.gmap = function(){
 	var myLatlng = new google.maps.LatLng(28.601584019049238,-81.20095419304656);
 	
 	var myOptions = {
-		zoom: 16,
+		zoom: 15,
 		center: myLatlng,
 		mapTypeControl: true,
 		//mapTypeId : google.maps.MapTypeId.ROADMAP,
