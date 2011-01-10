@@ -2,6 +2,8 @@
 .pad .wp-caption { display:block; float:left; line-height:100%; }
 .pad .wp-caption img { margin-bottom:4px; }
 .pad .wp-caption p { font-size:12px; font-family:georgia; color:#A9AAA9;}
-.pad img { float:left; margin-right:12px; margin-bottom:12px; }
+.pad img { float:left; margin-right:12px; margin-bottom:12px; height: 5em;}
 
 .articles{margin-top: 20px;}
+.articles a.img{float:left; margin: 3px 15px 0 0; margin-bottom: 0;}
+.articles a.img img{height: 5em; margin: 0; padding: 0;}
