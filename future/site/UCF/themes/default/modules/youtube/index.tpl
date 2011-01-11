@@ -4,11 +4,19 @@
 	<div class="text">
 		<h2>UCF on YouTube</h2>
 		<div id="youtube">
-			{foreach $videos as $v}
-			<div class="block">
-				{$v->get_description()}
-			</div>
-			{/foreach}
+			{if $videos}
+				{foreach $videos as $video}
+				<div class="block">
+					{$video}
+					<div class="clear">&nbsp;</div>
+				</div>
+				{/foreach}
+			{else}
+				<div class="block">
+					<p>Error with youtube feed.</p>
+					<p>Visit youtube directly at: <a href="http://m.youtube.com/ucf">http://m.youtube.com/ucf</a></p>
+				</div>
+			{/if}
 		</div>
 	</div>
 	
