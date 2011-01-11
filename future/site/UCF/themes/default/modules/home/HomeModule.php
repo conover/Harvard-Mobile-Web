@@ -17,6 +17,7 @@ class HomeModule extends UCFModule {
 				if (!$info['disabled']) {
 					$module = array(
 						'title' => $info['title'],
+						'fancy' => $info['fancy'],
 						'description' => $info['description'],
 						'opt' => ''.$info['opt'],
 						'url' => isset($info['url']) ? $info['url'] : "/$id/",
