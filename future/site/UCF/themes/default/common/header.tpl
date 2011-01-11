@@ -68,9 +68,6 @@
 	<body class="{$platform} {$pagetype}">
 		{block name="header"}
 		<div id="Header">
-			{if isset($topItem)}
-			<div id="new"><a href="/about/new.php"><span class="newlabel">NEW:</span>{$topItem}</a></div>
-			{/if}
-			<h1><a href="/home/">UCF<span>Mobile</span> <span class="beta">beta</span></a></h1>
+			<h1><a href="/home/">UCF</a></h1>
 		</div>
 		{/block}

@@ -23,11 +23,31 @@
 			
 			{$footerHTML}
 			
-			<p id="FooterNav">
-				<a href="/customize/">Customize</a>
-				<a href="http://www.ucf.edu">UCF Main Site</a>
-				<a href="mailto:webcom@mail.ucf.edu?subject=UCF Mobile Website Feedback">Feedback</a>
-			</p>
+			<div id="footer-links">
+				<a href="/customize/">
+					<span class="heading">Customize</span>
+					<span class="description">Change options</span>
+				</a>
+				<a href="http://www.ucf.edu">
+					<span class="heading">UCF.edu</span>
+					<span class="description">Visit full site</span>
+				</a>
+				<a href="mailto:webcom@mail.ucf.edu?subject=UCF Mobile Website Feedback">
+					<span class="heading">Feedback</span>
+					<span class="description">Suggestions &amp; ideas</span>
+				</a>
+				<a href="mailto:webcom@mail.ucf.edu?subject=UCF Mobile Website Feedback">
+					<span class="heading">Contact UCF</span>
+					<span class="description">Contact Information</span>
+				</a>
+			</div>
+			
+			<div id="university-information">
+				<span class="name">University of Central Florida</span>
+				<span class="street">4000 Central Florida Blvd</span>
+				<span class="city">Orlando, Florida 32826</span>
+				<span class="about"><a href="#">About this site</a></span>
+			</div>
 			
 			{foreach $inlineJavascriptFooterBlocks as $script}
 			<script type="text/javascript">
