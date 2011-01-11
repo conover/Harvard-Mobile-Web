@@ -23,9 +23,11 @@
 			
 			{$footerHTML}
 			
-			<ul id="FooterNav">
-				<li id="Main"><a href="http://www.ucf.edu">UCF Main Site</a></li>
-			</ul>
+			<p id="FooterNav">
+				<a href="/customize/">Customize</a>
+				<a href="http://www.ucf.edu">UCF Main Site</a>
+				<a href="mailto:webcom@mail.ucf.edu?subject=UCF Mobile Website Feedback">Feedback</a>
+			</p>
 			
 			{foreach $inlineJavascriptFooterBlocks as $script}
 			<script type="text/javascript">
