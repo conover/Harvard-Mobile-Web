@@ -19,7 +19,7 @@ class HomeModule extends UCFModule {
 						'title' => $info['title'],
 						'fancy' => $info['fancy'],
 						'description' => $info['description'],
-						'opt' => ''.$info['opt'],
+						'opt' => ''.@$info['opt'],
 						'url' => isset($info['url']) ? $info['url'] : "/$id/",
 						'img' => isset($info['img']) ? $info['img'] : "/modules/{$this->id}/images/$id.png",
 					);
