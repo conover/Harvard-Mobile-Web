@@ -177,7 +177,19 @@ h3 { color:white; padding:0 7px; }
 #footer-links .heading{font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 16px; font-weight: bold;}
 #footer-links .description{font-family: "Georgia", "serif"; font-size: 11px;}
 
-#university-information{display: block; width: 295px; margin: 0 auto; font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 10px; letter-spacing: 1px; color: #eeeeee; background: transparent url('/media/img/pegasus.png') no-repeat -10px 10px; text-transform: uppercase; line-height: 1.5em; padding: 15px 0;}
+#university-information{
+	display: block;
+	width: 295px;
+	margin: 0 auto;
+	font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
+	font-size: 10px;
+	letter-spacing: 1px;
+	color: #eeeeee;
+	background: transparent url('/media/img/pegasus.png') no-repeat 0;
+	text-transform: uppercase;
+	line-height: 1.5em;
+	padding: 15px 0;
+}
 #university-information .contact{margin: 0 auto 2em auto;}
 #university-information .contact span{display: block; margin-left: 75px;}
 #university-information .links span{display: inline-block; margin: 0 10px;}
