@@ -72,6 +72,6 @@
 	<body class="{$platform} {$pagetype}">
 		{block name="header"}
 		<div id="Header">
-			<h1><a href="/home/">UCF</a></h1>
+			<h1><a href="/home/"><span>UCF</span></a></h1>
 		</div>
 		{/block}

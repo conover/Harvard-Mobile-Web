@@ -162,7 +162,8 @@ h3 { color:white; padding:0 7px; }
 	border-bottom: 2px solid #ffd203; background-color: #000;
 	color: #fff; padding:0; margin: 0;}
 #Header h1{ text-align: center; margin: 0; padding: 0;}
-#Header h1 a{ text-decoration: none; color: #ffd203; border:0; }
+#Header h1 a{padding: 10px 0; text-decoration: none; border:0;}
+#Header h1 a span{display: inline-block;  background: transparent url('/media/img/pegasus-16x18.png') no-repeat 0 0; padding-left: 22px; color: #ffd203;}
 
 #Content{background: #333; padding: 0 0 20px 0; margin: 0;}
 
@@ -185,7 +186,7 @@ h3 { color:white; padding:0 7px; }
 	font-size: 10px;
 	letter-spacing: 1px;
 	color: #eeeeee;
-	background: transparent url('/media/img/pegasus.png') no-repeat 0;
+	background: transparent url('/media/img/pegasus-64x72.png') no-repeat 0px 5px;
 	text-transform: uppercase;
 	line-height: 1.5em;
 	padding: 15px 0;
