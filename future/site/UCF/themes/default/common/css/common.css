@@ -168,16 +168,21 @@ h3 { color:white; padding:0 7px; }
 
 
 /*/ Footer /*/
-#footer-links{}
-#footer-links a{display: inline-block; background-color: #111; padding: 10px; text-align: center;}
-#footer-links a span{display: block; color: #b7b7b7;}
+#footer-links{border-bottom: 1px solid #161616; }
+#footer-links a{display: block; background-color: #111; padding: 10px; text-align: center;  color: #b7b7b7;}
+#footer-links a:hover{background-color: #222; color: #ffd203;}
+#footer-links a span{display: block;}
+#footer-links .customize{float: left; width: 50%; border-right: 1px solid #161616;}
+#footer-links .feedback{margin-left: 50%;}
 #footer-links .heading{font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 16px; font-weight: bold;}
 #footer-links .description{font-family: "Georgia", "serif"; font-size: 11px;}
 
-#university-information{border-top: 1px solid #161616; font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 10px; letter-spacing: 1px; color: #eeeeee; background: transparent url('/media/img/pegasus.png') no-repeat -10px -3px; text-transform: uppercase; line-height: 1.5em; padding: 15px 0;}
-#university-information span{display: block; margin-left: 75px;}
+#university-information{display: block; width: 295px; margin: 0 auto; font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 10px; letter-spacing: 1px; color: #eeeeee; background: transparent url('/media/img/pegasus.png') no-repeat -10px 10px; text-transform: uppercase; line-height: 1.5em; padding: 15px 0;}
+#university-information .contact{margin: 0 auto 2em auto;}
+#university-information .contact span{display: block; margin-left: 75px;}
+#university-information .links span{display: inline-block; margin: 0 10px;}
+#university-information .links{}
 #university-information .name{font-weight: bold;}
-#university-information .about{margin-top: 1em;}
 #Footer{background: #000; background-color: #000; padding: 0 0 20px 0;}
 
 
