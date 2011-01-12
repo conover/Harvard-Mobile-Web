@@ -23,6 +23,11 @@ class HomeModule extends UCFModule {
 						'url' => isset($info['url']) ? $info['url'] : "/$id/",
 						'img' => isset($info['img']) ? $info['img'] : "/modules/{$this->id}/images/$id.png",
 					);
+					if ($id == 'events'){
+						$day           = date('j');
+						$module['img'] = "/modules/{$this->id}/images/dates/date-{$day}.png";
+					}
+					
 					if ($id == 'about' && $whatsNewCount > 0) {
 						$module['badge'] = $whatsNewCount;
 					}
