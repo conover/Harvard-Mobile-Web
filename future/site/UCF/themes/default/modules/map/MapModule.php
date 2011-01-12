@@ -8,6 +8,7 @@ class MapModule extends UCFModule {
 	protected $id = 'map';
 	protected $location   = false;
 	protected $locate_me  = false;
+	protected $directions = false;
 	
 	/****************************************************************************\
 		Constructor
@@ -95,11 +96,11 @@ class MapModule extends UCFModule {
 		$query = trim(stripslashes(strip_tags($_GET['q'])));
 		if(empty($query)) return;
 		$this->assign('search_q', $query);
-		$url = $map_api . urlencode($query);
+		$url = sprintf($map_api, urlencode($query));
 		
 		$contents = $this->fromCache($url);
 		$contents = utf8_encode($contents);
-		$results = json_decode($contents);
+		$results = json_decode($contents)->results;
 		
 	}
 	
@@ -122,11 +123,12 @@ class MapModule extends UCFModule {
 		}
 		
 		if($this->location){
-			// TODO: move url to config/web/map.ini
 			$map_api = $this->options['MAP_SERVICE_LOCATION'];
-			$url = $map_api . urlencode($this->location);
+			$url = sprintf($map_api, urlencode($this->location));
 			$contents = $this->fromCache($url);
 			$loc = utf8_encode($contents);
+			//remove poly coord
+			$loc = preg_replace( '/"poly_coords":.*]]],/is', '', $loc);
 			$this->assign('location', $loc);
 			$this->assign('location_id', $this->location);
 			if($this->directions) $this->assign('directions', true);

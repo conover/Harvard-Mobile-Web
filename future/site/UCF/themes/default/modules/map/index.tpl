@@ -47,7 +47,8 @@ Campus_Map.geoLocate('showGeoLoc');
 		alert("Location ({$location_id}) not found");
 		return;
 	}
-	var latlng = new google.maps.LatLng( loc.coord_x , loc.coord_y );
+	
+	var latlng = new google.maps.LatLng( loc.googlemap_point[0] , loc.googlemap_point[1] );
 	map.panTo(latlng);
 	map.panBy(0, -100);
 	
