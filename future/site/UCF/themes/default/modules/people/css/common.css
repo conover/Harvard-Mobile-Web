@@ -7,8 +7,8 @@ article header{}
 article header h1{font-size: 20px; margin: 0;}
 
 article footer {border-top: 1px solid #5C5D5E; margin-top: 10px; padding-top: 5px; font-size: 16px;}
-article footer .phone{width: 175px; float: left;}
-article footer .email{margin-left: 175px;}
+article footer .phone{width: 150px; float: left;}
+article footer .email{margin-left: 150px;}
 
 article .organization{color: #c8c8c8; font-weight: normal; margin-top: 10px; font-size: 14px;}
 article .building{color: #c8c8c8; font-weight: normal; font-size: 14px;}

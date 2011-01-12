@@ -40,7 +40,7 @@ class PeopleModule extends UCFModule{
 		));
 		
 		$url  = implode(array($service, '?', $query_str));
-		$json = $this->fetchHTTP($url);
+		$json = $this->fromCache($url);
 		
 		$response = json_decode($json);
 		if ($response == null){
