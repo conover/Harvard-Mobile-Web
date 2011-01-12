@@ -3,7 +3,8 @@
 #Home ul{border: none; margin: 0; padding: 0; font-weight: 300;}
 #Home ul li{border: none; margin: 0; padding: 0;}
 #Home ul li a{background-image: url('/media/img/chevron.png'); background-repeat: no-repeat; background-position: 100% 27px; border-bottom: 1px solid #161616; margin: 0; padding: 15px 20px; display: block;}
-#Home ul li a .icon{display: block; float: left; width: 55px;}
+#Home ul li a:hover{color: #fff; background-color: #222; cursor: pointer;}
+#Home ul li a .icon{display: block; float: left; width: 55px; position: relative; top: -3px;}
 #Home ul li a .heading,
 #Home ul li a .description{display: block; margin-left: 70px;}
 #Home ul li a .heading{font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 22px;}

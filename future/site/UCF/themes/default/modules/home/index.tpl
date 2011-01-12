@@ -8,6 +8,7 @@
 			<img class="icon" src="{$item['img']}" alt="{$item['title']}">
 			<span class="heading">{$item['fancy']}</span>
 			<span class="description">{$item['description']}</span>
+			<span class="end"><!-- --></span>
 		</a></li>
 	{/foreach}
 	</ul>

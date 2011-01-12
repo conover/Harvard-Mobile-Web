@@ -24,7 +24,7 @@ class HomeModule extends UCFModule {
 						'img' => isset($info['img']) ? $info['img'] : "/modules/{$this->id}/images/$id.png",
 					);
 					if ($id == 'events'){
-						$day           = date('j');
+						$day = date('j');
 						$module['img'] = "/modules/{$this->id}/images/dates/date-{$day}.png";
 					}
 					
