@@ -1,0 +1,8 @@
+#Twitter{}
+#Twitter p{}
+#Twitter ul{padding: 0; margin: 0; list-style-type: none; border: none;}
+#Twitter ul li{padding: 7px;}
+#Twitter ul li img{float: left;}
+#Twitter ul li .tweet{margin-left: 64px; color: #ccc; font-weight: normal; font-size: 16px; font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";}
+#Twitter ul li .tweet a{text-decoration: none; font-weight: bold;}
+#Twitter ul li .tweet .when{display: block; color: #aaa; font-size: 14px; margin-top: 5px;}
