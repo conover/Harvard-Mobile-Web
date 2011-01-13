@@ -3,7 +3,7 @@
 .pad .wp-caption { display:block; float:left; line-height:100%; }
 .pad .wp-caption img { margin-bottom:4px; }
 .pad .wp-caption p { font-size:12px; font-family:georgia; color:#A9AAA9;}
-.pad img { float:left; margin-right:12px; margin-bottom:12px; height: 5em;}
+.pad img { float:left; margin-right:12px; margin-bottom:12px; }
 
 .gloss{padding-top: .5em;}
 .block .original{text-align: center; display: block;}
