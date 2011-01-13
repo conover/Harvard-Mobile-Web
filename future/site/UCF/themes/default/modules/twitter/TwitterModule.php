@@ -48,3 +48,33 @@ function linkify($string){
 	$string = implode(' ', $words);
 	return $string;
 }
+
+function textual_difference($then){
+	$now  = time();
+	$diff = $now - $then;
+	
+	if ($diff < 60){
+		$text = 'less than a minute ago';
+	}#Seconds
+	else if ($diff < 3600){
+		$n    = floor($diff/60);
+		if ($n != 1){
+			$text = "about {$n} minutes ago";
+		}else{
+			$text = "about {$n} minute ago";
+		}
+	}#Minutes
+	else if ($diff < 86400){
+		$n    = floor($diff/3600);
+		if ($n != 1){
+			$text = "about {$n} hours ago";
+		}else{
+			$text = "about {$n} hour ago";
+		}
+	}#Hours
+	else{
+		$d    = date("F j, Y", $now);
+		$text = "on {$d}";
+	}#Default
+	return $text;
+}
