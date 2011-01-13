@@ -18,9 +18,9 @@
 <h1><a href="/">UCF Mobile</a></h1>
 </header>
 <div id="content">
-  <p>Ohai.</p>
-  <p><a href="/home/">View Mobile</a>.</p>
-  <p>Forked from Harvard Mobile Web, code <a href="https://github.com/UCF/Harvard-Mobile-Web">on github</a>.</p>
+	<p>This site was developed by <a href="mailto:webcom@mail.ucf.edu?subject=mobile">UCF Web Communications</a>.</p>
+	<p>Built on Harvard Mobile Web (soon to be iMobileU) all of our code is open-source and <a href="https://github.com/UCF/Harvard-Mobile-Web">available on github</a>.</p>
+	<p>&lt; <a href="/home/">back to mobile</a></p>
 </div>
 </div>
 

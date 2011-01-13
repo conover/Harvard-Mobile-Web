@@ -130,11 +130,14 @@ if (preg_match(';^.*favicon.ico$;', $path, $matches)) {
   }
   
   if (!strlen($path) || $path == '/') {
+/*  //disable redirection, simply show mobile app
     if ($GLOBALS['deviceClassifier']->isComputer() || $GLOBALS['deviceClassifier']->isSpider()) {
       header("Location: ./info/");
     } else {
       header("Location: ./home/");
     }
+*/  $id = "home";
+
   } else {  
     $parts = explode('/', ltrim($path, '/'), 2);
 
