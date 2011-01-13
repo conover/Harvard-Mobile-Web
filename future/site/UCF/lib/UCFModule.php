@@ -46,6 +46,11 @@ abstract class UCFModule extends Module{
 	function initialize()
 	{
 		$this->options = $GLOBALS['siteConfig']->getSection($this->id);
+		$this->cache   = new DiskCache(
+			$this->cacheFolder(),
+			$GLOBALS['siteConfig']->getVar('DEFAULT_CACHE_LIFESPAN'),
+			TRUE
+		);
 	}
 	
 	/**
@@ -74,8 +79,13 @@ abstract class UCFModule extends Module{
 	 **/
 	function fromCache($url)
 	{
-		$contents = $this->getCache($url);
-		return $contents;
+		$key = $this->cacheKey($url);
+		
+		if (!$this->cache->isFresh($key)){
+			$data = $this->fetchHttp($url);
+			$this->setCache($key, $data);
+		}
+		return $this->getCache($key);
 	}
 	
 	
@@ -104,6 +114,10 @@ abstract class UCFModule extends Module{
 	}
 	
 	
+	function setCache($key, $data){
+		$this->cache->write($data, $key);
+	}
+	
 	/**
 	 * Return contents of url, creating new version of cache if out of date or
 	 * non-existent
@@ -111,17 +125,9 @@ abstract class UCFModule extends Module{
 	 * @return string
 	 * @author Jared Lang
 	 **/
-	function getCache($url)
+	function getCache($key)
 	{
-		$key      = $this->cacheKey($url);
-		$lifespan = $GLOBALS['siteConfig']->getVar('DEFAULT_CACHE_LIFESPAN');
-		$cache    = new DiskCache($this->cacheFolder(), $lifespan, TRUE);
-		
-		if (!$cache->isFresh($key)){
-			$data = $this->fetchHttp($url);
-			$cache->write($data, $key);
-		}
-		return $cache->read($key);
+		return $this->cache->read($key);
 	}
 }
 

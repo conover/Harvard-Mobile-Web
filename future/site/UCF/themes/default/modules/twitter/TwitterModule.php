@@ -1,0 +1,50 @@
+<?php
+/**
+ * UCF Mobile - Twitter
+ * 
+ * @author UCF Web Communications
+ * @author Douglas Beck
+ * @author Jared Lang
+ */
+
+
+class TwitterModule extends UCFModule {
+	protected $id = 'twitter';
+	
+	public function initializeForPage(){
+		#Pull in TWITTER_ options to current scope
+		extract($this->options);
+		
+		$api_url   = '/status/friends_timeline/83678503.json';
+		$cache_key = $this->cacheKey($api_url);
+		$cache     = $this->getCache($cache_key);
+		if ($cache){
+			$tweets = json_decode($cache);
+		}else{
+			$twitter = new EpiTwitter(
+				$TWITTER_CONSUMER_KEY,
+				$TWITTER_CONSUMER_SECRET,
+				$TWITTER_OAUTH_TOKEN,
+				$TWITTER_OAUTH_SECRET
+			);
+			$response = $twitter->get('/statuses/friends_timeline/83678503.json');
+			$json     = $response->responseText;
+			$tweets   = json_decode($json);
+			$this->setCache($cache_key, $json);
+		}
+		
+		$this->assign('tweets', array_slice($tweets, 0, $TWITTER_MAX_TWEETS));
+	}
+}
+
+function linkify($string){
+	$words = explode(' ', $string);
+	$words = array_map(create_function('$w','
+		if (stripos($w, "http") !== False){
+			$w = "<a href=\"{$w}\">{$w}</a>";
+		}
+		return $w;
+	'), $words);
+	$string = implode(' ', $words);
+	return $string;
+}
