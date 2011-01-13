@@ -42,8 +42,8 @@
 					<span class="phone">(407) 823-2000</span>
 				</div>
 				<div class="links">
-					<span class="about"><a href="#">About this site</a></span>
-					<span class="contact"><a href="#">Contact UCF</a></span>
+					<span class="about"><a href="/info/">About this site</a></span>
+					<span class="contact"><a href="http://www.ucf.edu/contact/">Contact UCF</a></span>
 					<span class="main-site"><a href="http://www.ucf.edu">UCF.edu</a></span>
 				</div>
 			</div>
