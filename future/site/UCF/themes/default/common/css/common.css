@@ -176,14 +176,9 @@ h3 { color:white; padding:0 7px; }
 	display:inline-block; float:left; color:#ffc90a; }
 #header-crumbs h1 span { height:17px; padding:10px; position:relative; display:inline-block; float:left; font-weight:normal; }
 #header-crumbs h1 a span { position:absolute; height:37px; padding:0; top:0; right:0; width:14px; background:transparent url('/media/img/arrow.png') no-repeat right center;  }
-
-
-
-
-
+ 
 #Content{background: black; padding: 0 0 20px 0; margin: 0;}
-
-
+ 
 /*/ Footer /*/
 #footer-links{border-bottom: 1px solid #161616; }
 #footer-links a{display: block; background-color: #111; padding: 15px 0; text-align: center;  color: #b7b7b7;}
@@ -202,7 +197,7 @@ h3 { color:white; padding:0 7px; }
 	font-size: 10px;
 	letter-spacing: 1px;
 	color: #eeeeee;
-	background: transparent url('/media/img/pegasus-64x72.png') no-repeat 0px 5px;
+	background: transparent url('/media/img/pegasus-50x56.png') no-repeat 10px 17px;
 	text-transform: uppercase;
 	line-height: 1.5em;
 	padding: 15px 0;
