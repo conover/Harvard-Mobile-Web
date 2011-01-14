@@ -40,6 +40,7 @@ class FaqModule extends UCFModule {
 	}
 	
 	function initialize(){
+		parent::initialize();
 		$this->options = $GLOBALS['siteConfig']->getSection($this->id);
 		$this->getCategories();
 		$this->getCategory();
