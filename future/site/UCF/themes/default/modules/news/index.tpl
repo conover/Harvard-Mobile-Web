@@ -1,7 +1,9 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
+	{if filter_title($feed->get_title()) != "UCF Today"}
 	<h2>{block name="news_header"}{filter_title($feed->get_title())}{/block}</h2>
+	{/if}
 
 	<ul class="gloss">
 		<li class="arrow"><a href="feeds/">View Stories by Category</a></li>

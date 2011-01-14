@@ -73,7 +73,6 @@ class NewsModule extends UCFModule{
 		
 		$this->assign('feeds', $feeds);
 		$this->assign('cfeed', $cfeed);
-		$this->setPageTitle('Categories');
 		return;
 	}
 	

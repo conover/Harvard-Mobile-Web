@@ -3,7 +3,7 @@
 {strip}  
 	<head>
 		<meta charset="utf-8" />
-		<title>{$pageTitle}</title>
+		<title>{if $pageTitle == "Home"}UCF Mobile{else}{$pageTitle}{/if}</title>
 		<link href="{$minify['css']}" rel="stylesheet" media="all" type="text/css"/>
 		<link rel="shortcut icon" href="/media/favicon.png" />
 		{foreach $inlineCSSBlocks as $css}
@@ -70,8 +70,14 @@
 	</head>
 	
 	<body class="{$platform} {$pagetype}">
-		{block name="header"}
+	{block name="header"}
+		{if $pageTitle == 'Home'}
 		<div id="Header">
-			<h1><a href="/home/"><span>UCF</span></a></h1>
+			<h1><a href="/home/"><span>UCF</span>Mobile</a></h1>
 		</div>
-		{/block}
+		{else}
+		<div id="header-crumbs">
+			<h1><a href="/home/">UCF<span></span></a> <span>{$moduleName}</span></h1>
+		</div>
+		{/if}
+	{/block}

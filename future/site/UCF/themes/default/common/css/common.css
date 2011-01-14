@@ -162,10 +162,24 @@ h3 { color:white; padding:0 7px; }
 #Header{ 
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#000));
 	border-bottom: 2px solid #ffd203; background-color: #000;
-	color: #fff; padding:0; margin: 0;}
+	color: #fff; padding:0; margin: 0; font-family:helvetica;}
 #Header h1{ text-align: center; margin: 0; padding: 0;}
-#Header h1 a{padding: 10px 0; text-decoration: none; border:0;}
-#Header h1 a span{display: inline-block;  background: transparent url('/media/img/pegasus-16x18.png') no-repeat 0 0; padding-left: 22px; color: #ffd203;}
+#Header h1 a{padding: 10px 0; text-decoration: none; border:0; font-weight:normal;}
+#Header h1 a:hover { color:white; }
+#Header h1 a span{display: inline-block;  background: transparent url('/media/img/pegasus-16x18.png') no-repeat 0 0; padding-left: 22px; color: #ffd203; font-weight:bold;}
+#header-crumbs h1 { height:37px; overflow:hidden; border-bottom: 2px solid #ffd203; background-color: #000; }
+#header-crumbs h1 a {
+	background-image: url('/media/img/pegasus-20x19.png'), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#494848), to(#131212));
+	background-image: url('/media/img/pegasus-20x19.png'), -moz-linear-gradient(top,  #494848,  #131212);
+	background-repeat: no-repeat;
+	position:relative; height:17px; padding:10px 20px 10px 32px;
+	display:inline-block; float:left; color:#ffc90a; }
+#header-crumbs h1 span { height:17px; padding:10px; position:relative; display:inline-block; float:left; font-weight:normal; }
+#header-crumbs h1 a span { position:absolute; height:37px; padding:0; top:0; right:0; width:14px; background:transparent url('/media/img/arrow.png') no-repeat right center;  }
+
+
+
+
 
 #Content{background: black; padding: 0 0 20px 0; margin: 0;}
 
@@ -239,7 +253,10 @@ h3 { color:white; padding:0 7px; }
 .alert .block { 
 	background: #481616; 
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#600000), to(#161616));  
-	background: -moz-linear-gradient(top,  #600000,  #161616); }
+	background: -moz-linear-gradient(top,  #600000,  #161616);
+	border-top:1px solid #900000;
+	border-bottom:1px solid #5E0000;
+	 }
 
 .articles { padding: 0; margin: 0; list-style-type: none; border:0; }
 .articles li { padding:0 7px 7px; }

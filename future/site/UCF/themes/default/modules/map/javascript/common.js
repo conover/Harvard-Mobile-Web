@@ -15,9 +15,9 @@ Campus_Map.resize = function(){
 	var resize = function(){
 		// window - header - header border
 		if(Campus_Map.ie){
-			height = document.documentElement.clientHeight - document.getElementById('Header').scrollHeight;
+			height = document.documentElement.clientHeight - document.getElementById('header-crumbs').scrollHeight;
 		} else {
-			height = document.documentElement.clientHeight - document.getElementById('Header').clientHeight - 2;
+			height = document.documentElement.clientHeight - document.getElementById('header-crumbs').clientHeight - 2;
 		}
 		
 		document.getElementById('map-canvas').style.height = height + "px";
@@ -71,7 +71,7 @@ Campus_Map.gmap = function(){
 	var myLatlng = new google.maps.LatLng(28.601584019049238,-81.20095419304656);
 	
 	var myOptions = {
-		zoom: 15,
+		zoom: 16,
 		center: myLatlng,
 		mapTypeControl: true,
 		//mapTypeId : google.maps.MapTypeId.ROADMAP,
