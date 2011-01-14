@@ -15,7 +15,7 @@ class TwitterModule extends UCFModule {
 		#Pull in TWITTER_ options to current scope
 		extract($this->options);
 		
-		$api_url   = '/status/friends_timeline/83678503.json';
+		$api_url   = '/statuses/friends_timeline.json';
 		$cache_key = $this->cacheKey($api_url);
 		$cache     = $this->getCache($cache_key);
 		if ($cache){
