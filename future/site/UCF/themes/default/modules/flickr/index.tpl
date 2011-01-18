@@ -3,11 +3,9 @@
 
 {block name="body"}
 <div id="Flickr">
-	<h2>UCF on Flickr</h2>
 	<ul class="gloss tabs">
 		<li><a class="grid" href="#">Grid</a></li>
-		<li><a class="full" href="#">Fullscreen</a></li>
-		<li><a href="#">Flickr</a></li>
+		<li><a class="full" href="#">Full</a></li>
 	</ul>
 	<ul id="images">
 		{foreach $items as $id=>$item}
@@ -16,10 +14,10 @@
 		{$original = $image->link}
 		{if $image->thumbnails}
 			{$thumbnail = $image->thumbnails[0]}
-			{$src       = $thumbnail}
+			{$src = $thumbnail}
 		{else}
 			{$thumbnail = ''}
-			{$src       = $original}
+			{$src = $original}
 		{/if}
 		<li {if $first}class="active"{/if} data-thumbnail="{$thumbnail}" data-original="{$original}" data-id="{$id}">
 			<img src="{$src}" alt="{$item->get_title()}" >
@@ -34,10 +32,18 @@
 <script type="text/javascript" charset="utf-8">
 	(function ($){
 		$.fn.Gallery = function(){
-			var _this      = $(this);
-			
-			var slider = $("<ul id='gallery-slider'>");
+			var _this    = $(this);
+			var slider   = $("<ul id='gallery-slider'>");
+			var prefetch = $("<div id='prefetch'>");
 			_this.after(slider);
+			_this.after(prefetch);
+			
+			//Pre-fetch images
+			_this.children('li').each(function(){
+				var img = $('<img>');
+				img.attr('src', $(this).attr('data-original').replace('_m.jpg', '_z.jpg'));
+				prefetch.append(img);
+			});
 			
 			var activate = function(active){
 				//Change originals back to thumbnail and remove classes
@@ -59,13 +65,13 @@
 				next.addClass('next');
 				
 				slider.empty();
-				slider.append(prev.clone());
 				slider.append(active.clone());
+				slider.append(prev.clone());
 				slider.append(next.clone());
 				
 				slider.children('.active').each(function(){
 					$(this).children('img').attr('src', 
-						$(this).attr('data-original').replace('_m.jpg', '_b.jpg')
+						$(this).attr('data-original').replace('_m.jpg', '_z.jpg')
 					);
 				});
 				
@@ -90,6 +96,8 @@
 			});
 			
 			$('a.grid').click();
+			activate(_this.children().first());
+			prefetch.hide();
 		};
 		$('#images').Gallery();
 	})(jQuery);

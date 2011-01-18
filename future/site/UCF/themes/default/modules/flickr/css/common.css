@@ -3,16 +3,22 @@
 #Flickr ul{border: none; margin: 0;}
 #Flickr ul li{border: none;}
 #Flickr ul li:hover{border: none; cursor: pointer;}
+#Flickr ul li .grid{padding: 15px 0 10px 60px; background: transparent url('/media/img/grid.png') no-repeat left center;}
+#Flickr ul li .full{padding: 15px 0 10px 60px; background: transparent url('/media/img/full.png') no-repeat left center;}
+#Flickr ul li .url{padding: 15px 0 10px 0;}
 
 #Flickr #images{margin: 0 10px;}
 #Flickr #images li{margin: 10px; padding: 0; display: inline-block;}
 
 #Flickr #gallery-slider{}
 #Flickr #gallery-slider li{display: block;}
-#Flickr #gallery-slider .active img{vertical-align: middle; width: 100%;}
-#Flickr #gallery-slider .previous{background: transparent url('/media/img/chevron-flip.png') no-repeat 0% 50%; float: left; width: 50%;}
+#Flickr #gallery-slider .active img{vertical-align: middle;width: 100%;}
+#Flickr #gallery-slider .previous{display: block; float: left; background: transparent url('/media/img/chevron-flip.png') no-repeat center left; width: 50%;}
 #Flickr #gallery-slider .previous:after{}
-#Flickr #gallery-slider .previous img{display: none;}
-#Flickr #gallery-slider .next{background: transparent url('/media/img/chevron.png') no-repeat 100% 50%; margin-left: 50%;}
+#Flickr #gallery-slider .previous,
+#Flickr #gallery-slider .next{display: block; padding: 0; margin: 0;}
+#Flickr #gallery-slider .next img,
+#Flickr #gallery-slider .previous img{display: block; margin: 0 auto;}
+#Flickr #gallery-slider .next{display: block; margin-left: 50%; background: transparent url('/media/img/chevron.png') no-repeat center right; width: 50%;}
 #Flickr #gallery-slider .next:after{}
-#Flickr #gallery-slider .next img{display: none;}
+#Flickr #gallery-slider .next img{}

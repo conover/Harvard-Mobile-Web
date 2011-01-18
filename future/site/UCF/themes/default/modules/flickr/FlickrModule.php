@@ -17,11 +17,13 @@ class FlickrModule extends UCFModule {
 	
 	public function initializeForPage(){
 		$feed = new SimplePie();
+		$feed->set_timeout($GLOBALS['siteConfig']->getVar('HTTP_TIMEOUT'));
 		$feed->set_feed_url($this->feed_url);
 		$feed->set_cache_location(CACHE_DIR);
 		$feed->init();
 		
 		$items = $feed->get_items();
 		$this->assign('items', $items);
+		$this->assign('url', 'http://twitter.com/ucftweets');
 	}
 }
