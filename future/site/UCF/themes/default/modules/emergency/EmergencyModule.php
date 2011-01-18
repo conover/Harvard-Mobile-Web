@@ -36,6 +36,7 @@ class EmergencyModule extends UCFModule {
 	{
 		$url  = $this->options['EMERGENCY_RSS_URL'];
 		$feed = new SimplePie();
+		$feed->set_timeout($GLOBALS['siteConfig']->getVar('HTTP_TIMEOUT'));
 		$feed->set_feed_url($url);
 		$feed->set_cache_location(CACHE_DIR);
 		$feed->init();

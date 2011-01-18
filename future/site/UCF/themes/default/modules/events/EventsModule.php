@@ -17,6 +17,7 @@ class EventsModule extends UCFModule {
 	
 	function getFeed($url){
 		$feed = new SimplePie();
+		$feed->set_timeout($GLOBALS['siteConfig']->getVar('HTTP_TIMEOUT'));
 		$feed->set_item_class('UCFEventSimplePie_Item');
 		$feed->set_feed_url($url);
 		$feed->set_cache_location(CACHE_DIR);
