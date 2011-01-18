@@ -14,6 +14,7 @@ class YoutubeModule extends UCFModule {
 		
 		
 		$feed = new SimplePie();
+		$feed->set_timeout($GLOBALS['siteConfig']->getVar('HTTP_TIMEOUT'));
 		$feed->set_feed_url('http://gdata.youtube.com/feeds/base/users/UCF/uploads?alt=rss&v=2&orderby=published&client=ytapi-youtube-profile');
 		$feed->set_cache_location(CACHE_DIR);
 		$feed->init();
