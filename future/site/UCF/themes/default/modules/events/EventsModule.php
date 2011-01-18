@@ -41,7 +41,7 @@ class EventsModule extends UCFModule {
 		$this->assign('next', $next);
 		$this->assign('prev', $prev);
 		$this->assign('now', $day);
-		$this->assign('events', $feed->get_items());
+		$this->assign('events', array_reverse($feed->get_items()));
 		$this->setPageTitle('Events for '.date('M j', $day));
 	}
 	
@@ -62,7 +62,7 @@ class EventsModule extends UCFModule {
 		$url   = $this->options["EVENTS_URL"].'?'.$q_str.'&'.$this->rss_arg;
 		$feed  = $this->getFeed($url);
 		
-		$this->assign('events', $feed->get_items());
+		$this->assign('events', array_reverse($feed->get_items()));
 		$this->setPageTitle('Upcoming Events');
 	}
 	
@@ -72,7 +72,7 @@ class EventsModule extends UCFModule {
 		$url   = $this->options['EVENTS_URL'].'?'.$q_str.'&'.$this->rss_arg;
 		$feed  = $this->getFeed($url);
 		
-		$this->assign('events', $feed->get_items());
+		$this->assign('events', array_reverse($feed->get_items()));
 		$this->assign('search_q', $q);
 		$this->setPageTitle('Search UCF Events');
 	}
