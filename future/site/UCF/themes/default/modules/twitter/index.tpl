@@ -2,7 +2,7 @@
 
 {block name="body"}
 <div id="Twitter" class="text">
-	<p>Latest tweets about UCF.</p>
+	<h2>UCF on Twitter</h2>
 	<ul>
 		{foreach $tweets as $tweet}
 		<li class="block">
