@@ -4,7 +4,7 @@
 <div id="Home">
 	<ul>
 	{foreach $modules as $item}
-		<li><a href="{$item['url']}{$item['opt']}">
+		<li><a {if array_key_exists('onclick', $item)}onclick="{$item['onclick']}" {/if}href="{$item['url']}{$item['opt']}">
 			<img class="icon" src="{$item['img']}" alt="{$item['title']}">
 			<span class="heading">{$item['fancy']}</span>
 			<span class="description">{$item['description']}</span>

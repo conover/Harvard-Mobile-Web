@@ -23,6 +23,11 @@ class HomeModule extends UCFModule {
 						'url' => isset($info['url']) ? $info['url'] : "/$id/",
 						'img' => isset($info['img']) ? $info['img'] : "/modules/{$this->id}/images/$id.png",
 					);
+					
+					if (array_key_exists('onclick', $info)){
+						$module['onclick'] = $info['onclick'];
+					}
+					
 					if ($id == 'events'){
 						$day = date('j');
 						$module['img'] = "/modules/{$this->id}/images/dates/date-{$day}.png";
