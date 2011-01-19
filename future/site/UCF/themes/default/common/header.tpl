@@ -41,8 +41,6 @@
 		<script src="{$url}" type="text/javascript"></script>
 		{/foreach}
 		
-		<script src="{$minify['js']}" type="text/javascript"></script>
-		
 		{if count($onOrientationChangeBlocks)}
 		<script type="text/javascript">
 			function onOrientationChange() {ldelim}
