@@ -10,11 +10,12 @@
 				<input type="submit" value="Search" /></form>
 		</li>
 	</ul>
-	
-	{if $items}
+
 	<ul class="gloss">
-		<li class="arrow"><a href="categories/">Select a different category to search </a></li>
+		<li class="arrow"><a href="categories/">Select a specific category to search </a></li>
 	</ul>
+	
+	{if $items and $q}
 	<ul class="gloss">
 	{foreach $items as $id=>$item}
 		<li class="arrow"><a href="answer/?url={urlencode($item->get_link())}&amp;q={$q}">
