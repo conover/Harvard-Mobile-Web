@@ -5,7 +5,7 @@
 	<h2>FAQ Categories</h2>
 	
 	<ul class="gloss">
-		<li class="arrow-back"><a href="../">Cancel</a></li>
+		<li class="arrow-back"><a href="../">Back</a></li>
 	</ul>
 	<ul class="gloss">
 	{foreach $categories as $category}

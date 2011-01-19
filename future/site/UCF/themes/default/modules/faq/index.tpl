@@ -2,7 +2,7 @@
 
 {block name="body"}
 <div id="faqs">
-	<h2>FAQs{if $category}: {$category.name}{/if}</h2>
+	<h2>Search FAQs</h2>
 	<ul class="gloss">
 		<li class="search">
 			<form action="" method="get">
@@ -12,10 +12,11 @@
 	</ul>
 
 	<ul class="gloss">
-		<li class="arrow"><a href="categories/">Select a specific category to search </a></li>
+		<li class="arrow"><a href="categories/">FAQ Categories</a></li>
 	</ul>
 	
-	{if $items and $q}
+	{if ($items and ($category.id != 0)) or ($items and $category.id == 0 and $q)}
+	<h3>{$category.name}</h3>
 	<ul class="gloss">
 	{foreach $items as $id=>$item}
 		<li class="arrow"><a href="answer/?url={urlencode($item->get_link())}&amp;q={$q}">
