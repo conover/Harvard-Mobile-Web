@@ -1,4 +1,9 @@
 {include file="findInclude:common/header.tpl"}
+
+{foreach $externalJavascriptURLs as $url}
+<script src="{$url}" type="text/javascript"></script>
+{/foreach}
+<script src="{$minify['js']}" type="text/javascript"></script>
 <div id="map-canvas"></div>
 
 <script type="text/javascript">
