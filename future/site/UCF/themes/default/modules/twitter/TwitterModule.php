@@ -27,7 +27,7 @@ class TwitterModule extends UCFModule {
 				$TWITTER_OAUTH_TOKEN,
 				$TWITTER_OAUTH_SECRET
 			);
-			$response = $twitter->get('/statuses/friends_timeline/83678503.json');
+			$response = $twitter->get($api_url);
 			$json     = $response->responseText;
 			$tweets   = json_decode($json);
 			$this->setCache($cache_key, $json);
