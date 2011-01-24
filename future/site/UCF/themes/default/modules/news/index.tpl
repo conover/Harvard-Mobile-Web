@@ -46,7 +46,7 @@
 		</ul>
 		{/if}
 	{else}
-		<p>No articles found in this category.</p>
+		<p class="none">No articles found in this category.</p>
 	{/if}
 
 {/block}
