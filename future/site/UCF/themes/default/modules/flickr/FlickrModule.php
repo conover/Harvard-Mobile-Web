@@ -24,6 +24,5 @@ class FlickrModule extends UCFModule {
 		
 		$items = $feed->get_items();
 		$this->assign('items', $items);
-		$this->assign('url', 'http://twitter.com/ucftweets');
 	}
 }
