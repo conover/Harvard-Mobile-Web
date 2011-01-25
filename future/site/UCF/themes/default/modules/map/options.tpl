@@ -17,7 +17,7 @@
 					<p id="no-results">No results</p>
 				{else}
 						{foreach $results as $item}
-						<li class="arrow"><a href="/map/{if $directions}me+{/if}location/{$item->number}">{$item->name}</a></li>
+						<li class="arrow"><a href="/map/{if $directions}me+{/if}location/{$item->id}">{$item->name}</a></li>
 						{/foreach}
 					</ul>
 				{/if}
