@@ -27,12 +27,18 @@ class TwitterModule extends UCFModule {
 				$TWITTER_OAUTH_TOKEN,
 				$TWITTER_OAUTH_SECRET
 			);
-			$response = $twitter->get($api_url);
+			try{
+				$response = $twitter->get($api_url);
+			}catch(Exception $e){
+				$this->assign('error', True);
+				return;
+			}
 			$json     = $response->responseText;
 			$tweets   = json_decode($json);
 			$this->setCache($cache_key, $json);
 		}
 		
+		$this->assign('error', False);
 		$this->assign('tweets', array_slice($tweets, 0, $TWITTER_MAX_TWEETS));
 	}
 }
