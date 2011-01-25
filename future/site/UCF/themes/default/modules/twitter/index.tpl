@@ -3,6 +3,7 @@
 {block name="body"}
 <div id="Twitter" class="text">
 	<h2>UCF on Twitter</h2>
+	{if !$error}
 	<ul>
 		{foreach $tweets as $tweet}
 		<li class="block">
@@ -15,5 +16,8 @@
 		</li>
 		{/foreach}
 	</ul>
+	{else}
+	<p>Oops, tweets for UCF are unavailable at this time.</p>
+	{/if}
 </div>
 {/block}

@@ -18,21 +18,27 @@ class TwitterModule extends UCFModule {
 		$api_url   = '/statuses/friends_timeline.json';
 		$cache_key = $this->cacheKey($api_url);
 		$cache     = $this->getCache($cache_key);
-		if ($cache){
+		if ($cache and False){
 			$tweets = json_decode($cache);
 		}else{
 			$twitter = new EpiTwitter(
-				$TWITTER_CONSUMER_KEY,
+				$TWITTER_CONSUMER_KEY + 'broken',
 				$TWITTER_CONSUMER_SECRET,
 				$TWITTER_OAUTH_TOKEN,
 				$TWITTER_OAUTH_SECRET
 			);
-			$response = $twitter->get($api_url);
+			try{
+				$response = $twitter->get($api_url);
+			}catch(Exception $e){
+				$this->assign('error', True);
+				return;
+			}
 			$json     = $response->responseText;
 			$tweets   = json_decode($json);
 			$this->setCache($cache_key, $json);
 		}
 		
+		$this->assign('error', False);
 		$this->assign('tweets', array_slice($tweets, 0, $TWITTER_MAX_TWEETS));
 	}
 }
