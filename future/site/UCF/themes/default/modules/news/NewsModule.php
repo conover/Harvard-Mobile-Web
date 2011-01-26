@@ -53,9 +53,19 @@ class NewsModule extends UCFModule{
 		
 		foreach($articles as $index=>$article){
 			$article->url = $this->buildURL('article', array(
-				'id'  => $index,
+				'id'  => ($index+$start),
 			));
 			$article->image   = $article->get_enclosure();
+			$article->imageAlt = false;
+			if(!$article->image){
+				// pull image from content
+				$matches = array();
+				preg_match('/<img.+?>/i',  $article->get_content(), $matches);
+				if(count($matches)){ 
+					$img = strip_img_dimensions($matches[0]);
+					$article->imageAlt = $img;
+				}
+			}
 			$articles[$index] = $article;
 		}
 		
