@@ -35,11 +35,6 @@
 		<div class="clear">&nbsp;</div>
 	</div>
 	
-	<div class="block">
-		<h3>Dept of Environmental Health &amp; Safety</h3>
-		<p><a href="tel:4078236300">407-823-6300</a></p>
-	</div>
-	
 </div>
 
 {/block}
