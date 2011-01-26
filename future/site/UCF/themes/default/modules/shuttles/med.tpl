@@ -2,7 +2,7 @@
 
 {block name="body"}
 <div class="text">
-	<h2>College of Medicine shuttle</h2>
+	<h2>College of Medicine Shuttle</h2>
 	<div class="block">
 		<h3>Stop Locations</h3>
 		<h4>HSC (Health Sciences Campus)</h4>

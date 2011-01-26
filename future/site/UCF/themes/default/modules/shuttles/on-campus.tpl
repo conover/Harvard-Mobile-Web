@@ -2,7 +2,7 @@
 
 {block name="body"}
 <div class="text">
-	<h2>On-campus shuttles routes</h2>
+	<h2>On-campus Shuttle Routes</h2>
 	
 	<div class="block">
 		<p>The routes are designed to provide close access to as many of the most populated and important buildings and facilities on the campus on approximate 15 to 20 minute headways.</p>
