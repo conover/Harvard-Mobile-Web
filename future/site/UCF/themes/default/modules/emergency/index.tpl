@@ -17,7 +17,7 @@
 		<h3>University Police</h3>
 		<p><a id="call911" href="tel:911">Emergency Call 911</a></p>
 		<dl>
-			<dt>University Police</dt><dd><a href="tel:4078235555">407-823-5555</a></dd>
+			<dt>University Police (main office)</dt><dd><a href="tel:4078235555">407-823-5555</a></dd>
 			<dt>Safety Escort Patrol Services [SEPS]</dt><dd><a href="tel:4078232424">407-823-2424</a></dd>
 			<dt>Victim Services</dt><dd><a href="tel:4078232425">407-823-2425</a></dd>
 			<dt>Victim Services (after hours)</dt><dd><a href="tel:4078235555">407-823-5555</a></dd>
@@ -27,7 +27,7 @@
 	</div>
 	
 	<div class="block">
-		<h3>University Housing</h3>
+		<h3>Housing and Residence Life</h3>
 		<dl>
 			<dt>Main Office</dt><dd><a href="tel:4078234663">407-823-4663</a></dd>
 			<dt>Maintenance</dt><dd><a href="tel:4078235587">407-823-5587</a></dd>
@@ -36,7 +36,7 @@
 	</div>
 	
 	<div class="block">
-		<h3>Dept of Environmental Health &amp; Safety</h3>
+		<h3>Environmental Health and Safety</h3>
 		<p><a href="tel:4078236300">407-823-6300</a></p>
 	</div>
 	
