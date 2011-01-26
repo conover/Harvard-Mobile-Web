@@ -46,12 +46,6 @@
 					<span class="main-site"><a href="http://www.ucf.edu">UCF.edu</a></span>
 				</div>
 			</div>
-			
-			{foreach $inlineJavascriptFooterBlocks as $script}
-			<script type="text/javascript">
-			{$script} 
-			</script>
-			{/foreach}
 			{/block}
 			{/strip}
 		</div>
@@ -70,6 +64,10 @@
 			});
 		</script>
 		{block name="script"}{/block}
-		
+		{foreach $inlineJavascriptFooterBlocks as $script}
+		<script type="text/javascript">
+		{$script} 
+		</script>
+		{/foreach}
 	</body>
 </html>

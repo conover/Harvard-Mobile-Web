@@ -21,6 +21,8 @@
 					<section>
 						{if $article->image}
 						<a href="{$article->url}" class="img"><img src="{if $article->image->get_thumbnail()}{$article->image->get_thumbnail()}{else}{$article->image->get_link()}{/if}"></a>
+						{elseif $article->imageAlt}
+						<a href="{$article->url}" class="img">{$article->imageAlt}</a>
 						{/if}
 						<a href="{$article->url}">{$article->get_description()}</a>
 					</section>

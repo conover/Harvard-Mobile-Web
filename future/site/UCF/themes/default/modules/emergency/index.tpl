@@ -17,11 +17,11 @@
 		<h3>University Police</h3>
 		<p><a id="call911" href="tel:911">Emergency Call 911</a></p>
 		<dl>
+			<dt>University Police</dt><dd><a href="tel:4078235555">407-823-5555</a></dd>
 			<dt>Safety Escort Patrol Services [SEPS]</dt><dd><a href="tel:4078232424">407-823-2424</a></dd>
 			<dt>Victim Services</dt><dd><a href="tel:4078232425">407-823-2425</a></dd>
 			<dt>Victim Services (after hours)</dt><dd><a href="tel:4078235555">407-823-5555</a></dd>
 			<dt>Parking Services</dt><dd><a href="tel:4078235812">407-823-5812</a></dd>
-			<dt>Health Services Information</dt><dd><a href="tel:4078232701">407-823-2701</a></dd>
 		</dl>
 		<div class="clear">&nbsp;</div>
 	</div>
