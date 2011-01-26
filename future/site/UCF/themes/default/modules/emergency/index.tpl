@@ -36,7 +36,7 @@
 	</div>
 	
 	<div class="block">
-		<h3>Environmental Health &amp; Safety</h3>
+		<h3>Environmental Health and Safety</h3>
 		<p><a href="tel:4078236300">407-823-6300</a></p>
 	</div>
 	
