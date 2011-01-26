@@ -51,12 +51,13 @@ class NewsModule extends UCFModule{
 			'current' => $page,
 		);
 		
+		$_articles = array();
 		foreach($articles as $index=>$article){
 			$article->url = $this->buildURL('article', array(
 				'id'  => ($index+$start),
 			));
-			$article->image   = $article->get_enclosure();
-			$article->imageAlt = false;
+			$article->image      = $article->get_enclosure();
+			$article->imageAlt   = false;
 			if(!$article->image){
 				// pull image from content
 				$matches = array();
@@ -66,12 +67,15 @@ class NewsModule extends UCFModule{
 					$article->imageAlt = $img;
 				}
 			}
-			$articles[$index] = $article;
+			if (!in_array('did you know?', array_map(create_function('$a', '
+				return strtolower($a->term);
+			'), $article->get_categories()))){
+				$_articles[$index] = $article;
+			}
 		}
 		
-		
 		$this->assign('page', $page);
-		$this->assign('articles', $articles);
+		$this->assign('articles', $_articles);
 		$this->assign('feed', $feed);
 		$this->page = 'index';
 		$this->setPageTitle($feed->get_title());
