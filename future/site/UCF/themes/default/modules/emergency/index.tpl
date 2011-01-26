@@ -27,12 +27,17 @@
 	</div>
 	
 	<div class="block">
-		<h3>University Housing</h3>
+		<h3>Housing and Residence Life</h3>
 		<dl>
 			<dt>Main Office</dt><dd><a href="tel:4078234663">407-823-4663</a></dd>
 			<dt>Maintenance</dt><dd><a href="tel:4078235587">407-823-5587</a></dd>
 		</dl>
 		<div class="clear">&nbsp;</div>
+	</div>
+	
+	<div class="block">
+		<h3>Environmental Health &amp; Safety</h3>
+		<p><a href="tel:4078236300">407-823-6300</a></p>
 	</div>
 	
 </div>
