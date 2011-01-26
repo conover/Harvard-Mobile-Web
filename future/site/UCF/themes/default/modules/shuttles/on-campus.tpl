@@ -10,7 +10,7 @@
 	
 	<div class="block">
 		<h3>Black Route <span>(runs clockwise around the campus)</span></h3>
-		<p>(7:00 A.M. to 7:00 P.M.)</p>
+		<p>(7:00 am to 7:00 pm)</p>
         <table>
 			<tr><th>Stop #</th><th>Route</th></tr>
 			<tr><td>1</td><td>Burnett Honors College</td></tr>
@@ -28,7 +28,7 @@
 	
 	<div class="block">	
 		<h3>Gold Route <span>(runs counter-clockwise around the campus)</span></h3>
-		<p>(7:00 A.M. to 7:00 P.M.)</p>
+		<p>(7:00 am to 7:00 pm)</p>
 		<table>
 			<tr><th>Stop #</th><th>Route</th></tr>
 			<tr><td>1</td><td>Burnett Honors College</td></tr>
@@ -41,7 +41,7 @@
 			<tr><td>8</td><td>Teaching Academy/Welcome Center/Library</td></tr>
 		</table>
 		<h4>Summer Hours:</h4>
-		<p>(7:00 A.M. to 4:00 P.M.)</p>
+		<p>(7:00 am to 4:00 pm)</p>
 	</div>
 
 </div><!--/text -->
