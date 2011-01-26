@@ -39,7 +39,7 @@
 	<div class="text">
 		<div class="block">
 			<h3>Searching</h3>
-			<p>Search by: first and/or last name, organization name, phone-number (ex. 407-555-5555), email address, or location.</p>
+			<p>Search by: first and/or last name, organization name, phone number (ex. 407-555-5555), e-mail address, or location.</p>
 		</div>
 	</div>
 	{/if}
