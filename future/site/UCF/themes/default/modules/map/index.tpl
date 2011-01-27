@@ -7,37 +7,43 @@
 <div id="map-canvas"></div>
 
 <script type="text/javascript">
+/******************************************************************************\
+  Variables and HTML
+\******************************************************************************/
 	Campus_Map.device = "{$platform}";
-	Campus_Map.urls		= {
-		"map-options" : "{$options_url}"
+	Campus_Map.urls = {
+		'map-options' : '{$options_url}'
 	}
+	Campus_Map.html = {
+		'geo-btn': '{strip}
+					<a onclick="Campus_Map.geoLocate(\'showGeoLoc\'); return false;" {if $locate_me}class="on"{/if} id="geo-button">Where am I?</a>
+					{/strip}',
+		'geo-win': '{strip}
+					<div class="locate">
+						<h3>You Are Here.</h3>
+						<span>
+							&raquo; <a onclick="Campus_Map.destination=false;Campus_Map.directions()">Directions to campus</a><br>
+							&raquo; Directions to location:
+							<form method="get" action="{$directions_url}">
+								<input name="q" type="search"><input type="submit" value="search">
+							</form>
+						</span>
+					</div>
+					{/strip}',
+		'search': '{strip}
+					<form action="search/" method="get">
+						<div><input type="search" placeholder="Search" results="0" name="q"></div>
+						<input type="submit" value="">
+					</form>
+					{/strip}'
+	}		
 	Campus_Map.gmap();
 
-{if $locate_me}
 /******************************************************************************\
   Display's User's positions and offer directions
 \******************************************************************************/
-Campus_Map.showGeoLoc = function(){
-	var map = Campus_Map.map;
-	var html = '{strip}
-		<div class="locate">
-			<h3>You Are Here.</h3>
-			<span>
-				&raquo; <a onclick="Campus_Map.directions()">Directions to campus</a><br>
-				&raquo; Directions to location:
-				<form method="get" action="{$directions_url}">
-					<input name="q" type="search"><input type="submit" value="search">
-				</form>
-			</span>
-		</div>{/strip}';
-	Campus_Map.meLocWin = new google.maps.InfoWindow({
-		content: html,
-		position: Campus_Map.me
-	});
-	map.panTo(Campus_Map.me);
-	Campus_Map.meLocWin.open(map);
-};
-Campus_Map.geoLocate('showGeoLoc');
+{if $locate_me}
+Campus_Map.geoLocate();
 {/if}
 
 
@@ -79,5 +85,16 @@ Campus_Map.geoLocate('showGeoLoc');
 	Campus_Map.map.setZoom(14);
 {/if}
 </script>
+
+{if $platform=="computer"}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="/media/-/jquery.browser.min.js"></script>
+<script>
+	jQuery(function(){
+		$('body').addClass(jQuery.browser.name);
+		$('body').addClass(jQuery.browser.name + '' + jQuery.browser.versionX);
+	});
+</script>
+{/if}
 </body>
 </html>

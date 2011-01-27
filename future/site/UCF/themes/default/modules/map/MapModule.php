@@ -113,14 +113,11 @@ class MapModule extends UCFModule {
 		// add script to header
 		// rest of the js is in theme/map/index template
 		$this->addExternalJavascript('http://maps.google.com/maps/api/js?sensor=false');
+		$this->addExternalJavascript('http://code.google.com/apis/gears/gears_init.js');
+		$this->addExternalJavascript('/media/-/geo.js');
 		
 		$url = URL_PREFIX . 'map/options/';
 		$this->assign('options_url', $url);
-		
-		if($this->location || $this->locate_me){
-			$this->addExternalJavascript('http://code.google.com/apis/gears/gears_init.js');
-			$this->addExternalJavascript('/media/-/geo.js');
-		}
 		
 		if($this->location){
 			$map_api = $this->options['MAP_SERVICE_LOCATION'];
@@ -134,9 +131,9 @@ class MapModule extends UCFModule {
 			if($this->directions) $this->assign('directions', true);
 		}
 		
+		$url = URL_PREFIX . 'map/directions/';
+		$this->assign('directions_url', $url);
 		if($this->locate_me){
-			$url = URL_PREFIX . 'map/directions/';
-			$this->assign('directions_url', $url);
 			$this->assign('locate_me', true);
 		}
 		
