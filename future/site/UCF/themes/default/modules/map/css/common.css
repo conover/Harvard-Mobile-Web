@@ -68,10 +68,11 @@
 .locate form { padding:0 0 5px 15px; margin:0; }
 
 .gmnoprint { color:#444; }
-.info-window { width:300px; overflow-x:hidden; margin:0; font-family:"Trebuchet MS",sans-serif; font-size:12px; }
+.info-window { width:200px; overflow-x:hidden; margin:0; font-family:"Trebuchet MS",sans-serif; font-size:12px; }
 .info-window h2 { text-align:left; margin:0; padding:0 0 5px 0; font-size:1.5em; font-family:georgia,serif; font-size:18px; color:black; font-weight:normal; }
 .info-window p {text-align:right; padding-top:7px; margin:0; color:#151515;}
 .info-window a { color:	#990000; }
+.info-window img { max-width:200px; }
 
 #map-settings { 
 	background:url('/media/img/gears.png') no-repeat bottom center;

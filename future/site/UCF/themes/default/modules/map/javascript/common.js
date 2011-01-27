@@ -17,7 +17,7 @@ Campus_Map.resize = function(){
 		if(Campus_Map.ie){
 			height = document.documentElement.clientHeight - document.getElementById('header-crumbs').scrollHeight;
 		} else {
-			height = document.documentElement.clientHeight - document.getElementById('header-crumbs').clientHeight - 2;
+			height = document.documentElement.clientHeight - document.getElementById('header-crumbs').clientHeight;
 		}
 		
 		document.getElementById('map-canvas').style.height = height + "px";
@@ -69,11 +69,13 @@ Campus_Map.controls = function() {
 	geo.innerHTML = Campus_Map.html['geo-btn'];
 	this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(geo);
 	
-	
-	
+	// preload images
+	var img = new Array();
+	img[0] = new Image(); img[0].src = "/media/img/geo-load.gif";
+	img[1] = new Image(); img[1].src = "/media/img/geo-blue.png";
+	img[2] = new Image(); img[2].src = "/media/img/geo-grey.png";
 
 }
-
 
 
 /******************************************************************************\
@@ -118,6 +120,8 @@ Campus_Map.gmap = function(){
 \******************************************************************************/
 Campus_Map.destination = false;
 Campus_Map.directions = function(){
+	
+	if(Campus_Map.win){ Campus_Map.win.close(); }
 	
 	if(!Campus_Map.me){
 		// error in geoloaction, display campus location if set
@@ -195,17 +199,33 @@ Campus_Map.geoLocate = function(callback){
 	
 	var geo_success = function(p) {
 		var map  = Campus_Map.map;
-		var win  = Campus_Map.win;
-		var html = Campus_Map.html['geo-win'];
 		var me = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
-		win.setContent(html);
-		win.setPosition(me);
 		map.panTo(me);
-		win.open(map);
 		Campus_Map.me = me;
+		
+		// place marker
+		var image = new google.maps.MarkerImage('/media/img/geo-blue.png',
+		      new google.maps.Size(22, 22),  //dimen
+		      new google.maps.Point(0,0),    //origin
+		      new google.maps.Point(11, 11)); //anchor
+		var geoMaker = new google.maps.Marker({ 
+			position  : me,
+			map       : map,
+			clickable : false,
+			icon      : image
+		});
+		
+		// do something with location
 		if(callback && typeof Campus_Map[callback] !== 'undefined'){
 			Campus_Map[callback]();
+		} else {
+			var html = Campus_Map.html['geo-win'];
+			var win  = Campus_Map.win;
+			win.setContent(html);
+			win.setPosition(me);
+			win.open(map);
 		}
+		
 		button("on");
 	}
 	
