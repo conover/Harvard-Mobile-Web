@@ -72,6 +72,7 @@
 		{else}
 		<div id="header-crumbs">
 			<h1><a href="/home/">UCF<span></span></a> <span>{$moduleName}</span></h1>
+			{if $moduleID == "map"}<a href="/map/options/" id="map-settings">Map Settings</a>{/if} 
 		</div>
 		{/if}
 	{/block}
