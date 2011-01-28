@@ -22,7 +22,7 @@ If only needed for development and not production, the easiest way to get all th
 
 Once finished, you should see "W" (wampserver) in your systray
 
-Open a browser and you should be able to go to: http://localhost/ and see "WampServer" with a list of the config and tools, etc
+Open a browser and you should be able to go to: [http://localhost/](http://localhost/) and see "WampServer" with a list of the config and tools, etc
 
 ### set up a local site
 
@@ -114,7 +114,7 @@ for mobile.dev the vhost documentroot needs to be updated:
 
 **restart apache/wamp**
 
-View [http://mobile.dev in a browser, should see an error:
+View [http://mobile.dev](http://mobile.dev) in a browser, should see an error:
 > Missing config file....
 
 So far so good!
