@@ -8,8 +8,6 @@
 		<link href="/media/-/css/blueprint-print.css" rel="stylesheet" type="text/css" media="print">
 		<link href="/media/-/css/blueprint-screen.css" rel="stylesheet" type="text/css" media="screen, projection">
 		<!--[if lt IE 8]><link href="/media/-/css/blueprint-ie.css" rel="stylesheet" type="text/css" media="screen, projection"><![endif]-->
-		<!-- Page Styles -->
-		<link type="text/css" href="{$minify['css']}" rel="stylesheet" />
 	</head>
 	<!--[if IE 7 ]><body class="ie7 ie"><![endif]-->
 	<!--[if IE 8 ]><body class="ie8 ie"><![endif]-->
