@@ -100,17 +100,17 @@
 							<div class="caption">A variety of resources</div>
 						</div>
 						<div class="span-7 last col">
-							<img src="/media/img/info/resources.png" alt="Main Menu of UCF Mobile" />
+							<img src="/media/img/info/today.png" alt="Main Menu of UCF Mobile" />
 							<div class="caption">UCF Today News</div>
 						</div>
 					</div>
 					<div class="span-14 last row">
 						<div class="span-7">
-							<img src="/media/img/info/resources.png" alt="Main Menu of UCF Mobile" />
+							<img src="/media/img/info/map.png" alt="Main Menu of UCF Mobile" />
 							<div class="caption">UCF Mobile Map</div>
 						</div>
 						<div class="span-7 last">
-							<img src="/media/img/info/resources.png" alt="Main Menu of UCF Mobile" />
+							<img src="/media/img/info/photos.png" alt="Main Menu of UCF Mobile" />
 							<div class="caption">UCF Photos</div>
 						</div>
 					</div>
