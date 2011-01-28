@@ -42,7 +42,7 @@
 					<span class="phone">(407) 823-2000</span>
 				</div>
 				<div class="links">
-					<span class="about"><a href="/info/">About this site</a></span>
+					<span class="about"><a href="/about/">About this site</a></span>
 					<span class="main-site"><a href="http://www.ucf.edu">UCF.edu</a></span>
 				</div>
 			</div>
