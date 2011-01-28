@@ -15,7 +15,7 @@ body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-
 #content #left p{font-weight: 100;}
 #content #left p a{color: #ffc907; text-decoration: underline;}
 #content #left h2{font-size: 15px; color: #fff; font-weight: 600; letter-spacing: 1px; font-family: "Helvetica", "sans-serif";}
-#content #right img{}
+#content #right img{margin: 0 0 0 19px;}
 #content #right .caption{font-size: 15px; font-family: "Helvetica", "sans-serif"; font-weight: 600; text-align: center;}
 #content #right .row{margin-bottom: 40px;}
 #content #right .col{}
