@@ -29,7 +29,7 @@
 							<img class="icon" src="/modules/home/images/news.png" alt="UCF Today"> 
 							<span class="heading"><span class='gold bold'>UCF</span> <span class='bold'>Today</span></span> 
 							<span class="description">News, stories, and more</span> 
-							<span class="end"><!-- --></span> 
+							<span class="end"><!-- --></span>
 						</a></li> 
 						<li><a href="/events/"> 
 							<img class="icon" src="/modules/home/images/dates/date-28.png" alt="Events at UCF"> 

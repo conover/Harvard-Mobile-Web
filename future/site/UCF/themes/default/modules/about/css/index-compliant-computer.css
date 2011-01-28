@@ -1,10 +1,13 @@
+#UCFHBHeaderLinks {font-size: 10px; position: relative; top: -5px;}
+#q{min-height: 0px; line-height: inherit; font-size: 10px; margin-top: 0; padding-top: 0; position: relative; top: -5px;}
+
 /*/ Page-wide /*/
 body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-size: 15px;}
 #wrap{margin: 0 auto; width: 950px;}
 
 /*/ Heading /*/
 #header{margin-top: 40px; font-family: "Helvetica Neue", "Helvetica", "sans-serif";}
-#header .brand{color: #fff; font-size: 52px;}
+#header .brand{color: #fff; font-size: 52px;  font-weight: 100;}
 #header .brand .standout{font-weight: bold; color: #ffc907;}
 #header .url{font-size: 36px; color: #ffc907; font-weight: 100; text-align: right;}
 
