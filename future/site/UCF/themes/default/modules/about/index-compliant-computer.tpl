@@ -7,8 +7,8 @@
 		<link href="https://universityheader.ucf.edu/bar/css/bar.css" rel="stylesheet" type="text/css">
 		<link href="/media/-/css/blueprint-print.css" rel="stylesheet" type="text/css" media="print">
 		<link href="/media/-/css/blueprint-screen.css" rel="stylesheet" type="text/css" media="screen, projection">
-		<link href="/media/-/css/about-static.css" rel="stylesheet" type="text/css" media="screen, projection">
 		<!--[if lt IE 8]><link href="/media/-/css/blueprint-ie.css" rel="stylesheet" type="text/css" media="screen, projection"><![endif]-->
+		<link href="/media/-/css/about-static.css" rel="stylesheet" type="text/css" media="screen, projection">
 	</head>
 	<!--[if IE 7 ]><body class="ie7 ie"><![endif]-->
 	<!--[if IE 8 ]><body class="ie8 ie"><![endif]-->

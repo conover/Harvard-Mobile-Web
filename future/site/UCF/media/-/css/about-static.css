@@ -1,5 +1,5 @@
 /*/ Page-wide /*/
-body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-size: 15px;}
+body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-size: 15px; text-align:left;}
 #wrap{margin: 0 auto; width: 950px;}
 
 /*/ Heading /*/
