@@ -1,5 +1,5 @@
-#UCFHBHeaderLinks {font-size: 10px; position: relative; top: -5px;}
-#q{min-height: 0px; line-height: inherit; font-size: 10px; margin-top: 0; padding-top: 0; position: relative; top: -5px;}
+#UCFHBHeaderLinks {min-height: 0px; line-height: inherit; font-size: 10px; position: relative; top: -5px; margin: 0; padding: 0;}
+#q{min-height: 0px; line-height: inherit; font-size: 10px; margin: 0; padding: 0; position: relative; top: -5px;}
 
 /*/ Page-wide /*/
 body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-size: 15px;}
@@ -17,7 +17,7 @@ body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-
 #content #left{}
 #content #left p{font-weight: 100;}
 #content #left p a{color: #ffc907; text-decoration: underline;}
-#content #left h2{font-size: 15px; color: #fff; font-weight: 600; letter-spacing: 1px; font-family: "Helvetica", "sans-serif";}
+#content #left h2{font-size: 15px; color: #fff; font-weight: 600; letter-spacing: 1px; font-family: "Helvetica", "sans-serif"; text-align: left;}
 #content #right img{margin: 0 0 0 19px;}
 #content #right .caption{font-size: 15px; font-family: "Helvetica", "sans-serif"; font-weight: 600; text-align: center;}
 #content #right .row{margin-bottom: 40px;}
