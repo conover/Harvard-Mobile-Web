@@ -1,15 +1,28 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
+
 	<div class="text">
-		<h2>UCF on YouTube</h2>
 		<div id="youtube">
 			{if $videos}
 				{foreach $videos as $video}
-				<div class="block">
-					{$video}
-					<div class="clear">&nbsp;</div>
-				</div>
+					{if $video['error']}
+						<!-- error parsing video -->
+					{else}
+						<div class="block">
+							<h3>{$video['title']}</h3>
+							{if $platform !="computer"}
+							<iframe class="youtube-player" type="text/html" width="290" height="175" src="http://www.youtube.com/embed/{$video['id']}" frameborder="0"></iframe>
+							{else}
+							<div class="icon">
+								<a href="{$video['link']}">{$video['icon']}</a>
+							</div>
+							{/if}
+							<div class="desc">{$video['desc']}</div>
+							<div class="foot">{$video['foot']}</div>
+							<div class="clear">&nbsp;</div>
+						</div>
+					{/if}
 				{/foreach}
 			{else}
 				<div class="block">

@@ -1,5 +1,7 @@
-#youtube { padding:14px 0 0; }
-#youtube .block { padding-left:18px; position:relative; }
+
+.text { padding-top:0; }
+#youtube { padding:0; }
+#youtube .block { padding-left:18px; position:relative; border-bottom: 1px solid #FFD203; border-top:0; margin-top:0; padding-bottom:15px; }
 #youtube .block .clear { clear:both; height:1px; overflow:hidden; font-size:1px; }
 #youtube h3 { margin-left:0; padding-left:0; margin-bottom:14px; }
 #youtube h3 a { text-decoration:none; }
