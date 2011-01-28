@@ -1,7 +1,42 @@
-body { font-family: "Trebuchet MS", sans-serif; }
-#wrap { width:950px; padding:28px 12px 32px; margin:0 auto; }
-header { border-bottom:1px dotted black; display:block; margin-bottom:22px; }
-h1 { font-family:georgia, serif; font-size:24px; font-weight:normal; }
-h1 a { text-decoration:none; color:black; }
-a { color:#660000; }
-a:hover { color:#e50606; }
+/*/ Page-wide /*/
+body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-size: 15px;}
+#wrap{margin: 0 auto; width: 950px;}
+
+/*/ Heading /*/
+#header{margin-top: 40px; font-family: "Helvetica Neue", "Helvetica", "sans-serif";}
+#header .brand{color: #fff; font-size: 52px;}
+#header .brand .standout{font-weight: bold; color: #ffc907;}
+#header .url{font-size: 36px; color: #ffc907; font-weight: 100; text-align: right;}
+
+
+/*/ Content /*/
+#content{}
+#content #left{}
+#content #left p{font-weight: 100;}
+#content #left p a{color: #ffc907; text-decoration: underline;}
+#content #left h2{font-size: 15px; color: #fff; font-weight: 600; letter-spacing: 1px; font-family: "Helvetica", "sans-serif";}
+#content #right img{}
+#content #right .caption{font-size: 15px; font-family: "Helvetica", "sans-serif"; font-weight: 600; text-align: center;}
+#content #right .row{margin-bottom: 40px;}
+#content #right .col{}
+
+
+/*/ Footer /*/
+#footer{border-top: 1px solid #161616; margin-top: 50px; padding: 20px 0 20px 0;}
+#footer .logo a{display: block; height: 89px; width: 155px; text-indent: -1024px; background: transparent url(/media/img/info/ucf-sfo.png) no-repeat; position: relative; top: -10px;}
+#footer .copyright{text-align: right; font-family: "Helvetica", "arial", "sans-serif"; font-size: 14px; color: #999;}
+
+
+/*/ Menu /*/
+ul{border: none; margin: 0; padding: 0; font-weight: 300; list-style-type: none;}
+ul li{border: none; margin: 0; padding: 0;}
+ul li a{background-image: url('/media/img/chevron.png'); background-repeat: no-repeat; background-position: 100% 27px; border-bottom: 1px solid #161616; margin: 0; padding: 15px 20px; display: block; text-decoration: none; color: #fff;}
+ul li a:hover{color: #fff; background-color: #222; cursor: pointer;}
+ul li a .icon{display: block; float: left; width: 55px; position: relative; top: -3px;}
+ul li a .heading,
+ul li a .description{display: block; margin-left: 70px;}
+ul li a .heading{font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 22px;}
+ul li a .description{font-family: "Georgia", "serif"; font-size: 13px; font-weight: normal; color: #eeeeee;}
+
+.gold{color: #FCC82D;}
+.bold{font-weight: bold;}
