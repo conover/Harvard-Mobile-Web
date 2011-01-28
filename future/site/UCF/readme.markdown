@@ -29,17 +29,19 @@ Open a browser and you should be able to go to: http://localhost/ and see "WampS
 Note, the folders and naming convention is simply my personal preference.
 
 Create a "Sites" folder for all local dev:
+
 * Create directory: `C:\Sites\mobile`
 * In the mobile dir, create `index.php` and in this file write `Hello World!`
 
 I like to use http://mobile.dev/ for local development.  Add mobile.dev to your hosts file:
+
 * in `C:\Windows\System32\drivers\etc` edit the `hosts` file
 * add the line
         127.0.0.1   mobile.dev
 
 Create an apache vhost for mobile.dev:
-* depending on where you installed wamp, go to `C:\wamp\bin\apache\Apache2.2.17\conf`
 
+* depending on where you installed wamp, go to `C:\wamp\bin\apache\Apache2.2.17\conf`
 * edit `httpd.conf`, find:
         # Virtual hosts
         #Include conf/extra/httpd-vhosts.conf
@@ -71,6 +73,7 @@ Create an apache vhost for mobile.dev:
 
 ### Back to Wamp
 Will later need two extensions/modules:
+
 * SSL: "W" (systray) > PHP > PHPextensions > PHP_openssl
 * Rewrite: W > Apache > Apache Modules > rewite_module
 * W > Restart All Services
@@ -117,8 +120,10 @@ View [http://mobile.dev in a browser, should see an error:
 So far so good!
 
 Need to create two config files (this process is being fixed/updated as we speak):
+
 * in `mobile/future/config` duplicate the template and save as `config.ini`
 * in `mobile/future/site/UCF/config` create blank file `config-development.ini`
+
 
 Refresh browser, hopefully all good!  
 
