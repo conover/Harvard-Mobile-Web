@@ -20,10 +20,11 @@ class YoutubeModule extends UCFModule {
 		$feed->init();
 		$items = $feed->get_items();
 		$videos = array();
-		$count = 0;
 		
 		foreach($items as $item){
-
+			
+			$video = array();
+			
 			// capture each piece of the description
 			$matches = array();
 			preg_match_all('/<td.*?>(.*?)<\/td>/is', $item->get_description(), $matches);
@@ -34,27 +35,37 @@ class YoutubeModule extends UCFModule {
 				$m = preg_replace( '/[\n\r]/', '', $m);
 			}
 			
-			$video = '';
+			
 			if(empty($matches[1]) || count($matches[1])<5 ){
-				$video = "<!-- error parsing content -->";
+				$video['error'] = true;
 			} else {
 				$c = $matches[1];
+				$video['foot']  = $c[2] . $c[3] . $c[4];
+				
+				preg_match('/<img[^>]+?>/', $c[0], $matches);
+				if(!empty($matches)){
+					$video['icon']  = $matches[0];
+				}
 				
 				preg_match_all('/<div.*?>(.*?)<\/div>/is', $c[1], $matches);
+				$video['desc']  = $matches[1][1];
 				$title = $matches[1][0];
-				$description = $matches[1][1];
-				
-				$video .= '<h3>' . $title . '</h3>';
-				$video .= '<div class="icon">' . $c[0] . '</div>';
-				$video .= '<div class="desc">' . $description . '</div>';
-				$video .= '<div class="foot">' . $c[2] . $c[3] . $c[4] . '</div>';
-				++$count;
+				preg_match('/>([^<]+?)</', $title, $matches); // strip link
+				if(!empty($matches)){
+					$video['title'] = $matches[1];
+				}
 			}
+			
+			
+			$link = $item->get_link();
+			$video['link'] = $link;
+			preg_match('/\?v=([^&]+)&/', $link, $matches);
+			if(!empty($matches)){
+				$video['id'] = $matches[1];
+			}
+			
 			$videos[] = $video;
-		}
-		
-		if($count < 1){
-			$videos = false;
+			
 		}
 		
 		$this->assign('videos', $videos);

@@ -4,8 +4,8 @@
 <div class="text">
 	<h2>Rosen College Shuttle</h2>
 	<div class="block">
-		<p>Shuttle services, which consist of five (5) round trips each day, are provided to the Rosen College of Hospitality Management (RCHM), Monday - Thursday during regular class day. Due to light class schedules on Friday at RCHM, no service is provided on Friday.</p>
-		<p>The shuttle bus departs and returns on the main campus UCF campus stop is located at the Student Union on Aquarius Agora Dr. Drop off at RCHM is at the front of the main entrance, and return trips to UCF commence from the RCHM main parking lot. </p>
+		<p>Rosen shuttle copy changes: Shuttle services, which consist of five round trips each day, are provided to Rosen College of Hospitality Management students, Monday thru Thursday during regular class days. Due to light class schedules on Friday, no service is provided.</p>
+		<p>The shuttle bus departs and returns to the UCF main campus stop located at the Student Union on Aquarius Agora Dr. Students are dropped off at the main Rosen entrance, and return trips to UCF commence from the main Rosen parking lot.</p>
 	</div>
 	<div class="block">
 		<h3>Fall - Spring Semesters</h3>
