@@ -21,7 +21,7 @@ body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-
 /*/ Content /*/
 #content{}
 #content #left{}
-#content #left #call-to-act{display: block; color: #000; font-size: 19px; font-family: "Helvetica", "sans-serif"; padding: 10px; width: 100%; background-color: #ffc907; margin-bottom: 30px; text-align: center; font-weight: bold; text-decoration: none;}
+#content #left #call-to-act{display: block; color: #000; font-size: 19px; font-family: "Helvetica", "sans-serif"; padding: 10px; width: 85%; background-color: #ffc907; margin-bottom: 30px; text-align: center; font-weight: bold; text-decoration: none;}
 #content #left p{font-weight: 100;}
 #content #left p a{color: #ffc907; text-decoration: underline;}
 #content #left h2{font-size: 15px; color: #fff; font-weight: 600; letter-spacing: 1px; font-family: "Helvetica", "sans-serif"; text-align: left;}
