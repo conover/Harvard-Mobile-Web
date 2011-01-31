@@ -17,11 +17,12 @@
 		<div class="container">
 			<div id="header" class="span-24 last">
 				<h1 class="span-12 brand"><span class="standout">UCF</span>Mobile</h1>
-				<div class="span-12 last url">m.ucf.edu</div>
+				<div class="span-12 last url"><a href="/home">m.ucf.edu</a></div>
 			</div>
 			<div id="content" class="span-24 last">
 				<div id="left" class="span-8 append-2">
-					<p>UCF Mobile brings UCF resources to your finger tips on your web capable mobile device. From news and stories, events and maps, UCF Mobile will help you connect to UCF from your mobile device. Visit <a href="/home">m.ucf.edu</a>.</p>
+					<p>UCF Mobile brings UCF resources to your finger tips on your web capable mobile device. From news and stories, events and maps, UCF Mobile will help you connect to UCF from your mobile device.</p>
+					<a href="/home" class="button" id="call-to-act">Visit http://m.ucf.edu/</a>
 					<h2>Website features:</h2>
 					<ul> 
 						<li><a href="/news/"> 
