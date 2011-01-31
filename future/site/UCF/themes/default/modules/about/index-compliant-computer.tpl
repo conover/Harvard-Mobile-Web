@@ -2,6 +2,7 @@
 <html lang="en-US">
 	<head>
 		<meta charset="utf-8">
+		<meta http-equiv="X-UA-COMPATIBLE" content="IE=EmulateIE7">
 		<title>UCFMobile</title>
 		<!-- UCF Header and Stylesheets -->
 		<link href="https://universityheader.ucf.edu/bar/css/bar.css" rel="stylesheet" type="text/css">
@@ -14,7 +15,7 @@
 	<!--[if IE 8 ]><body class="ie8 ie"><![endif]-->
 	<!--[if IE 9 ]><body class="ie9 ie"><![endif]-->
 	<!--[if (gt IE 9)|!(IE)]><!--><body><!--<![endif]-->
-		<div id="wrap">
+		<div class="container">
 			<div id="header" class="span-24 last">
 				<h1 class="span-12 brand"><span class="standout">UCF</span>Mobile</h1>
 				<div class="span-12 last url">m.ucf.edu</div>
