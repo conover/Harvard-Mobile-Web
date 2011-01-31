@@ -131,7 +131,7 @@ if (preg_match(';^.*favicon.ico$;', $path, $matches)) {
   
   if (!strlen($path) || $path == '/') {
     if ($GLOBALS['deviceClassifier']->isComputer() || $GLOBALS['deviceClassifier']->isSpider()) {
-      header("Location: ./info/");
+      header("Location: ./about/");
     } else {
       header("Location: ./home/");
     }
