@@ -21,7 +21,7 @@
 			</div>
 			<div id="content" class="span-24 last">
 				<div id="left" class="span-8 append-2">
-					<p>UCF Mobile brings UCF resources to your finger tips on your web capable mobile device. From news and stories, events and maps, UCF Mobile will help you connect to UCF from your mobile device. Visit <a href="http://m.ucf.edu">m.ucf.edu</a>.</p>
+					<p>UCF Mobile brings UCF resources to your finger tips on your web capable mobile device. From news and stories, events and maps, UCF Mobile will help you connect to UCF from your mobile device. Visit <a href="/home">m.ucf.edu</a>.</p>
 					<h2>Website features:</h2>
 					<ul> 
 						<li><a href="/news/"> 
