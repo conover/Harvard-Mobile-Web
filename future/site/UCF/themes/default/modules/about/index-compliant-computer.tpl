@@ -2,7 +2,6 @@
 <html lang="en-US">
 	<head>
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-COMPATIBLE" content="IE=EmulateIE7">
 		<title>UCFMobile</title>
 		<!-- UCF Header and Stylesheets -->
 		<link href="https://universityheader.ucf.edu/bar/css/bar.css" rel="stylesheet" type="text/css">
