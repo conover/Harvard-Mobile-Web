@@ -1,0 +1,65 @@
+form #UCFHBHeaderLinks{position: relative; top: -5px;}
+form #q{position: relative; top: -5px;}
+form #UCFHBsubmit{position: relative; top: -4px;}
+.ie7 form #UCFHBHeaderLinks{position: relative; top: -8px;}
+.ie7 form #q{position: relative; top: -8px;}
+.ie7 form #UCFHBsubmit{position: relative; top: -15px;}
+
+
+/*/ Page-wide /*/
+body{background-color: #000; color: #fff; font-family: "Georgia", "serif"; font-size: 15px;}
+
+
+/*/ Heading /*/
+#header{margin-top: 40px; font-family: "Helvetica Neue", "Helvetica", "sans-serif";}
+#header h1{font-style: normal;}
+#header .brand{color: #fff; font-size: 52px;  font-weight: 300;}
+#header .brand .standout{font-weight: bold; color: #ffc907;}
+#header .url a{display: block; font-size: 36px; color: #ffc907; font-weight: 100; text-align: right; text-decoration: none;}
+
+
+/*/ Content /*/
+#content{}
+#content #left{}
+#content #left #call-to-act{display: block; color: #000; font-size: 19px; font-family: "Helvetica", "sans-serif"; padding: 10px; width: 85%; background-color: #ffc907; margin-bottom: 30px; text-align: center; font-weight: bold; text-decoration: none;}
+#content #left p{font-weight: 100;}
+#content #left p a{color: #ffc907; text-decoration: underline;}
+#content #left h2{font-size: 15px; color: #fff; font-weight: 600; letter-spacing: 1px; font-family: "Helvetica", "sans-serif"; text-align: left;}
+#content #right img{margin: 0 0 0 19px;}
+#content #right .caption{font-size: 15px; font-family: "Helvetica", "sans-serif"; font-weight: 600; text-align: center;}
+#content #right .row{margin-bottom: 40px;}
+#content #right .col{}
+
+
+/*/ Footer /*/
+#footer{border-top: 1px solid #161616; margin-top: 50px; padding: 20px 0 20px 0;}
+#footer .logo a{display: block; height: 89px; width: 155px; text-indent: -1024px; background: transparent url(/media/img/info/ucf-sfo.png) no-repeat; position: relative; top: -10px;}
+#footer .copyright{text-align: right; font-family: "Helvetica", "arial", "sans-serif"; font-size: 14px; color: #999;}
+
+
+/*/ Menu /*/
+ul{border: none; margin: 0; padding: 0; font-weight: 300; list-style-type: none;}
+ul li{border: none; margin: 0; padding: 0;}
+ul li a{background-image: url('/media/img/chevron.png'); background-repeat: no-repeat; background-position: 100% 27px; border-bottom: 1px solid #161616; margin: 0; padding: 15px 20px; display: block; text-decoration: none; color: #fff;}
+ul li a:hover,
+ul li a:focus{color: #fff; background-color: #222; cursor: pointer;}
+ul li a .icon{display: block; float: left; width: 55px; position: relative; top: -3px;}
+.ie7 ul li a .heading{margin-top: -22px;}
+ul li a .heading,
+ul li a .description{display: block; margin-left: 70px;}
+ul li a .heading{font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif"; font-size: 22px;}
+ul li a .description{font-family: "Georgia", "serif"; font-size: 13px; font-weight: normal; color: #eeeeee;}
+
+.gold{color: #FCC82D;}
+.bold{font-weight: bold;}
+
+/*********************************************\
+    Ridiculous CSS3 button 
+\*********************************************/
+.button {
+	zoom: 1;
+	display:inline-block; color:white; background: #1d89e2;
+	-moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius:8px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fdd541), to(#ffc907));
+	background: -moz-linear-gradient(top,  #ffc907,  #dfc907); cursor:pointer;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFE143', endColorstr='#dfc907', gradientType='0');}
