@@ -1,3 +1,6 @@
+form #UCFHBHeaderLinks{position: relative; top: -5px;}
+form #q{position: relative; top: -5px;}
+form #UCFHBsubmit{position: relative; top: -4px;}
 .ie7 form #UCFHBHeaderLinks{position: relative; top: -8px;}
 .ie7 form #q{position: relative; top: -8px;}
 .ie7 form #UCFHBsubmit{position: relative; top: -15px;}
