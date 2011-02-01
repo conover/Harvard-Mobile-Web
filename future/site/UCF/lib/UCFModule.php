@@ -2,6 +2,19 @@
 
 abstract class UCFModule extends Module{
 	/**
+	 * Override Module.displayPage
+	 *
+	 * @return void
+	 * @author Jared Lang
+	 **/
+	function displayPage()
+	{
+		$this->assign('CHARTBEAT_ID', $GLOBALS['siteConfig']->getVar('CHARTBEAT_ID'));
+		$this->assign('CHARTBEAT_DOMAIN', $GLOBALS['siteConfig']->getVar('CHARTBEAT_DOMAIN'));
+		parent::displayPage();
+	}
+	
+	/**
 	 * Returns url slug for given string
 	 *
 	 * @return string

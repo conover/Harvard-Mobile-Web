@@ -13,6 +13,10 @@
 		{/foreach}
 		
 		{block name="javascript"}
+		{if strlen($CHARTBEAT_ID)}
+		<script type="text/javascript">
+			var _sf_startpt=(new Date()).getTime()</script>
+		{/if}
 		{if strlen($GOOGLE_ANALYTICS_ID)}
 		<script type="text/javascript">
 			var _gaq = _gaq || [];
