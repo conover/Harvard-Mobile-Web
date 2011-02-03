@@ -1,0 +1,38 @@
+<?php
+$page->title('Courses: Search Results')
+     ->navbar_image('courses');
+
+//construct the breadcrumbs
+if ($back == 'School|Listing') {
+  $page->breadcrumbs(getBreadcrumbName($courseGroupShort), getBreadcrumbName($courseNameShort), 'Results');
+  $page->breadcrumb_links(
+    coursesURL($courseGroup, $courseGroupShort),
+    courseURL('School', $courseGroup, $courseGroupShort, $courseName, $courseNameShort));
+  $page->breadcrumb_classes('crumb2a', 'crumb2b');
+
+} else if ($back == 'School') {
+  $page->breadcrumbs(getBreadcrumbName($courseGroupShort), 'Results');
+  $page->breadcrumb_links(coursesURL($courseGroup, $courseGroupShort));
+  $page->breadcrumb_classes('crumb1');
+
+} else if ($back == 'Listing') {
+  $page->breadcrumbs(getBreadcrumbName($courseNameShort), 'Results');
+  $page->breadcrumb_links(courseURL('School', $courseGroup, $courseGroupShort, $courseName, $courseNameShort));
+  $page->breadcrumb_classes('crumb1');
+
+} else {
+  $page->breadcrumbs('Search', 'Results')
+     ->breadcrumb_links('searchMain.php?filter='.urlencode(stripslashes($_REQUEST['filter'])));
+}
+
+$page->content_begin();
+
+?>
+<div class="nonfocal">
+<h2><?=$title?></h2>
+</div>
+<?
+$content->output($classes);
+
+$page->content_end(); 
+?>

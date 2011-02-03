@@ -1,0 +1,37 @@
+<?php
+$page->title("Events: Academic Calendar")
+     ->header('Academic Calendar');
+     
+
+$page->content_begin();
+?>
+
+  <div class="nonfocal">
+   <h2>Academic Calendar for <?=$year?>&shy;-<?=$year + 1?></h2>
+</div>
+
+<div class="sidenav">
+<?=implode(' | ', $nav_links)?>
+</div>
+
+<div class="focal">
+   <? foreach($days as $day => $items) { ?>
+      <h4><?=$day?></h4>
+      <ul>
+      <? foreach ($items as $item) { ?>
+         <li><?=$item?></li>
+      <? } ?>
+      </ul>
+   <? } ?>
+</div>
+
+<div class="sidenav">
+<?=implode(' | ', $nav_links)?>
+</div>
+
+<?
+
+$page->content_end();
+$page->nav_link("./", "Events Home");
+
+?>

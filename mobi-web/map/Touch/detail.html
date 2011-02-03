@@ -1,0 +1,77 @@
+<?
+$page->title("Map: Detail")
+     ->navbar_image('map')
+     ->header("Detail");
+
+function tabs() {
+  $html = array();
+  foreach(array("Map", "Photo", "What's Here") as $aTab) {
+    if($url = selfURL($aTab)) {
+      if(tab() == $aTab) {
+        $html[] = '<span class="active">' . $aTab . '</span>';
+      } else {
+        $html[] = "<a href=\"$url\">$aTab</a>";
+      }
+    }
+  }
+  return implode("&nbsp;|&nbsp;", $html);
+}
+
+$page->content_begin();
+?>
+
+	<div class="shaded">
+		<h2><?=$name?></h2>
+		<p class="smallprint"><?=str_replace(' ', '&shy; ', $displayDetails['Address'])?></p>
+
+		<div id="tabs">
+		<?=$tabs_html?>
+		</div>
+
+	</div> <!-- class="shaded" -->
+
+<? 
+switch ($tab) {
+case 'Map': ?>
+
+	<div class="tabbody centered">
+		<a name="scrolldown"> </a>
+		<img id="mapimage" width="<?=$imageWidth?>" height="<?=$imageHeight?>" alt="Map" src="<?=$imageUrl?>" lowsrc="../../images/touch/loading3.gif" /> 
+	    <? if ($hasMap) { ?>
+		<div class="zoomlinks">
+			Zoom: <a href="<?=$zoomInUrl?>">In</a>&nbsp;|&nbsp;<a href="<?=$zoomOutUrl?>">Out</a>
+			<br/>
+			Scroll: <a href="<?=$scrollNorth?>">N</a>&nbsp;|&nbsp;<a href="<?=$scrollSouth?>">S</a>&nbsp;|&nbsp;<a href="<?=$scrollEast?>">E</a>&nbsp;|&nbsp;<a href="<?=$scrollWest?>">W</a><br/>
+		</div>
+		<? } ?>
+    </div>
+<?
+  break;
+case "Photo": ?>
+
+	<div class="tabbody centered">
+		<p><img src="<?=$photoURL?>" alt="Photo" width="<?=$photoWidth?>" class="photo" lowsrc="../Touch/images/loading3.gif"<? if ($photoWidth < 250) { ?> width="<?=$photoWidth?>"<? } ?> /></p>
+    </div>
+<?
+  break;
+case "Details": ?>
+
+	<div class="tabbody">
+		<ul>
+            <? foreach($displayDetails as $field => $value) { ?>
+                <li><?=$field?>: <?=$value?></li>
+            <? } ?>
+		</ul>
+	</div>
+<?
+  break;
+}
+?>
+
+<? if (isset($displayDetails['Address'], $displayDetails['City'], $displayDetails['State'])) { ?>
+<ul class="nav">
+<li><a href="http://maps.google.com/maps?q=<?=$displayDetails['Address']?>,<?=$displayDetails['City']?>+<?=$displayDetails['State']?>" class="external">Google Map</a></li>
+</ul>
+<? } ?>
+
+<? $page->content_end(); ?>

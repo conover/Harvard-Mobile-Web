@@ -1,0 +1,86 @@
+<?php
+$page->title('ShuttleTracker')
+     ->navbar_image('shuttleschedule')
+     ->header('ShuttleTracker')
+     ->breadcrumb_home();
+
+$page->content_begin();
+?>
+
+	<div class="shaded">
+		<div id="tabs"> <!-- No extra whitespace in code below; non-breaking spaces required -->
+      <?=$tabs_html?>
+    </div>
+  </div>
+  
+  <div class="tabbody">
+<?  switch ($tab) { 
+      case "Running": ?>
+    <?  foreach ($agencies as $agencyID => $agencyName) { ?>
+          <h3><?= $agencyName ?> Shuttles</h3>
+          <ul class="nav">
+        <?  foreach ($runningRoutes[$agencyID] as $routeID => $routeName) { ?>
+            <li><a href="times.php?route=<?=$routeID?>"><?= $routeName ?></a></li>
+        <?  } ?>
+          </ul>
+    <?  }
+        break; 
+        
+      case "Offline": ?>
+    <?  foreach ($agencies as $agencyID => $agencyName) { ?>
+          <h3><?= $agencyName ?> Shuttles</h3>
+          <ul class="nav">
+        <?  foreach ($nonRunningRoutes[$agencyID] as $routeID => $routeName) { ?>
+            <li><a href="times.php?route=<?=$routeID?>"><?= $routeName ?></a></li>
+        <?  } ?>
+          </ul>
+    <?  }
+        break; 
+        
+      case "News": ?>
+
+      <? foreach ($agenciesAnnouncementsAndName as $announcementsAndName) { ?>
+         <h3><?=$announcementsAndName['long_name']?> Shuttles</h3>
+         <ul class="nav">
+           <? if($announcementsAndName['announcements']) { ?>
+                <? foreach($announcementsAndName['announcements'] as $index => $announcement) { ?>
+                     <li>
+                         <a href="<?=announcementURL($announcements['name'],$index)?>">
+                             <?=$announcement['title']?><br />
+                             <span class="smallprint"><?=$announcement['date']?></span>
+                         </a>
+                     </li>
+                <? } ?>
+           <? } else { ?>
+                <li class="nolink">No announcements at this time</li>
+           <? } ?>
+       </ul>
+      <? } ?>
+<?      break; 
+
+      case "Info": ?>
+          <h3>System Information</h3>
+          <ul class="nav">
+              <?  foreach ($infoItems as $infoItem) { ?>
+                   <li><a href="<?=infoURL($infoItem)?>"><?=$infoItem['name']?></a></li>
+              <?  } ?>
+          </ul>
+
+          <? foreach($contacts as $type => $numberItems) { ?>
+             <h3><?=$type?></h3>
+             <ul class="nav">
+                <? foreach($numberItems as $numberItem) { ?>
+                    <li><a href="<?=phoneURL($numberItem)?>" class="phone"><?=$numberItem['name']?><br />
+                            <span class="smallprint">(<?=$numberItem['number']?>)</span></a></li>
+                <? } ?>
+             </ul>
+          <? } ?>
+<?      break;
+
+    } ?>
+	</div>
+	
+<? 
+$page->content_end();
+$page->extra_footer("Map service provided by Facilities Department and");
+?>

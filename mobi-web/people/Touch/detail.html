@@ -1,0 +1,80 @@
+<?php
+$page->title('People: Detail')
+     ->navbar_image('people')
+     ->header('Detail');
+
+
+class Item {
+
+  private $person;
+
+  public function __construct($person) {
+    $this->person = $person;
+  }
+
+  public function display($label, $field, $href=NULL, $class=NULL, $group=False, $flat=FALSE) {
+    $displayString = "";
+    
+    foreach($this->person->getField($field) as $value) {
+      $formatted_value = $value;
+      if (strcmp($field, 'ou') == 0) {
+        $formatted_value = str_replace('^', ' / ', $formatted_value);
+      }
+      $formatted_value = htmlspecialchars($formatted_value);
+      $formatted_value = str_replace('$', '<br />', $formatted_value);
+
+      if ($flat) {
+        $displayString = '<h2>'.$formatted_value.'</h2>';
+        
+        if (!$group) {
+          $displayString = '<div class="nonfocal">'.$displayString.'</div>';
+        }
+        
+      } else {
+        $innerContents = "
+          <span class=\"label\">$label</span>
+          <span class=\"value\">$formatted_value</span>";
+        if ($href !== NULL) {
+          $innerContents = '<a href="' . $href($value) . '" class="' . $class . '">'
+                       . $innerContents . '</a>';
+        }
+
+        $liAttrs = ($href === NULL) ? ' class="nolink"' : ''; 
+        $innerContents = '<li'.$liAttrs.'>'.$innerContents . '</li>';
+
+        if (!$group) {
+          $innerContents = '<ul class="nav">' . $innerContents . '</ul>';
+        }
+        $displayString .= $innerContents;
+      }
+    }
+    echo $displayString;
+  }
+}
+
+             
+$item = new Item($person);
+
+$page->content_begin();
+?>
+    
+        <? $item->display('name', 'cn', NULL, NULL, FALSE, TRUE); ?>
+
+        <? $item->display('title', 'title', NULL, NULL, FALSE); ?>
+
+        <? $item->display('email', 'mail', 'mailHREF', 'email', FALSE); ?>
+
+        <? if(has_phone($person)) { ?>
+          <ul class="nav">
+          <? $item->display('phone', 'telephonenumber', 'phoneHREF', 'phone', TRUE); ?>
+          <? $item->display('home', 'homephone', 'phoneHREF', 'phone', TRUE); ?>
+          <? $item->display('fax', 'facsimiletelephonenumber', 'phoneHREF', 'phone', TRUE); ?>
+          </ul>
+        <? } ?>
+
+        <? $item->display('address', 'street', NULL, NULL, FALSE); ?>
+        <? $item->display('office', 'postaladdress', 'officeURL', 'map', FALSE); ?>
+        <? $item->display('unit', 'ou', NULL, NULL, FALSE); ?>
+
+<? $page->content_end(); ?>
+

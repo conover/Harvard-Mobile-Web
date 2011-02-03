@@ -1,0 +1,14 @@
+.event .range {}
+.event .range .start,
+.event .range .end{font-weight: bold;}
+.event .range .end{}
+.event .range .end:before{font-weight: normal; display: inline-block; text-align: center; padding: 0 10px 0 7px; content: ' - ';}
+.event .location{font-size: 18px; font-weight: bold; margin: 0 0 0 0;}
+.event .description{margin: 20px 0;}
+.event .times .start{font-weight: bold;}
+
+.group {margin: 1em auto; width: 200px;}
+.group a,
+.group span {display: inline-block; margin: 0; font-weight: bold; width: 130px; text-align: center;}
+.group a {width: 30px; text-indent: -2048px; background-image: url(/media/img/chevron.png); background-position: center; background-repeat: no-repeat; padding: 0;}
+.group a.arrow-back{ background-image: url(/media/img/chevron-flip.png);}

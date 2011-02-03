@@ -1,0 +1,33 @@
+<?php
+$title = ucname($name) . ": " . ($isToday ?
+	"Today" : $current['day_3Let'] . " " . $current['month_3Let'] . " " . $current['day_num']);
+
+$page->title('Events: '.ucname($name))
+     ->navbar_image('calendar')
+     ->header(ucname($name));
+
+$page->content_begin(); 
+?>
+
+<ul class="nonfocal">
+   <h2><?=$title ?></h2>
+</ul>
+
+<div class="sidenav">
+	<a href="<?=categoryDayURL($prev, $id, $name)?>">&lt; <?=$prev['day_3Let']?> <?=$prev['month_3Let']?> <?=$prev['day_num']?></a> |
+	<a href="<?=categoryDayURL($next, $id, $name)?>"><?=$next['day_3Let']?> <?=$next['month_3Let']?> <?=$next['day_num']?> &gt;</a>
+</div>
+
+<?
+$content->output($events);
+?>
+
+<div class="sidenav">
+	<a href="<?=categoryDayURL($prev, $id, $name)?>">&lt; <?=$prev['day_3Let']?> <?=$prev['month_3Let']?> <?=$prev['day_num']?></a> |
+	<a href="<?=categoryDayURL($next, $id, $name)?>"><?=$next['day_3Let']?> <?=$next['month_3Let']?> <?=$next['day_num']?> &gt;</a>
+</div>
+
+<?
+$page->content_end(); 
+?>
+

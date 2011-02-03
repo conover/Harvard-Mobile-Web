@@ -1,0 +1,40 @@
+.gloss li input[type="search"] { 
+	-moz-border-radius: 5px 0 0 5px;
+	-webkit-appearance: textfield; -webkit-rtl-ordering: logical; -webkit-user-select: text;
+}
+
+.gloss li input[value="Search"] { 
+	-webkit-border-top-right-radius: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-radius-topright: 5px;
+	-moz-border-radius-bottomright: 5px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.firefox .gloss li { line-height:23px; }
+.firefox .gloss li a { padding:11px 9px 8px 0; }
+.firefox .tabs { height:45px; }
+
+.webkit .gloss li input[type="search"] { padding-left:0; }
+
+/******************************************************************************\
+  IE
+\******************************************************************************/
+.msie .gloss li.arrow { background: #4c4d4e url(/media/img/chevron.png) right center no-repeat; }
+.msie .gloss li.arrow-back { background: #4c4d4e url(/media/img/chevron-flip.png) left center no-repeat; }
+.msie .gloss li { border:1px solid #727477; background: #4c4d4e; }
+.msie .gloss li.search { border:0; }
+.msie .search input[value="Search"] { margin-top:1px; background: #4c4d4e; }
+.msie .search input[type="text"] { background:white; border:0; }
+.msie footer table { width:auto; margin:0 auto; font-size:11px; }
+
+/******************************************************************************\
+  FF old
+\******************************************************************************/
+.firefox2 .gloss li { background: #4c4d4e; }
+.firefox2 .gloss li.arrow { background: #4c4d4e url(/media/img/chevron.png) right center no-repeat; }
+.firefox2 .gloss li.arrow-back { background: #4c4d4e url(/media/img/chevron-flip.png) left center no-repeat; }
+.firefox2 .gloss li.search { border:0; }
+.firefox2 .search input[value="Search"] { margin-top:1px; background: #4c4d4e; }
+.firefox2 .search input[type="text"] { background:white; border:0; }

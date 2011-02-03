@@ -1,0 +1,81 @@
+#map-options { padding:5px 0 0 6px; }
+#map-options a { 
+	display:block; padding:5px 7px 5px 21px;
+	text-decoration:none; 
+	color:#5577bb; 
+	background:white url(/modules/media/img/google-search.png) no-repeat; 
+	background-position:4px 4px; font-size:14px;
+	border:1px solid #bbb; 
+	border-radius:8px; -moz-border-radius: 8px; -webkit-border-radius: 8px;
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px;; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px; 
+}
+
+#no-results { font-weight:bold; padding:12px 0 10px 10px; margin:0; font-size:22px;  }
+
+
+/* search button */
+#search { padding:5px 5px 0 0; }
+#search form { background:none; padding:0; margin:0; border-radius:0; -webkit-border-radius:0; -moz-border-radius:0; height:36px; }
+#search form div { padding-right:35px; }
+#search form input { height:36px; line-height:36px; border:0; }
+#search form input[type="search"] { 
+	width:190px; -webkit-appearance: textfield;
+	line-height:10px; padding:0 5px 0 5px;
+	border-radius:5px 0 0 5px;
+	-moz-border-radius:5px 0 0 5px;
+	-webkit-border-radius:5px 0 0 5px;
+	border:1px solid #7D7D7D; border-right:0; padding-left:4px; }
+#search form input[type="submit"] {
+	width:40px;
+	border-radius:0 5px 5px 0;
+	-moz-border-radius:0 5px 5px 0;
+	-webkit-border-radius:0 5px 5px 0;
+	position:absolute; right:0; top:0; 
+	background-repeat:no-repeat; 
+	background-position:center;
+	background-image: url('/media/img/mag-glass.png'), -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#141414));
+	background-image: url('/media/img/mag-glass.png'), -moz-linear-gradient(top,  #222,  #141414); }
+.firefox #search form input[type="search"] { height:34px; }
+
+#geo {
+	margin:5px;
+	background-color:black;
+	background-repeat:no-repeat;
+	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
+	position:absolute; right:0; top:0;
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#141414));
+	background-image: -moz-linear-gradient(top,  #222,  #141414);
+	background-position:center;
+	overflow:hidden;
+}
+
+#geo a:hover { cursor:pointer; }
+#geo a {
+	padding:7px;
+	display:block; height:22px; width:22px; text-indent:-500px; overflow:hidden;
+	background:transparent url('/media/img/geo-grey.png') no-repeat center;
+}
+	
+#geo a.load { background-image:url('/media/img/geo-load.gif'); height:22px; width:22px; }
+#geo a.on { background-image:url('/media/img/geo-blue.png'); }
+
+.locate { color: #444; line-height:22px;}
+.locate h3 { font-size:16px; padding:0; margin:0; color:#444; }
+.locate span { font-size:14px; display:block; padding-top:5px;}
+.locate a { color: #5577BB; text-decoration:none;  }
+.locate a:hover, .locate a:active { border-bottom:1px dotted #5577BB; cursor:pointer; }
+.locate input { padding:0; line-height:18px; width:140px; font-size:14px; }
+.locate input[type='submit'] { background: url("/media/img/google-search.png") no-repeat 4px 3px; text-indent:-500px; width:25px; height:25px; border:1px solid #bbb; border-radius:8px; -moz-border-radius: 6px; -webkit-border-radius: 6px; margin-left:3px; }
+.locate form { padding:0 0 5px 15px; margin:0; }
+
+.gmnoprint { color:#444; }
+.info-window { width:200px; overflow-x:hidden; margin:0; font-family:"Trebuchet MS",sans-serif; font-size:12px; }
+.info-window h2 { text-align:left; margin:0; padding:0 0 5px 0; font-size:1.5em; font-family:georgia,serif; font-size:18px; color:black; font-weight:normal; }
+.info-window p {text-align:right; padding-top:7px; margin:0; color:#151515;}
+.info-window a { color:	#990000; }
+.info-window img { max-width:200px; }
+
+#map-settings { 
+	background:url('/media/img/gears.png') no-repeat bottom center;
+	position:absolute; display:block; overflow:hidden; text-indent:-500px;
+	top:0; right:0; height:32px; width:43px; padding:3px 0 0 8px;}

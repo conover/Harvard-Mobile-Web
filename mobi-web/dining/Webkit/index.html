@@ -1,0 +1,98 @@
+<?php
+$page->title('Student Dining')
+     ->navbar_image('dining')
+     ->breadcrumbs('Student Dining')
+     ->add_stylesheet('Webkit/dining')
+     ->add_javascript('../Webkit/uiscripts')
+     ->breadcrumb_home();
+
+$page->content_begin();
+?>
+
+<div class="nonfocal">
+	<h2>Menu for <strong><?=$current['short']?></strong></h2>
+</div>
+
+<div class="sidenav">
+    <?=html_arrows(dayURL($prev), $prev['short'], dayURL($next), $next['short'])?>
+</div>
+
+<a name="scrolldown"> </a>
+<div class="nonfocal">
+    <ul id="tabs" class="smalltabs">
+        <? foreach($food_items as $meal => $food_types) { ?>
+            <li <? if($meal==$current_meal) { ?>class="active"<? } ?> >
+                <a href="#scrolldown" onclick="showTab('<?=$meal?>tab',this)">
+                    <?=ucwords($meal)?>
+                </a>
+           </li>
+        <? } ?>
+
+        <li><a href="#scrolldown" onclick="showTab('locationstab',this)">Locations</a></li>
+    </ul>
+    
+
+    <div id="tabbodies">
+        <? foreach($food_items as $meal => $food_types) { ?>
+            <div class="tabbody" id="<?=$meal?>tab" style="display:none">
+                    <? if(count($food_types) > 0) { ?>
+                
+                        <? foreach($food_types as $food_type => $foods) { ?>
+                            <h3><?=$food_type?></h3>
+                            <ul class="nav nested">
+                                <? foreach($foods as $food) { ?>
+                                    <li>
+                                        <?=$food['item']?>
+                                    </li>
+                                <? } ?>
+                            </ul>
+                        <? } ?>
+                    <? } else { ?>
+                        <p><?=ucwords($meal)?></p>
+                    <? } ?>
+            </div>
+        <? } ?>
+
+        	<div class="tabbody" id="locationstab" style="display:none">
+		<div class="columns2">
+			<ul class="iconlegend col">
+				<li><img src="Webkit/images/dining-status-open@2x.png" width="20" height="20" alt="Open">Open now</li>
+				<li><img src="Webkit/images/dining-status-open-w-restrictions@2x.png" width="20" height="20" alt="Open with Restrictions">Open w/ restrictions</li>
+			</ul>
+			<ul class="iconlegend col">
+				<li><img src="Webkit/images/dining-status-closed@2x.png" width="20" height="20" alt="Closed">Closed</li>
+				<li><img src="Webkit/images/dining-status-closed-w-restrictions@2x.png" width="20" height="20" alt="Closed with Upcoming Restrictions">Upcoming restrictions</li>
+			</ul>
+			<div class="clear"></div>
+		</div> <!-- class="columns" -->
+
+		<p class="fineprint">Harvard student ID required. Schedule shown does not account for holidays and other closures.</p>
+
+		<ul class="nav nested">
+                        <? foreach($dining_statuses as $dining_status) { ?>
+                            <li class="dininghall <?=$dining_status['status']?>">
+                                <a href="<?=detailURL($dining_status)?>"><?=$dining_status['name']?><br/>
+                                    <span class="smallprint"><?=statusSummary($dining_status)?></span>
+                                </a>
+                            </li>
+                        <? } ?>
+		</ul>
+	</div> <!-- id="locationstab" -->
+
+	<div class="clear"></div>
+
+    </div>
+</div>
+
+<div class="sidenav">
+    <?=html_arrows(dayURL($prev), $prev['short'], dayURL($next), $next['short'])?>
+</div>
+
+<?
+
+$page->content_end();
+
+$script = "showTab('{$current_meal}tab');";
+$page->footer_script($script);
+
+?>

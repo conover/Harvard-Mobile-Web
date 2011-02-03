@@ -1,0 +1,122 @@
+<?php
+$page->title("Courses: Detail")
+     ->header("Detail")
+     ->navbar_image('courses');
+
+$page->add_stylesheet('Touch/mystellar');
+
+$page->content_begin();
+?>
+
+	<div class="shaded">
+		<a id="mystellar" href="<?= selfURL() ?>&action=<?=$action?>"><?=$page->img_tag($mystellar_img, 'gif', 'My Courses', array('border', '0'))?></a>
+
+		<h2><?=$class['name']?>: <?=className($class)?></h2>
+		<p> <?=$term?> <? if (strlen($class['stellarUrl']) > 0) { ?>| <a href="<?=$class['stellarUrl']?>" target="_new">Course Website</a><? } ?></p>
+
+		<div id="tabs">
+		<?=$tabs_html?>
+		</div>
+	</div> <!-- class="shaded" -->
+
+        <?     if((strlen($class['meeting_times']->rawTimesText()) == 0) 
+                        && (strlen($class['meeting_times']->rawLocationsText()) == 0)
+                        && (strlen($class['description']) == 0)
+                        && (strlen($class['preReq']) == 0)
+                        && (strlen($class['credits']) == 0)
+                        && (strlen($class['cross_reg']) == 0)
+                        && (strlen($class['exam_group']) == 0)
+                        && (strlen($class['department']) == 0)
+                        && (strlen($class['school']) == 0)
+                        && ((count($class['staff']['instructors'])) == 0)){ ?>
+
+                <p No detailed information to display </p>
+
+                <?} ?>
+	<div class="tabbody nopad">
+		<a name="scrolldown"> </a>
+		<ul class="results">
+<? switch ($tab) {
+   case 'News':
+     if (isset($item)) { ?>
+
+			<li class="nolink"><strong><?=$item['title']?></strong>:<?=$itemtext?><span class="smallprint">(<?=sDate($item)?>)</span></li>
+			<li><a href="<?=selfURL()?>" class="noaction">&lt; Back to News</a></li>
+    <? } elseif ($has_news) {
+         foreach($items as $index => $item) {
+           if(is_long_text($item)) { ?>
+			<li>
+				<a href="<?=selfURL()?>&amp;index=<?=$index?>">
+				<strong><?=$item['title']?></strong>:
+				<?=summary($item)?><span class="more">more</span> <span class="smallprint">(<?=sDate($item)?>)</span>
+				</a>
+        <? } else { ?>
+			<li class="nolink">
+				<strong><?=$item['title']?></strong>:
+				<?=summary($item)?> <span class="smallprint">(<?=sDate($item)?>)</span>
+			</li>
+        <? } // if (is_long_text($item))
+         } // foreach ($items as $index => $item)
+       } else { ?>
+
+			<li class="nolink">No announcements
+    <? } ?>
+
+			</li>
+    <? break; // case 'News'
+
+   case 'Info':
+     $meetingTimes = $class['meeting_times'];
+     if ($meetingTimes->parseSucceeded()) {
+       foreach ($meetingTimes->all() as $meetingTime) {
+         echo("<li>");
+         if ($meetingTime->isLocationKnown()) {
+           echo("<a class=\"map\" href=\"" . mapURLForCourses($meetingTime->locationText()) . "\">" .
+                $meetingTime->daysText() . " " . $meetingTime->timeText() .
+                " (" . $meetingTime->locationText() . ")</a>");
+         }
+         else {
+           echo($meetingTime->daysText() . " " . $meetingTime->timeText() .
+                " (" . $meetingTime->locationText() . ")");
+         }
+         echo("</li>");
+       }
+    }
+    else {
+      echo("<li>" . $meetingTimes->rawTimesText() . " " . $meetingTimes->rawLocationsText() . "</li>");
+    }
+    ?>
+
+
+			<li class="nolink">
+				<h3>Description:</h3>
+				<p><?=htmlentities($class['description'])?></p>
+			</li>
+
+    <? break; // case 'Info'
+
+     case 'Instructor(s)': ?>
+			<li class="nolink"><h3>Instructor(s):</h3></li>
+
+    <? foreach ($class['staff']['instructors'] as $instruct) { ?>
+
+			<li><a href="<?=personURL($instruct)?>" class="people"><?=$instruct?></a></li>
+
+    <? }
+       if (count($class['staff']['tas'])) { ?>
+
+			<li class="nolink"><h3>TAs:</h3></li>
+    <? foreach ($class['staff']['tas'] as $TA) { ?>
+
+			<li><a href="<?=personURL($TA)?>" class="people"><?=$TA?></a></li>
+
+    <? } // foreach ($class['staff']['tas'] as $TA)
+     } // if (count($class['staff']['tas'])) {
+     break; // case 'Staff'
+   } ?>
+		</ul>
+
+	</div>
+
+
+<? $page->content_end(); ?>

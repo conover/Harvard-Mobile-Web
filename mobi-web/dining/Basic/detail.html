@@ -1,0 +1,30 @@
+<?php
+
+$page->title('Student Dining: Dining Hall')
+     ->add_stylesheet('Basic/dining')
+     ->header('Dining Hall');
+
+$page->content_begin();
+?>
+
+<div class="focal">
+	<h2><?=$dining_hall?></h2>
+	<p class="fineprint">Harvard student ID required. Schedule shown does not account for holidays and other closures.</p>
+
+        <? foreach($hours as $meal => $times) {?>
+            <p><?=ucfirst($meal)?>: <?=$times?></p>
+        <? } ?>
+
+	<br/>
+
+	<h3>Interhouse Restrictions</h3>
+        <? foreach($restrictions as $meal => $restriction) { ?>
+            <p><?=ucwords($meal)?>: <?=$restriction?></p>
+        <? } ?>
+
+</div>
+
+<?
+$page->content_end(); 
+$page->nav_link("./", "Student Dining");
+?>

@@ -1,0 +1,72 @@
+<?php
+$page->title('Courses')
+     ->navbar_image('courses')
+     ->header('Courses')
+     ->breadcrumb_home();
+
+$page->content_begin();
+?>
+	<div class="nonfocal">
+	    <p>Descriptions, announcements and other information for <?=INSTITUTION_NAME?> classes.</p>
+        </div>
+    
+
+    <? if (count(getMyStellar()->allTags) > 0 ) { ?>
+        
+        <div class="nonfocal">
+            <h3>My Courses</h3> 
+        </div>
+    
+        <? if (count(getMyStellar()->currentIds)) { ?>
+	    <ul class="nav">
+	          <? foreach (getMyStellar()->currentIds as $id) { 
+                $class = CourseData::get_subject_details($id);
+			  ?>
+		    <li><a href="detail.php?id=<?= $id ?>&back=index.php"><?= name($class)?>: <?=$class['title']?></a></li>
+              <? } ?>
+	    </ul>
+	<? } ?>
+
+        <? if (count(getMyStellar()->oldIds)) { ?>
+           <div class="nonfocal legend">The following old classes have been removed from your My Courses settings:
+              <?=implode(", ", getMyStellar()->oldIds)?>
+           </div>
+        <? } ?>
+    
+    <? } ?>
+	
+    <div class="nonfocal">
+	    <h3>Browse by school:</h3>
+	</div>
+
+	<ul class="nav">
+
+	<? foreach($schools as $school) { ?>
+		<li>
+		<? if ((count($school->courses) == 1) && ($school->courses[0]->name == "")){ $school_name = $school->school_name;?>
+			<a href="<?= courseURL('', $school_name, $school->school_name_short, $school_name, $school->school_name_short)?>"><?= $school->school_name_short ?></a>
+		 <? }  else if (count($school->courses) == 1) {  $school_name = $school->school_name; ?>
+                 <a href="<?= courseURL('', $school_name, $school->school_name_short, $school->school_name_short, $school->school_name_short)?>"><?=$school->school_name_short ?></a>
+                 <? } else { ?>
+                 <a href="<?= coursesURL($school->school_name, $school->school_name_short) ?>"><?= $school->school_name_short ?></a>
+	    <? } ?>
+		</li>
+	<?} ?>
+	
+	</ul>
+        	<div class="nonfocal">
+		<form method="get" action="searchMain.php">
+			<span class="inputcombo">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr ><td width="70%">
+                                <input class="forminput" type="text" id="filter" name="filter" placeholder="Search keyword, #, or instructor" />
+                                <input class="forminput" type="hidden" id="courseGroup" name="courseGroup" value=""/>
+                                <input class="forminput" type="hidden" id="courseName" name="courseName" value=""/></td><td width="30%">
+                                <input type="submit" value="Search" class="submitbutton" /></td></tr></table>
+			</span>
+		</form>
+	</div>
+	
+<? $page->content_end(); ?>
+
+
+

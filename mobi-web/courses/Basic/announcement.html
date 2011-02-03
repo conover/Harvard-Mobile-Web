@@ -1,0 +1,21 @@
+<?php
+$page->title('Courses: Announcement')
+     ->header('Announcement');
+
+$page->content_begin();
+?>
+
+	<div class="focal">
+	
+		<h2><?=$item['title']?></h2>
+
+                <? foreach(paragraphs($item) as $paragraph) { ?>	
+		   <p><?=$paragraph?></p>
+                <? } ?>
+		<p class="smallprint"><?=longDate($item)?></p>
+
+	</div>
+<? 
+$page->content_end();
+$page->nav_link("./", "Courses Home");
+?>

@@ -1,0 +1,90 @@
+<?php
+$page->title('People: Detail')
+     ->navbar_image('people')
+     ->breadcrumbs('Search', 'Detail');
+     
+if (isset($_REQUEST['filter'])) {
+     $page->breadcrumb_links('index.php?filter='.urlencode(stripslashes($_REQUEST['filter'])));
+}
+
+class Item {
+  private $person;
+
+  public function __construct($person) {
+    $this->person = $person;
+  }
+
+  public function display($label, $field, $href=NULL, $class=NULL, $group=False, $flat=False) {
+    $displayString = "";
+
+    foreach($this->person->getField($field) as $value) {
+      $formatted_value = $value;
+      if (strcmp($field, 'ou') == 0) {
+        $formatted_value = str_replace('^', ' / ', $formatted_value);
+      }
+      $formatted_value = htmlspecialchars($formatted_value);
+	  if (strcmp($field, 'mail') != 0) {
+		// We now don't want hyphens to display in an email address, but it's OK elsewhere.
+      	$formatted_value = str_replace('@', '@&shy;', $formatted_value);
+	  }
+      // prevent phones from creating links from things that look like phone/email
+      $formatted_value = str_replace('-', '-&shy;', $formatted_value);
+      $formatted_value = str_replace('$', '<br />', $formatted_value);
+      
+      if ($flat) {
+        $displayString = '<h2>'.$formatted_value.'</h2>';
+        
+        if (!$group) {
+          $displayString = '<div class="nonfocal">'.$displayString.'</div>';
+        }
+        
+        
+      } else {
+        $innerContents = "
+                 <div class=\"label\">$label</div>
+                 <div class=\"value\">$formatted_value</div>";
+        if ($href !== NULL) {
+		  $linkAddress = $value;
+	
+          $innerContents = '<a href="' . $href($linkAddress) . '" class="' . $class . '">'
+                       . $innerContents . '</a>';
+        }
+
+        $innerContents = '<li>' . $innerContents . '</li>';
+
+        if (!$group) {
+          $innerContents = '<ul class="nav">' . $innerContents . '</ul>';
+        }
+
+        $displayString .= $innerContents;
+      }
+    }
+    echo $displayString;
+  }
+}
+
+$item = new Item($person);
+
+$page->content_begin();
+?>
+    
+        <? $item->display('name', 'cn', NULL, NULL, FALSE, TRUE); ?>
+
+        <? $item->display('title', 'title', NULL, NULL, FALSE); ?>
+
+        <? $item->display('email', 'mail', 'mailHREF', 'email', FALSE); ?>
+
+        <? if(has_phone($person)) { ?>
+          <ul class="nav">
+          <? $item->display('phone', 'telephonenumber', 'phoneHREF', 'phone', TRUE); ?>
+          <? $item->display('home', 'homephone', 'phoneHREF', 'phone', TRUE); ?>
+          <? $item->display('fax', 'facsimiletelephonenumber', 'phoneHREF', 'phone', TRUE); ?>
+          </ul>
+        <? } ?>
+
+        <? $item->display('address', 'street', NULL, NULL, FALSE); ?>
+        <? $item->display('office', 'postaladdress', 'officeURL', 'map', FALSE); ?>
+        <? $item->display('unit', 'ou', NULL, NULL, FALSE); ?>
+
+<? $page->content_end(); ?>
+

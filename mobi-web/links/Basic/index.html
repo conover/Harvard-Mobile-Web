@@ -1,0 +1,17 @@
+<?php
+$page->title('Schools')
+     ->header('Schools');
+
+$page->content_begin();
+?>
+
+	<p>Click on a link to see each School's website. Please note that these websites may not be optimized for mobile.</p>
+
+      <p class="nav">
+           <? foreach($links as $index => $item) { ?>
+	   <?=$page->link_access_key($item['link'], $item['name'])?>
+	   <br />
+           <? } ?>
+      </p>
+
+<? $page->content_end(); ?>

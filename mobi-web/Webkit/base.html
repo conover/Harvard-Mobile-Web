@@ -1,0 +1,106 @@
+<?='<?xml version="1.0" encoding="UTF-8"?>'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+        <meta http-equiv="content-type" content="application/xhtml+xml" />
+        <meta name="viewport" id="viewport" content="width=device-width, user-scalable=<?=$scalable?><?if ($fixed) { ?>, initial-scale=1.0, maximum-scale=1.0<? } ?>" />
+        <title><?=$title?></title>
+        <!-- Branch: "Webkit" -->        
+        <link rel="stylesheet" type="text/css" href="../Webkit/core.css" />
+        <link rel="apple-touch-icon" href="../Webkit/images/icon-<?=$navbar_image?>.png" />
+        <? echo $this->stylesheet_links() ?>
+
+        <? if($inline_css) { ?>
+           <style type="text/css" media="screen">
+              <?=$inline_css?>
+           </style>
+        <? } ?>
+
+        <? foreach($raw_js as $script) { ?>
+              <script type="text/javascript">
+                 <?=$script?> 
+              </script>
+        <? } ?>
+
+        <? foreach($javascripts as $script) { ?>
+              <script src="<?=$script?>.js" type="text/javascript"> </script>
+        <? } ?>
+
+        <? if($onorientationchange) { ?>
+           <script type="text/javascript">
+               window.addEventListener("orientationchange", function() { <?=$onorientationchange?>}, false);
+               window.addEventListener("resize", function() { <?=$onorientationchange?>}, false);
+           </script>
+        <? } ?>
+        <? require_once 'ga.html'; ?>
+</head>
+
+<body <? if (isset($extra_onload)) { ?>onload="<?=$extra_onload?>"<? } ?>>
+<div id="navbar" <? if ($help_on) { ?>class="helpon"<? } ?>>
+       <? if(!$home) { ?>
+
+               <div class="breadcrumbs"><a name="top" href="../home/" class="homelink">
+                          <img src="../Webkit/images/homelink.png" width="57" height="45" alt="<?=SITE_NAME?> Home" />
+                    </a><a href="<?=$module_home_link?>" class="module">
+                          <img src="../Webkit/images/title-<?=$navbar_image?>.png" width="28" height="28" alt="" />
+                    </a><?
+                       foreach($breadcrumbs as $index => $breadcrumb) {
+                          $attr = isset($breadcrumb_classes[$index]) ? ' class="'.$breadcrumb_classes[$index].'"' : '';
+                          if(isset($breadcrumb_links[$index])) {
+                            echo '<a href="' . $breadcrumb_links[$index] . '"'.$attr.'><span>' . $breadcrumb . '</span></a>';
+                          } else {
+                            echo '<a href="#" onclick="history.back(); return false"'.$attr.'><span>' . $breadcrumb . '</span></a>';
+                          }
+                       }
+                    ?><span class="pagetitle"><?=$last_breadcrumb?></span></div>
+
+       <? } else { ?>
+
+               <div class="breadcrumbs homepage">
+                   <a href="../home/" class="homelink">
+                         <img src="../Webkit/images/homelink.png" width="57" height="45" alt="<?=SITE_NAME?> Home" />
+                   </a>
+                   <span class="pagetitle">
+                         <img src="../Webkit/images/title-<?=$navbar_image?>.png" width="28" height="28" alt="" class="moduleicon" />
+                         <?=$last_breadcrumb?>
+                   </span>
+               </div>
+
+       <? } ?>    
+
+       <? if($help_on) { ?> 
+
+            <div class="help">
+                <a href="help.php"><img src="../Webkit/images/help.png" width="46" height="45" alt="Help" /></a>
+            </div>
+       <? } ?>
+
+</div>
+
+
+
+<div id="container">
+       <? $this->draw_content(); ?>
+</div>
+
+
+<div id="footerlinks">
+        <a href="#top">Back to top</a> | <a href="../home/"><?=SITE_NAME?> home</a>
+</div>
+
+<div id="footer">
+<? if ($this->standard_footer) { ?>
+	<?=COPYRIGHT_NOTICE?>
+<? } else { ?>
+<?=$this->footer?>
+<? } ?>
+</div>
+
+<? if($this->footer_script) { ?>
+      <script type="text/javascript">
+          <?=$this->footer_script?>
+      </script>
+<? } ?>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<?php
+$page->title('Map')
+     ->header('Map');
+
+$page->content_begin();
+?>
+	<form method="get" action="<?=searchURL()?>">
+
+	<p>
+		<strong>Search Map:</strong><br/>
+		<span class="inputcombo emphasized">
+			<input class="forminput" type="text" id="filter" name="filter" <? if(isset($query)) { ?> value="<?=htmlspecialchars($query)?>" <? } ?> />
+			<? if ($page->platform == 'bbplus') { ?>
+                        <input src="../Basic/images/search_button.png" name="search" id="sch_btn" class="imagebutton" type="image" value="Search" />
+                        <? } else { ?>
+                        <input class="combobutton" name="sch_btn" id="sch_btn" type="submit" value="Search" />
+                        <? } ?>
+		</span>	
+	</p>
+	
+	<p class="legend">
+		<strong>Tip:</strong> You can search by any 'Browse by' category shown below.
+	</p>
+
+	<p class="nav"><? 
+	  foreach ($categories as $category => $title) { 
+	    ?><?=$page->link_access_key(categoryURL($category), $title)?><br/>
+    <? } ?>
+	</p>
+<?
+$page->content_end();
+// $page->extra_link("directions.php", "Directions to " . INSTITUTION_NAME);
+?>

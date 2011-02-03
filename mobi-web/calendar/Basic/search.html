@@ -1,0 +1,12 @@
+<?php
+$page->title("Events: Search Results")
+     ->header('Events');
+
+$page->content_begin();
+
+$content->output($events);
+
+$page->content_end();
+$page->nav_link("./", "Events Home");
+
+?>

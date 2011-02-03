@@ -1,0 +1,68 @@
+<?php
+$page->title("Events: Detail")
+     ->header('Detail');
+
+$page->content_begin();
+
+// get a list of the category mappings first
+$harvard_cat = Harvard_Calendar::get_categories(PATH_TO_EVENTS_CAT);
+
+?>
+
+
+
+<div class="focal">
+		<h2><?=$event->get_summary()?></h2>
+		<p>
+			<?=$date_str?><br/>
+			<?=$time_of_day?>
+		</p>
+		<p>
+                    <? if(briefLocation($event)) { ?>
+			Location: <?=briefLocation($event)?>
+                    <? } ?>
+		</p>
+
+               <? if(strlen($ticketWebLink) > 0) { ?>
+		     <p>
+			Link to Tickets: <a href="<?=$ticketWebLink?>" class="action external" target="_new"><?=$ticketWebLink?></a>
+		     </p>
+                <? } ?>
+                        <?=stripslashes($descriptionString)?>
+
+                <? if(strlen($phoneNum)) { ?>
+		    <p>
+  			For info call: <a href="<?=$phoneNum?>" class="action phone"><?=$phoneNum?></a>
+		    </p>
+                <? } ?>
+                   <? if(strlen($email)) { ?>
+		    <p>
+  			Email: <a href="<?=$email?>" class="action phone"><?=$email?></a>
+		    </p>
+                <? } ?>
+
+                <? if(strlen($url) > 0) { ?>
+			Website: <a href="<?=$url?>" class="action external" target="_new"><?=$url?></a>
+                <? } ?>
+
+		<p class="legend">Categorized as:
+                   <? $size = count($categories);
+                      foreach($categories as $index => $category) { $last = ($size-1 == $index);
+
+                      foreach($harvard_cat as $cat) {
+						// The strings from $harvard_cat may be null-terminated, unlike the usual PHP strings, so trim before comparing.
+				        	if (strcmp(trim($cat->get_name()), trim($category)) == 0) {
+                            	$categoryFound = $cat;
+                        	}
+						}
+                      ?>
+                        <a href="<?=categoryURL($categoryFound)?>"><?=ucname($category)?></a><? if(!$last) { echo ","; } ?>
+                   <? } ?>
+                </p>
+	</div>
+<?
+
+$page->content_end();
+$page->nav_link("./", "Events Home");
+
+?>

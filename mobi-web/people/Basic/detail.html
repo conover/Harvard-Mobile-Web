@@ -1,0 +1,66 @@
+<?php
+
+$page->title('People: Detail')
+     ->header('Detail');
+
+class Item {
+  private $person;
+  private $first = True;
+
+  public function __construct($person)
+  {
+    $this->person = $person;
+  }
+
+  public function display($label, $field, $href=NULL, $class=NULL, $flat=FALSE)
+  {
+    foreach($this->person->getField($field) as $value) {
+      $formatted_value = $value;
+      if (strcmp($field, 'ou') == 0) {
+        $formatted_value = str_replace('^', ' / ', $formatted_value);
+      }
+      $formatted_value = htmlspecialchars($formatted_value);
+      $formatted_value = str_replace('$', '<br />', $formatted_value);
+
+      if ($href !== NULL) {
+        $formatted_value = '<a href="' . $href($value) . '" class="action ' . $class . '">'
+               . str_replace('$', '<br/>', $formatted_value) . '</a>';
+      }
+      if ($flat) {
+        echo '<h2>'.$formatted_value.'</h2>';
+        
+      } else {
+        echo '<tr valign="top"><td><span class="dllabel">'.$label.
+          '</span>&nbsp;</td><td><span class="value">'.$formatted_value.'</span></tr>';
+      }
+    }
+  }
+}
+
+$item = new Item($person);
+
+$page->content_begin();
+?>
+    <? $item->display('name: ', 'cn', NULL, NULL, TRUE); ?>
+	
+	<div class="focal">
+		<table class="dl" cellpadding="0" cellspacing="0" border="0" style="margin: 0; padding: 0">
+        <?
+          $item->display('title: ', 'title', NULL, NULL);
+          $item->display('email: ', 'mail', "mailHREF", 'email');
+          $item->display('phone:', 'telephonenumber', "phoneHREF", 'phone');
+          $item->display('home: ', 'homephone', "phoneHREF", 'phone');
+          $item->display('fax: ', 'facsimiletelephonenumber', "phoneHREF", 'phone');
+          $item->display('office: ', 'postaladdress', "officeURL", 'map');
+          $item->display('unit: ', 'ou', NULL, NULL);
+        ?>
+	</table>
+	</div>
+	
+
+<? 
+
+$page->content_end(); 
+$page->nav_link("index.php", "People Directory");
+
+?>

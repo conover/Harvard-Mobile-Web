@@ -1,0 +1,145 @@
+<?php
+
+$select_bbox = shiftBBox($bbox, 0, 0, 1);
+
+$bbox_script =<<<JS
+     var mapSelect = '$selectvalue';
+     var initMapBoxW = {$bbox["xmin"]};
+     var initMapBoxN = {$bbox["ymax"]};
+     var initMapBoxS = {$bbox["ymin"]};
+     var initMapBoxE = {$bbox["xmax"]};
+     var selectMapBoxW = {$select_bbox["xmin"]};
+     var selectMapBoxN = {$select_bbox["ymax"]};
+     var selectMapBoxS = {$select_bbox["ymin"]};
+     var selectMapBoxE = {$select_bbox["xmax"]};
+     var photoURL = '$photoURL';	// If there's no photo, set to ""
+     var mapBaseURL = '{$mapBaseURL}';
+     var mapOptions = '{$mapOptions}';
+     var mapLayers = '{$mapLayers}';
+
+     var detailBaseURL = 'detail.php?{$detailUrlOptions}';
+     var fullscreenBaseURL = 'detail-fullscreen.php?{$detailUrlOptions}';
+
+JS;
+
+$page->title('Map: Detail')
+     ->navbar_image('map')
+     ->not_scalable()
+     ->add_stylesheet('Webkit/map')
+     ->add_inline_script($bbox_script)
+     ->add_javascript('../Webkit/uiscripts')
+     ->add_javascript('Webkit/map');
+     
+if ($hasMap) {
+     $page->extra_onload("loadImage(getMapURL(mapBaseURL),'mapimage');");
+}
+
+//construct the breadcrumbs
+$back = isset($_REQUEST['back']) ? $_REQUEST['back'] : '';
+if ($back == 'Browse') {
+  $category = stripslashes($_REQUEST['category']);
+  $layer = ArcGISServer::getLayer($category);
+  $title = $layer->getName();
+
+  $page->breadcrumbs($title, 'Detail');
+  $page->breadcrumb_links('index.php?category='.urlencode($category));
+  $page->breadcrumb_classes('crumb1');
+  
+} else if ($back == 'Search') {
+  $page->breadcrumbs('Search', 'Detail');
+  $page->breadcrumb_links('search.php?filter='.urlencode(stripslashes($_REQUEST['filter'])));  
+  
+} else {
+  $page->breadcrumbs('Detail');
+}
+
+$page->content_begin();
+?>
+	<a name="scrolldown"></a>		
+	<div class="focal shaded">
+
+		<h2><?=$name?></h2>
+		<p class="address"><?=str_replace(' ', '&shy; ', $displayDetails['Address'])?></p>
+		<ul id="tabs">
+			<li class="active"><a href="#scrolldown" onclick="showTab('maptab',this); hide('loadingimage')">Map</a></li>
+			<? if ($photoURL) { ?>
+                           <li><a href="#scrolldown" onclick="showTab('phototab',this),loadImage(photoURL,'photo')">Photo</a></li>
+                        <? } ?>
+                        
+                        <? if ($details) { ?>
+			   <li><a href="#scrolldown" onclick="showTab('detailstab',this)">Details</a></li>
+                        <? } ?>
+		</ul>
+		
+		<div id="tabbodies">	
+			<div class="tabbody" id="maptab">
+			    <? if ($hasMap) { ?>
+				  <div id="mapscrollers">
+					<div id="nw"><a href="#scrolldown" onclick="scroll('nw'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="NW" /></a></div>
+					<div id="n"><a href="#scrolldown" onclick="scroll('n'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="N" /></a></div>
+					<div id="ne"><a href="#scrolldown" onclick="scroll('ne'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="NE" /></a></div>
+					<div id="e"><a href="#scrolldown" onclick="scroll('e'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="E" /></a></div>
+					<div id="se"><a href="#scrolldown" onclick="scroll('se'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="SE" /></a></div>
+					<div id="s"><a href="#scrolldown" onclick="scroll('s'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="S" /></a></div>
+					<div id="sw"><a href="#scrolldown" onclick="scroll('sw'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="SW" /></a></div>
+					<div id="w"><a href="#scrolldown" onclick="scroll('w'); "><img src="../Webkit/images/blank.png" width="50" height="50" alt="W" /></a></div>
+					<img id="loadingimage" src="../Webkit/images/loading2.gif" width="40" height="40" alt="Loading" />
+				  </div> <!-- id="mapscrollers" -->
+				  <img id="mapimage" width="<?=$imageWidth?>" height="<?=$imageHeight?>" alt="" onload="hide('loadingimage')"/> 
+				  <div id="mapzoom">
+					<a href="#" onclick="zoomin(); return false;" id="zoomin"><img src="../Webkit/images/blank.png" width="40" height="34" alt="Zoom In" /></a>
+					<a href="#" onclick="zoomout(); return false;" id="zoomout"><img src="../Webkit/images/blank.png" width="40" height="34" alt="Zoom Out" /></a>
+					<a href="#" onclick="recenter(); return false;" id="recenter" class="disabled"><img src="../Webkit/images/blank.png" width="40" height="34" alt="Recenter" /></a>
+					<a href="detail-fullscreen.php" id="fullscreen"><img src="../Webkit/images/blank.png" width="40" height="34" alt="Full Screen" /></a>
+				  </div>
+			    <? } else { ?>
+				    <img id="mapimage" width="<?=$imageWidth?>" height="<?=$imageHeight?>" alt="" onload="hide('loadingimage')" src="<?=$imageUrl?>"/> 
+				<? } ?>
+			</div> <!-- id="maptab" -->
+		
+
+			<div class="tabbody" id="phototab" style="display:none">
+				<img id="loadingimage2" src="../Webkit/images/loading2.gif" width="40" height="40" alt="Loading" />
+				<img id="photo" src="" width="<?=$photoWidth?>" height="" alt="Photo" onload="hide('loadingimage2')" />
+
+			</div> <!-- id="phototab" -->
+
+
+
+			<div class="tabbody" id="detailstab" style="display:none">
+				<ul>
+                                     <? foreach($displayDetails as $field => $value) { ?>
+					  <li><b><?=$field?>:</b> <?=$value?></li>
+                                     <? } ?>
+				</ul>
+			</div> <!-- id="detailstab" -->
+
+
+
+			<div class="clear"></div>
+		</div>
+
+	</div> <!-- class="focal shaded" -->
+	
+        <? if (isset($displayDetails['Address'], $displayDetails['City'], $displayDetails['State'])) { ?>
+	   <ul class="secondary">
+		<li>
+			<a href="http://maps.google.com/maps?q=<?=$displayDetails['Address']?>, <?=$displayDetails['City']?> <?=$displayDetails['State']?>" class="external">Google Map</a>
+		</li>
+	  </ul>
+	<? } ?>
+<?
+$page->content_end();
+
+
+$script =<<<JS
+	showTab('maptab');
+
+	mapW = {$imageWidth};
+	mapH = {$imageHeight};
+
+  checkIfMoved();
+JS;
+
+$page->footer_script($script);
+?>

@@ -1,0 +1,50 @@
+<?php ?>
+<?='<?xml version="1.0" encoding="UTF-8"?>'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="content-type" content="application/xhtml+xml" />
+<?=$page->meta_tags()?>
+<title><?=SITE_NAME?></title>
+<link rel="stylesheet" type="text/css" href="<?=$page->delta_file('index', 'css') ?>" />
+<!-- Branch: "Basic" -->
+<!-- Platform: "bbplus" -->
+</head>
+<body>
+
+<div id="container">
+<h1><?=$page->img_tag('harvard-logo-home', 'png', '', array('id' => 'logo'))?></h1>
+
+<form method="get" action="./search.php" id="searchform">
+<div id="homesearch">
+	<table class="searchform" cellpadding="0" cellspacing="3px" border="0">
+	<tr><td width="42%" align="right">Search Harvard Mobile:</td>
+	<td class="inputtd" width="50%"><input class="forminput" type="text" id="filter" name="search_terms" value="" /></td>
+	<td width="8%" align="left"><input src="../Basic/images/search_button.png" name="search" id="sch_btn" type="image" value="Search" /></td>
+	</tr></table>
+</div>
+</form>
+
+
+<div id="homegrid">
+<? foreach ($modules as $index => $module) { ?>
+<div><a href="<?=Modules::url($module, $page->certs)?>"><?=$page->img_tag($module, 'png', Modules::title($module))?>
+<br/><?=Modules::wrap_title($module)?></a>
+</div>
+<? } ?>
+<? foreach(Modules::$secondaryModules as $module) { ?>
+  <div><a href="<?=Modules::url($module, $page->certs)?>"><?=$page->img_tag($module, 'png', Modules::title($module))?>
+  <br/><?=Modules::wrap_title($module)?></a>
+  </div>
+<? } ?>
+</div>
+
+<div id="download"><a href="../download/"><img src="Basic/images/download-bbplus.png" width="32" height="26" alt="Download" align="absmiddle" />Add the BlackBerry shortcut to your home screen</a><br /></div>
+<div id="footer">
+	<?=COPYRIGHT_NOTICE?>
+</div>
+<? if ($ini['SHOW_DEVICE_DETECTION']) { include('extra_footer.inc'); } ?>
+</div>
+<?=$page->googleAnalyticsGetImageUrl();?>
+</body>
+</html>

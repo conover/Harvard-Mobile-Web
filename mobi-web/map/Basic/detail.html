@@ -1,0 +1,54 @@
+<?
+$page->title("Map: Detail")
+     ->header("Detail");
+
+$page->content_begin();
+?>
+
+	<div class="focal">
+		<h2><?=$name?></h2>
+		
+                <? if($tab == "Map") { ?>
+  		   <p>
+			<?=str_replace(' ', '&shy; ', $displayDetails['Address'])?>
+		   </p>
+                <? } ?>
+
+		<p class="tabs"> <!-- No extra whitespace in code below; non-breaking spaces required -->
+                        <?=$tabs_html?>
+                </p>
+
+                <? switch ($tab) { 
+                     case "Map": ?>
+    		       <p class="image">
+			  <a name="map"> </a>
+			  <img src="<?=$imageUrl?>" width="<?=$imageWidth?>" height="<?=$imageHeight?>" alt="Map" />
+		       </p>
+		       <? if ($hasMap) { ?>
+		       <p>
+			  Scroll: <a href="<?=$scrollNorth?>">N</a>&nbsp;|&nbsp;<a href="<?=$scrollSouth?>">S</a>&nbsp;|&nbsp;<a href="<?=$scrollEast?>">E</a>&nbsp;|&nbsp;<a href="<?=$scrollWest?>">W</a><br/>
+			  Zoom: <a href="<?=$zoomInUrl?>">In</a>&nbsp;|&nbsp;<a href="<?=$zoomOutUrl?>">Out</a>
+		      </p>
+                   <? } break; case "Photo": ?>
+
+		      <p class="image"><img src="<?=$photoURL?>" width="<?=$photoWidth?>" alt="Photo" /></p>
+                 
+                   <? break; case "Details": ?>
+		      <p>
+                         <? foreach ($displayDetails as $field => $value) { ?>
+		              <b><?=$field?></b>: <?=$value?><br/>
+                         <? } ?>
+		      </p>
+
+                  <? } ?>
+	</div>
+<? if ($page->platform == 'bbplus' && isset($displayDetails['Address'], $displayDetails['City'], $displayDetails['State'])) { ?>
+<div class="focal">
+<a href="http://maps.google.com/maps?q=<?=$displayDetails['Address']?>,<?=$displayDetails['City']?>+<?=$displayDetails['State']?>" class="external">Google Map</a>
+</div>
+<? } ?>
+
+<?
+$page->content_end();
+$page->nav_link("./", "Map Home");
+?>

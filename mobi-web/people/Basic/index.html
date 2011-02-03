@@ -1,0 +1,49 @@
+<?php
+$page->title('People')
+     ->header('People');
+
+$page->content_begin();
+?>
+	<form 
+		name="search_form" 
+		method="get" 
+		action="<?=$_SERVER['SCRIPT_NAME']?>"	
+	> 
+
+	<p>
+		<strong>Search:</strong>
+		<span class="inputcombo emphasized">
+		    <fieldset>
+			    <input class="forminput" type="text" id="filter" name="filter" <? if (isset($searchTerms)) { ?>value="<?=htmlspecialchars($searchTerms)?>"<? } ?>" />
+                            <? if ($page->platform == 'bbplus') { ?>
+                            <input src="../Basic/images/search_button.png" name="search" id="sch_btn" class="imagebutton" type="image" value="Search" />
+                            <? } else { ?>
+                            &nbsp;<input class="combobutton" name="sch_btn" id="sch_btn" type="submit" value="Search" />
+                            <? } ?>
+			</fieldset>
+		</span>	
+	</p>
+
+        <? if (($errorMessage != null)) { ?>
+            <p><?= $errorMessage ?></p>
+        <? } ?>
+        <? if($failed_search) { ?>
+                <p>No matches found</p>
+        <? } ?>
+
+	<p class="legend">
+  	        <strong>Search tips:</strong> You can search by part or all of a person's name, email address or phone number.
+	</p>		
+
+	</form>
+<? 
+
+$page->content_end(); 
+
+foreach ($phoneNumbers as $name => $number) {
+
+  $page->extra_link("tel:$number", "$name <span class='smallprint'>(" . addSilentHyphens($number) . ")</span>", "action phone");
+
+}
+
+?>

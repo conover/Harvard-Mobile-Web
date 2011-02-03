@@ -1,0 +1,33 @@
+<div class="focal">
+  <? foreach($results as $i => $class) { 
+        $className = $class['name'];
+    
+        $prevClassName = '';
+        $nextClassName = '';
+        if ($i > 0) {
+          $prevClassName = $results[$i-1]['name'];
+        }
+        if ($i < count($results)-1) {
+          $nextClassName = $results[$i+1]['name'];
+        }
+      
+        $staffName = '';
+        if ($className == $prevClassName || $className == $nextClassName) {
+          // Multiple classes with the same name in a row, show instructors to differentiate      
+          foreach($class['staff']['instructors'] as $name) {
+            $staffName .= (strlen($staffName) ? ', ' : '').$name;
+          }
+          if (strlen($staffName)) {
+            $staffName = ' ('.$staffName.')';
+          }
+        }
+        $filter = isset($_REQUEST['filter']) ? stripslashes($_REQUEST['filter']) : '';
+        $courseGroup = isset($_REQUEST['courseGroup']) ? stripslashes($_REQUEST['courseGroup']) : '';
+        $courseGroupShort = isset($_REQUEST['courseGroupShort']) ? stripslashes($_REQUEST['courseGroupShort']) : ''; 
+        $courseName = isset($_REQUEST['courseName']) ? stripslashes($_REQUEST['courseName']) : '';
+        $courseNameShort = isset($_REQUEST['courseNameShort']) ? stripslashes($_REQUEST['courseNameShort']) : ''; 
+        $back = (isset($_REQUEST['back']) && strlen($_REQUEST['back'])) ? $_REQUEST['back'].'|Search' : 'Search' ;
+        ?>
+		<p><a href="<?=detailURL($back, $class['masterId'], $courseGroup, $courseGroupShort, $courseName, $courseNameShort, $filter)?>"><?=$className?> : <?=$class["title"]?><?=$staffName?></a></p>
+ <? } ?>
+</div>

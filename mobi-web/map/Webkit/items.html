@@ -1,0 +1,7 @@
+<ul class="results">
+
+          <? foreach($results as $resultObj) { ?>
+              <li><a href="<?=detailURL($resultObj)?>"><?=titleFromResult($resultObj)?></a></li>
+          <? } ?>
+
+</ul>

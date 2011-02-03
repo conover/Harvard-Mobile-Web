@@ -1,0 +1,11 @@
+
+	<ul class="results">
+              <? foreach($results as $person) { ?>
+		     <li>
+                        <a href="<?=detail_url($person)?>">
+                           <?=htmlentities($person->getFieldSingle('givenname'))?> <strong><?=htmlentities($person->getFieldSingle('sn'))?></strong>
+                        </a>
+                     </li>
+	      <? } ?>
+	</ul>
+	

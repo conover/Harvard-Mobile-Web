@@ -1,0 +1,19 @@
+<?php
+$page->title("Map: Browse by Category")
+     ->navbar_image('map')
+     ->header("Browse by Category");
+
+$page->content_begin();
+?>
+
+	<div class="nonfocal">
+		<h2>Browse Buildings: <?=$title?></h2>
+	</div>
+	
+	<ul class="nav">
+             <? foreach($places as $name => $info) { ?>
+		<li><a href="<?=detailURL($name, $category, $info)?>"><?=$name?></a></li>
+             <? } ?>
+	</ul>
+
+<? $page->content_end(); ?>

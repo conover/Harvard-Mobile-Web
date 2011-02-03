@@ -1,0 +1,20 @@
+<?php
+$page->title('About')
+     ->header('About');
+
+$page->content_begin();
+?>
+
+    <p class="nav"> 
+        <?=$page->link_access_key('./?page=about_site', 'About this website')?><br />
+        <?=$page->link_access_key('./?page=about', 'About ' . INSTITUTION_NAME)?><br />
+    </p> 
+    
+    <p class="secondary"> 
+        <a href="mailto:<?=FEEDBACK_EMAIL?>">Send us Feedback!</a><br/> 
+    </p> 
+
+<? 
+$page->content_end(); 
+$page->help_off();
+?>

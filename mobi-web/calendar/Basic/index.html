@@ -1,0 +1,35 @@
+<?php
+$page->title('Events')
+     ->header('Events');
+     
+$page->content_begin();
+?>
+	<form method="get" action="search.php">
+
+	<h2><?=$today['weekday']?>, <?=$today['month_3Let']?> <?=$today['day_num']?>, <?=$today['year']?></h2>
+
+	<p class="nav"><?=$page->link_access_key('', 'Events Home')?><br/>
+		<?=$page->link_access_key(dayURL($today, 'events'), "Today's Events")?><br/>
+		<?=$page->link_access_key(categorysURL(), 'Browse by Category')?><br/>
+		<?=$page->link_access_key(academicURL($today['year'], $today['month_num']), 'Academic Calendar')?><br/>
+	</p>
+	
+	
+	<p>
+		<strong>Search for events:</strong><br/>
+		<span class="inputcombo">
+			<input class="forminput" type="text" id="filter" name="filter" />
+			<? if ($page->platform == 'bbplus') { ?>
+                        <input src="../Basic/images/search_button.png" name="search" id="sch_btn" class="imagebutton" type="image" value="Search" />
+                        <? } else { ?>
+                        <input class="combobutton" name="sch_btn" id="sch_btn" type="submit" value="Search" />
+                        <? } ?>
+		</span>
+		<br/>
+		<select id="timeframe" name="timeframe">
+                   <? foreach($search_options as $key => $option) { ?>
+                      <option value="<?=$key?>" <? if(isset($option['selected']) && $option['selected']) { ?>selected="selected"<? } ?> ><?=$option['phrase']?></option>
+                   <? } ?>
+		</select>
+	</p>
+<? $page->content_end(); ?>

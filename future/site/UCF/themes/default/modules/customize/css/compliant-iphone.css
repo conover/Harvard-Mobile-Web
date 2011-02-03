@@ -1,0 +1,5 @@
+#dragReorderList{}
+#dragReorderList li{line-height: 30px; background-color: #000; border-bottom: none;}
+#dragReorderList.gloss li a{display: inline-block; padding: 0; margin: 4px 0; color: #fff; padding: 0px 10px 0px 0; line-height: 21px;}
+
+#savedMessage{background-color: #000; color: #fff;}

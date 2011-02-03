@@ -1,0 +1,21 @@
+<?php
+$page->title("Events: Browse by Category")
+     ->header('Events');
+
+$page->content_begin();
+
+?>
+
+	<h2>Browse by Category</h2>
+
+	<p class="nav"><? 
+	  foreach($categories as $category) {
+      ?><a href="<?=categoryURL($category)?>"><?=ucname($category->get_name())?></a><br/>
+    <? } ?>
+	</p>
+<?
+
+$page->content_end();
+$page->nav_link("./", "Events Home");
+
+?>

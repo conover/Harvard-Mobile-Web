@@ -1,0 +1,19 @@
+<?php
+$page->title('About')
+     ->navbar_image('about')
+     ->breadcrumbs('About')
+     ->breadcrumb_home();
+
+error_log(LIBDIR);
+
+$page->content_begin();
+?>
+    <ul class="nav"> 
+        <li><a href="./?page=about_site">About this website</a></li>
+        <li><a href="./?page=about">About <?=INSTITUTION_NAME?></a></li> 
+        <li><a class="email" href="mailto:<?=FEEDBACK_EMAIL?>">Send us Feedback!</a></li> 
+    </ul> 
+<? 
+$page->content_end(); 
+$page->help_off();
+?>

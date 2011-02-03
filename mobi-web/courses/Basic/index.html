@@ -1,0 +1,61 @@
+<?php
+$page->title('Courses')
+     ->header('Courses');
+
+$page->content_begin();
+
+?>
+	<form name="search_form" method="get" action="searchMain.php">
+	
+	<p>Descriptions, announcements and other information for <?=INSTITUTION_NAME?> classes.</p>
+           <? if (count(getMyStellar()->allTags) > 0 ) { ?>
+
+        <h3>My Courses:</h3>
+
+        <? if (count(getMyStellar()->currentIds)) { ?>
+	   <p class="nav"><? 
+	      foreach (getMyStellar()->currentIds as $id) {
+                $class = CourseData::get_subject_details($id);
+		      ?><a href="detail.php?id=<?= $id ?>&back=index.php"><?= name($class)?>: <?=$class['title']?></a><br />
+        <? } ?>
+	   </p>
+        <? } ?>
+
+        <? if (count(getMyStellar()->oldIds)) { ?>
+           <div class="nonfocal legend">The following old classes have been removed from your My Courses settings:
+             <?=implode(", ", getMyStellar()->oldIds)?>
+           </div>
+        <? } ?>
+
+    <? } ?>
+	<h3>Browse by school:</h3>
+
+	<p class="nav"><?=$page->link_access_key('', 'Courses Home')?><br/>
+                <? foreach($schools as $school) { ?>
+                <? if ((count($school->courses) == 1) && ($school->courses[0]->name == "")){ $school_name = $school->school_name;?>
+                    <?=$page->link_access_key(courseURL('', $school_name, $school->school_name_short, $school_name, $school->school_name_short), $school->school_name_short)?><br/>
+                 <? }  else if (count($school->courses) == 1) {  $school_name = $school->school_name; ?>
+                 <?=$page->link_access_key(courseURL('', $school_name, $school->school_name_short, $school->school_name_short, $school->school_name_short), $school->school_name_short)?><br/>
+               <? }
+                  else { ?>
+		<?=$page->link_access_key(coursesURL($school->school_name, $school->school_name_short), $school->school_name_short)?><br/>
+                    <? } ?>
+                <?} ?>
+	</p>
+	
+	<p>
+		<strong>Search by keyword, #, or instructor:</strong><br/>
+		<span class="inputcombo">
+			<input class="forminput" type="text" id="filter" name="filter" />
+            <input class="forminput" type="hidden" id="courseGroup" name="courseGroup" value=""/>
+            <input class="forminput" type="hidden" id="courseName" name="courseName" value=""/>
+            <? if ($page->platform == 'bbplus') { ?>
+            <input src="../Basic/images/search_button.png" name="search" id="sch_btn" class="imagebutton" type="image" value="Search" />
+            <? } else { ?>
+            <input class="combobutton" name="sch_btn" id="sch_btn" type="submit" value="Search" />
+            <? } ?>
+		</span>	
+	</p>
+        </form>
+
+<? $page->content_end(); ?>
