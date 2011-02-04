@@ -21,7 +21,7 @@
 			</div>
 			<div id="content" class="span-24 last">
 				<div id="left" class="span-8 append-2">
-					<p>UCF Mobile is an online resource that works on any web capable mobile device. From events to videos and from news to maps UCF Mobile is a powerhouse of connectivity to keep you in touch with UCF.</p>
+					<p>UCF Mobile is an online resource that works on any web capable mobile device. From events to videos and from news to maps UCF Mobile is a powerhouse of connectivity to keep you in touch with UCF. Check back for updates and releases to the web and device native apps.</p>
 					<a href="/home" class="button" id="call-to-act">Visit http://m.ucf.edu/</a>
 					<h2>Website features:</h2>
 					<ul> 
