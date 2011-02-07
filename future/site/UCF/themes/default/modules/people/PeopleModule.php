@@ -11,23 +11,6 @@ class PeopleModule extends UCFModule{
 	protected $id = 'people';
 	
 	/**
-	 * Given a SimpleXMLElement representing a result from the people search,
-	 * will return that object converted to an associative array.
-	 *
-	 * @return array
-	 * @author Jared Lang
-	 **/
-	function resultToArray($result){
-		$array = array();
-		foreach($result->Field as $field){
-			$key   = (string)$field['name'];
-			$value = (string)$field;
-			$array[$key] = $value;
-		}
-		return $array;
-	}
-	
-	/**
 	 * Returns an array of objects resulting from a search against $query.
 	 *
 	 * @return array
@@ -52,26 +35,21 @@ class PeopleModule extends UCFModule{
 	}
 	
 	function initializeForPage(){
-		$queryName = 'q';
-		$idName    = 'id';
+		$queryName = 'search';
 		$query     = $this->getArg($queryName, '');
-		$this->assign('searchURL', $this->buildURL('./search'));
 		$this->assign('queryName', $queryName);
-		$this->assign('idName', $idName);
 		$this->assign('query', $query);
 		
 		switch ($this->page){
 			case 'index':
 				$this->assign('query', $query);
-				
 				if (!empty($this->args[$queryName])){
-					$this->assign('listing', $this->search($query));
+					$listing = $this->search($query);
+					$listing = merge_duplicates($listing);
+					$this->assign('listing', $listing);
 				}else{
 					$this->assign('listing', array());
 				}
-				break;
-			case 'detail':
-				$id = $this->getArg($idName);
 				break;
 			default:
 				#raise 404
@@ -80,6 +58,23 @@ class PeopleModule extends UCFModule{
 				break;
 		}
 	}
-} // END class 
+} // END class
+
+/**
+ * Combines duplicate people entries
+ *
+ * @return results
+ * @author Jared Lang
+ **/
+function merge_duplicates($items){
+	$by_email = array();
+	foreach($items as $item){
+		if (!array_key_exists($item->email, $by_email)){
+			$by_email[$item->email] = array();
+		}
+		$by_email[$item->email][] = $item;
+	}
+	return $by_email;
+}
 
 ?>

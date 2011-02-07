@@ -1,18 +1,27 @@
+{if count($result)}
+{$primary = $result[0]}
 <article>
 	<header>
-		<h1>{$result->name}</h1>
+		<h1>{$primary->name}</h1>
 	</header>
-	<section class="organization">
-		{if !empty($result->organization)}{$result->organization}{/if}
-		{if !empty($result->department)}&#8226; {$result->department}{/if}
-	</section>
-	<section class="building">
-		{if !empty($result->building)}{$result->building}{/if}<!--
-		-->{if !empty($result->room)}, Room {$result->room}{/if}
-	</section>
+	{foreach $result as $entry}
+	<div class="entry">
+		<section class="organization">
+			{if !empty($entry->organization)}{$entry->organization}{/if}
+			{if !empty($entry->department)}&#8226; {$entry->department}{/if}
+		</section>
+		<section class="building">
+			{if !empty($entry->building)}{$entry->building}{/if}<!--
+			-->{if !empty($entry->room)}, Room {$entry->room}{/if}
+		</section>
+		<section class="phone">
+			<a href="tel:{$entry->phone}">{$entry->phone}</a>
+		</section>
+	</div>
+	{/foreach}
 	<footer>
-		<div class="phone"><a href="tel:{$result->phone}">{$result->phone}</a></div>
-		<div class="email"><a href="mailto:{$result->email}">{$result->email}</a></div>
+		<div class="email"><a href="mailto:{$primary->email}">{$primary->email}</a></div>
 		<div class="end"><!-- --></div>
 	</footer>
 </article>
+{/if}
