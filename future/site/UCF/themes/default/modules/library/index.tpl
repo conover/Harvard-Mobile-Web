@@ -1,6 +1,6 @@
 {extends file="findExtends:common/base.tpl"}
 
-{block name="javascript"}
+{block name="additionalHeadTags"}
 	<!--
 	<link rel="stylesheet" type="text/css" href="http://library.ucf.edu/Web/CSS/Main.css">
 	<link rel="stylesheet" type="text/css" href="http://library.ucf.edu/Web/CSS/Advanced.asp?section=about">
