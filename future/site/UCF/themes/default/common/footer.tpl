@@ -50,19 +50,22 @@
 			{/strip}
 		</div>
 		
-		
+		{if $moduleID != 'library'}
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 		<script src="/media/-/jquery.browser.min.js"></script>
+		{/if}
 		{foreach $externalJavascriptURLs as $url}
 		<script src="{$url}" type="text/javascript"></script>
 		{/foreach}
 		<script src="{$minify['js']}" type="text/javascript"></script>
+		{if $moduleID != 'library'}
 		<script>
 			jQuery(function(){
 				$('#body').addClass(jQuery.browser.name);
 				$('#body').addClass(jQuery.browser.name + '' + jQuery.browser.versionX);
 			});
 		</script>
+		{/if}
 		{block name="script"}{/block}
 		{foreach $inlineJavascriptFooterBlocks as $script}
 		<script type="text/javascript">
