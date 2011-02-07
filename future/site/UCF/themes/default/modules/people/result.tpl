@@ -3,9 +3,11 @@
 <article>
 	<header>
 		<h1>{$primary->name}</h1>
+		<div class="email"><a href="mailto:{$primary->email}">{$primary->email}</a></div>
 	</header>
+	{$first = True}
 	{foreach $result as $entry}
-	<div class="entry">
+	<div class="entry{if $first} first{$first = False}{/if}">
 		<section class="organization">
 			{if !empty($entry->organization)}{$entry->organization}{/if}
 			{if !empty($entry->department)}&#8226; {$entry->department}{/if}
@@ -19,9 +21,5 @@
 		</section>
 	</div>
 	{/foreach}
-	<footer>
-		<div class="email"><a href="mailto:{$primary->email}">{$primary->email}</a></div>
-		<div class="end"><!-- --></div>
-	</footer>
 </article>
 {/if}

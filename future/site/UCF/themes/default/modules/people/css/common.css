@@ -12,12 +12,13 @@ article {
 	padding:12px 12px 12px 24px; border-top:1px solid #FFD203; background:black; 
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#222), to(#000));
 	background: -moz-linear-gradient(top,  #222,  #000); }
-article header{}
-article header h1{font-size: 20px; margin: 0; padding: 0 0 10px 0; border-bottom: 1px dotted #5C5D5E;}
-article .entry{border-bottom: 1px dotted #5C5D5E; padding: 0 0 10px 0;}
+article header{padding-bottom: 5px;}
+article header h1{font-size: 20px; margin: 0;}
+article header .email{font-size: 16px;}
+article .entry{border-top: 1px dotted #5C5D5E; padding: 10px 0;}
 article footer {padding-top: 5px; font-size: 16px;}
 
-article .organization{color: #c8c8c8; font-weight: normal; margin-top: 10px; font-size: 14px;}
+article .organization{color: #c8c8c8; font-weight: normal; font-size: 14px;}
 article .building{color: #c8c8c8; font-weight: normal; font-size: 14px;}
 
 .end{clear: both;}

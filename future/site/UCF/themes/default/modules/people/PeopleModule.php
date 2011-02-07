@@ -67,12 +67,15 @@ class PeopleModule extends UCFModule{
  * @author Jared Lang
  **/
 function merge_duplicates($items){
-	$by_email = array();
+	$null_key  = 'null@mail.ucf.edu-';
+	$null_iter = 0;
+	$by_email  = array();
 	foreach($items as $item){
-		if (!array_key_exists($item->email, $by_email)){
-			$by_email[$item->email] = array();
+		$key = ($item->email) ? $item->email : $null_key . $null_iter++;
+		if (!array_key_exists($key, $by_email)){
+			$by_email[$key] = array();
 		}
-		$by_email[$item->email][] = $item;
+		$by_email[$key][] = $item;
 	}
 	return $by_email;
 }
