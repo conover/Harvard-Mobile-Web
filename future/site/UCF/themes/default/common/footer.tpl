@@ -73,7 +73,7 @@
 		</script>
 		{/foreach}
 		
-		{if strlen($CHARTBEAT_ID) and strlen($CHARTBEAT_DOMAIN)}
+		{if !$DEBUG and strlen($CHARTBEAT_ID) and strlen($CHARTBEAT_DOMAIN)}
 		<script type="text/javascript">
 		var _sf_async_config    = {};
 		_sf_async_config.uid    = {$CHARTBEAT_ID};

@@ -17,6 +17,7 @@
 
 {block name="body"}
 <div id="library">
+	<script> var dbug = { log : function(){} }; </script>
 	<script type="text/javascript" src="http://library.ucf.edu/Web/JS/Main.js"></script>
 	<script type="text/javascript" src="http://library.ucf.edu/Web/JS/Maps.js"></script>
 	

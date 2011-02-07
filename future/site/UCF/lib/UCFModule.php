@@ -9,6 +9,11 @@ abstract class UCFModule extends Module{
 	 **/
 	function displayPage()
 	{
+		if($GLOBALS['siteConfig']->getVar('SITE_MODE') == 'development'){
+			$this->assign('DEBUG', true);
+		} else {
+			$this->assign('DEBUG', false);
+		}
 		$this->assign('CHARTBEAT_ID', $GLOBALS['siteConfig']->getVar('CHARTBEAT_ID'));
 		$this->assign('CHARTBEAT_DOMAIN', $GLOBALS['siteConfig']->getVar('CHARTBEAT_DOMAIN'));
 		parent::displayPage();
