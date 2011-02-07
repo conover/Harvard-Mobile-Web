@@ -9,9 +9,9 @@
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	
 	<script src="http://library.ucf.edu/Web/JS/mootools-1.2.5.js" type="text/javascript"></script>
+	<script src="/Web/JS/clientcide-trunk.js" type="text/javascript"></script>
 	<!--
 	<script src="/Web/JS/class.MavSelectBox.js" type="text/javascript"></script>
-	<script src="/Web/JS/clientcide-trunk.js" type="text/javascript"></script>
 	-->
 {/block}
 
