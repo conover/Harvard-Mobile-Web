@@ -42,7 +42,7 @@
 					<span class="phone">(407) 823-2000</span>
 				</div>
 				<div class="links">
-					<span class="about"><a href="/info/">About this site</a></span>
+					<span class="about"><a href="/about/">About this site</a></span>
 					<span class="main-site"><a href="http://www.ucf.edu">UCF.edu</a></span>
 				</div>
 			</div>
@@ -69,5 +69,31 @@
 		{$script} 
 		</script>
 		{/foreach}
+		
+		{if strlen($CHARTBEAT_ID) and strlen($CHARTBEAT_DOMAIN)}
+		<script type="text/javascript">
+		var _sf_async_config    = {};
+		_sf_async_config.uid    = {$CHARTBEAT_ID};
+		_sf_async_config.domain = '{$CHARTBEAT_DOMAIN}';
+		(function(){
+			function loadChartbeat() {
+				window._sf_endpt=(new Date()).getTime();
+				var e = document.createElement('script');
+				e.setAttribute('language', 'javascript');
+				e.setAttribute('type', 'text/javascript');
+				e.setAttribute('src', (
+					("https:" == document.location.protocol) ? 
+					"https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" :
+					"http://static.chartbeat.com/") +
+				"js/chartbeat.js");
+				document.body.appendChild(e);
+			}
+			var oldonload = window.onload;
+			window.onload = (typeof window.onload != 'function') ? loadChartbeat : function() {
+				oldonload(); loadChartbeat();
+			};
+		})();
+		</script>
+		{/if}
 	</body>
 </html>

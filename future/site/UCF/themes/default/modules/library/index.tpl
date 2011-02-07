@@ -1,15 +1,27 @@
 {extends file="findExtends:common/base.tpl"}
 
 {block name="body"}
-<div id="faqs">
-	<h2>Search FAQs</h2>
+<div id="library">
+	
 	<ul class="gloss">
 		<li class="search">
-			<form action="" method="get">
-				<div><input type="search" placeholder="Ask a question" name="q" id="faq-search-input" /></div>
-				<input type="submit" value="Search" /></form>
+			<form method="get" action="">
+				<div><input type="search" id="people-search-input" value="" placeholder="Search" name="q"></div>
+				<input type="submit" value="Search">
+			</form>
 		</li>
 	</ul>
+	
+	<div class="text">
+		<div class="block">
+			<h3>Library Stuff</h3>
+			<p>{$foo}</p>
+		</div>
+	</div>
+	
+	<ul class="gloss">
+		<li class="arrow"><a href="#">Link</a></li>
+	</ul>
 
-</div>
+</div><!-- /library -->
 {/block}
