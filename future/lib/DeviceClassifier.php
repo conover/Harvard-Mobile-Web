@@ -6,6 +6,16 @@ class DeviceClassifier {
   private $pagetype = 'unknown';
   private $platform = 'unknown';
   private $certs = false;
+  
+  private function cacheFolder()
+  {
+    return CACHE_DIR . "/DeviceDetection";
+  }
+
+  private function cacheLifetime()
+  {
+    return 900;
+  }
 
   public function getDevice() {
     return implode('-', array(
@@ -31,26 +41,57 @@ class DeviceClassifier {
       $this->setDevice($_COOKIE[COOKIE_KEY]);
       //error_log(__FUNCTION__."(): choosing device cookie '{$_COOKIE['layout']}' <{$_SERVER['REQUEST_URI']}>");
       
-    } else {
-      $query = http_build_query(array(
-        'user-agent' => $_SERVER['HTTP_USER_AGENT'],
-      ));
+    } elseif (isset($_SERVER['HTTP_USER_AGENT'])) {
+    
+      $user_agent = $_SERVER['HTTP_USER_AGENT'];
       
-      $json = file_get_contents($GLOBALS['siteConfig']->getVar('MOBI_SERVICE_URL').'?'.$query);
+      /* see if the server has cached the results from the the device detection server */
+      $cache = new DiskCache($this->cacheFolder(), $this->cacheLifetime(), TRUE);
+      $cacheFilename = md5($user_agent);
+
+      if ($cache->isFresh($cacheFilename)) {
+           $json = $cache->read($cacheFilename);
+      } else {
+
+          $query = http_build_query(array(
+            'user-agent' => $user_agent
+          ));
+          
+          $url = $GLOBALS['siteConfig']->getVar('MOBI_SERVICE_URL').'?'.$query;
+          $json = file_get_contents($url);
+
+          $cache->write($json, $cacheFilename);
+      }            
+
       $data = json_decode($json, true);
       
-      switch ($data['pagetype']) {
-        case 'Basic':
+      switch (strtolower($data['pagetype'])) {
+        case 'basic':
           if ($data['platform'] == 'computer' || $data['platform'] == 'spider') {
             $this->pagetype = 'compliant';
+            
+          } else if ($data['platform'] == 'bbplus') {
+            $this->pagetype = 'compliant';
+            
           } else {
             $this->pagetype = 'basic';
           }
           break;
         
-        case 'Compliant':
-        case 'Webkit':
-        case 'Touch':
+        case 'touch':
+          if ($data['platform'] == 'blackberry') {
+            $this->pagetype = 'compliant'; // Storm, Storm 2
+            
+          } else if ($data['platform'] == 'winphone7') {
+            $this->pagetype = 'compliant'; // Windows Phone 7
+            
+          } else {
+            $this->pagetype = 'touch';
+          }
+          break;
+          
+        case 'compliant':
+        case 'webkit':
         default:
           $this->pagetype = 'compliant';
           break;
