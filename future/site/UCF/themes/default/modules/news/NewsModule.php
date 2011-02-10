@@ -23,6 +23,7 @@ class NewsModule extends UCFModule{
 			$feed = new SimplePie();
 			$feed->set_timeout($GLOBALS['siteConfig']->getVar('HTTP_TIMEOUT'));
 			$feed->set_feed_url($url);
+			$feed->set_cache_duration($GLOBALS['siteConfig']->getVar('DEFAULT_CACHE_LIFESPAN'));
 			$feed->set_cache_location(CACHE_DIR);
 			$feed->init();
 			$slug = $this->sluggify($feed->get_title());
