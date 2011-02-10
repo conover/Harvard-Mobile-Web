@@ -2,15 +2,24 @@
 .pad h1 { padding-bottom:8px; }
 .pad .wp-caption { display:block; float:left; line-height:100%; }
 .pad .wp-caption img { margin-bottom:4px; }
-.pad .wp-caption p { font-size:12px; font-family:georgia; color:#A9AAA9;}
-.pad img { float:left; margin-right:12px; margin-bottom:12px; }
-
+.pad .wp-caption p {font-size:12px; font-family:georgia; color:#A9AAA9;}
 .gloss{padding-top: .5em;}
-.block .original{text-align: center; display: block;}
-article .content a{text-decoration: underline;}
+
+article.block header{margin-bottom: 20px; border-bottom: 1px dotted #333;}
+article.block header h1{font-size: 24px;}
+article.block header div{color: #aaa; font-size: 14px;}
+article.block .content{font-size: 14px;}
+article.block .content a{text-decoration: underline; font-weight: bold; font-size: 16px;}
+article.block .content p{line-height: 1.5em;}
+article.block .content strong{}
+article.block .content em{}
+article.block .content ul,
+article.block .content ol{line-height: 1.5em; clear: both; padding: 0 0 0 5px; margin: 0;}
+article.block .content img{float:left; margin-right:12px; margin-bottom:12px;}
+article.block footer{}
+article.block footer .original{text-align: center; display: block;}
 
 .articles{margin-top: 20px;}
 .articles a.img{float:left; margin: 2px 10px 0 0;}
 .articles a.img img{height: 95px; margin: 0; padding: 0; font-size: 16px;}
-
 .none { padding:16px 8px 0 10px; }
